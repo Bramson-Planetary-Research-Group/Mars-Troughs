@@ -17,18 +17,31 @@ void equations_of_motion(double*positions, double*k, double t, double*params, gs
   /* MODELING CHOICES BELOW */
   //
   //Read out the free parameters
-  double beta, gamma, l0;
-  beta = params[0];
-  gamma = params[1];
-  l0 = params[2]; //Constant lag model
+  double beta = params[0]*1e-3;
+  double gamma = params[1]*1e-2;
+  //l0 = params[2]; //Constant lag model
+  //Quadratic lag model
+  double l0 = params[2];
+  double l1 = params[3]*1e-7;
+  double l2 = params[4]*1e-13;
+
   //Calculate accumulation(t) model
   double At = beta*(gsl_spline_eval(ins_spl, t, acc) - gamma);
   //Calculate the lag(t) model
-  double lag = l0; //Constant lag model
+  //double lag = l0; //Constant lag model
+  double lag = l2*t*t + l1*t + l0;
   //
   /* MODELING CHOICES ABOVE */
 
   //Calculate the retreat
+  if ((lag < 0)||(lag > 20)){
+      printf("LAGERR: %.1f %.1f\n",t,lag);
+      fflush(stdout);
+  }
+  if ((t < 0)||(t > 1500000.0)){
+    printf("TIMEERR: %.1f %.1f\n",t,lag);
+    fflush(stdout);
+  }
   double Rt = gsl_spline2d_eval(ret_spl, t, lag, xacc, yacc);
 
   //Calculate the derivatives and return

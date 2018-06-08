@@ -12,6 +12,11 @@ void driver(double xi, double zi, double*params, int Np, double*times_out, int N
   //Declare some iteration variables
   int i,j;
 
+  //Use this for degbugging
+  for (i=0; i < Nl; i++){
+    //printf("here:%d %.0f   %.0f\n",i, times[i], lags[i]);
+  }
+
   //CREATE THE INSOLATION AND LAG SPLINES HERE
   gsl_spline*ins_spl = gsl_spline_alloc(gsl_interp_cspline, Nt);
   gsl_interp_accel*acc = gsl_interp_accel_alloc();
