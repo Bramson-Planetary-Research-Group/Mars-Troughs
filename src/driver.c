@@ -7,24 +7,26 @@
 #include "driver.h"
 #include "rk4.h"
 
-void driver(double xi, double zi, double*params, int Np, double*times, int N, double*x, double*z, double*insolation, double*lags, int Nl, double*retreats){  
+void driver(double xi, double zi, double*params, int Np, double*times_out, int N, double*times, int Nt, double*x, double*z, double*insolation, double*lags, int Nl, double*retreats){
   
   //Declare some iteration variables
   int i,j;
 
   //CREATE THE INSOLATION AND LAG SPLINES HERE
-  gsl_spline*ins_spl = gsl_spline_alloc(gsl_interp_cspline, N);
+  gsl_spline*ins_spl = gsl_spline_alloc(gsl_interp_cspline, Nt);
   gsl_interp_accel*acc = gsl_interp_accel_alloc();
-  gsl_spline_init(ins_spl, times, insolation, N);
-  //gsl_spline_eval(ins_spl, t, acc);
+  gsl_spline_init(ins_spl, times, insolation, Nt);
+  //Test call
+  gsl_spline_eval(ins_spl, 0, acc);
   gsl_interp_accel*xacc = gsl_interp_accel_alloc();
   gsl_interp_accel*yacc = gsl_interp_accel_alloc();
-  gsl_spline2d*ret_spl = gsl_spline2d_alloc(gsl_interp2d_bilinear, N, Nl);
-  gsl_spline2d_init(ret_spl, times, lags, retreats, N, Nl);
-  //gsl_spline2d_eval(ret_spl, time, lag, xacc, yacc);
+  gsl_spline2d*ret_spl = gsl_spline2d_alloc(gsl_interp2d_bilinear, Nt, Nl);
+  gsl_spline2d_init(ret_spl, times, lags, retreats, Nt, Nl);
+  //Test call
+  gsl_spline2d_eval(ret_spl, 0, 13, xacc, yacc);
 
   //Calculate the time step
-  double dt = times[1]-times[0];
+  double dt = times_out[1]-times_out[0];
 
   //Declare the current time
   double t=0;
@@ -39,12 +41,12 @@ void driver(double xi, double zi, double*params, int Np, double*times, int N, do
 	
   //Loop over all the times and advance the simulation
   //Note: we take N-2 steps since we have already stored the initial information
-  for (i = 0; i < N-2; i++){
+  for (i = 0; i < N-1; i++){
     rk4(current_position, dt, t, params, ins_spl, acc, ret_spl, xacc, yacc);
     t+=dt;
       
     x[i+1] = current_position[0];
-      z[i+1] = current_position[1];
+    z[i+1] = current_position[1];
   }
 
   //Free the positions array
