@@ -17,16 +17,18 @@ void equations_of_motion(double*positions, double*k, double t, double*params, gs
   /* MODELING CHOICES BELOW */
   //
   //Read out the free parameters
-  double beta = params[0]*1e-3;
-  double gamma = params[1]*1e-2;
-  //l0 = params[2]; //Constant lag model
+  double alpha = params[0];
+  double beta = params[1];
+  double gamma = params[2];
+  //l0 = params[****]; //Constant lag model
   //Quadratic lag model
-  double l0 = params[2];
-  double l1 = params[3]*1e-7;
-  double l2 = params[4]*1e-13;
+  double l0 = params[3];
+  double l1 = params[4];
+  double l2 = params[5];
 
   //Calculate accumulation(t) model
-  double At = beta*(gsl_spline_eval(ins_spl, t, acc) - gamma);
+  double ins_t = gsl_spline_eval(ins_spl, t, acc)
+  double At = alpha*ins_t*ins_t + beta*ins_t + gamma;
   //Calculate the lag(t) model
   //double lag = l0; //Constant lag model
   double lag = l2*t*t + l1*t + l0;
