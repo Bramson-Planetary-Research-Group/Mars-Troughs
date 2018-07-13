@@ -22,22 +22,23 @@ void equations_of_motion(double*positions, double*k, double t, double*params, gs
   double gamma = params[2];
   //l0 = params[****]; //Constant lag model
   //Quadratic lag model
-  double l0 = params[3];
-  double l1 = params[4];
-  double l2 = params[5];
+  double a = params[3];
+  double b = params[4];
+  double c = params[5];
 
+  //printf("%e %e %e %e %e %e\n",alpha, beta, gamma, a, b, c);
   //Calculate accumulation(t) model
-  double ins_t = gsl_spline_eval(ins_spl, t, acc)
+  double ins_t = gsl_spline_eval(ins_spl, t, acc);
   double At = alpha*ins_t*ins_t + beta*ins_t + gamma;
   //Calculate the lag(t) model
   //double lag = l0; //Constant lag model
-  double lag = l2*t*t + l1*t + l0;
+  double lag = a*t*t + b*t + c;
   //
   /* MODELING CHOICES ABOVE */
 
   //Calculate the retreat
-  if ((lag < 0)||(lag > 20)){
-      printf("LAGERR: %.1f %.1f\n",t,lag);
+  if ((lag < 0)||(lag > 20.0)){
+      printf("LAGERR: %.1f %.1e\n",t,lag);
       fflush(stdout);
   }
   if ((t < 0)||(t > 1500000.0)){

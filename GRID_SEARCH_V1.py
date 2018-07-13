@@ -95,12 +95,13 @@ def do_grid():
                             output[ind, 0:-1] = guess
                             #Calculate cost function
                             output[ind, -1] = cost(guess)
-                            if output[ind, -1] < 1e40:
-                                print "Done with ind = %d"%ind
-                                return
+                            print "Done with ind = %d"%ind
                             ind+=1
-                            #if ind > 100:
-                            #    return
+                            ###
+                            #COMMENT OUT THE IF STATMENT WHEN YOU
+                            #ARE READY TO RUN FOR REAL
+                            ###
+                            if ind > 10: return
                             continue
                         continue
                     continue
