@@ -1,3 +1,6 @@
+# MCMC chains
+*.npy
+
 # emacs back up files
 output.txt
 *~

@@ -9,6 +9,15 @@
 
 void equations_of_motion(double*positions, double*k, double t, double*params, gsl_spline*ins_spl,gsl_interp_accel*acc,gsl_spline2d*ret_spl, gsl_interp_accel*xacc, gsl_interp_accel*yacc){
 
+  //Check if the time is too high
+  if ((t < 0)||(t > 1500000.0)){
+    printf("TIMEERR: %.1f\n",t);
+    fflush(stdout);
+    k[0] = 0;
+    k[1] = 0;
+    return;
+  }
+
   //Read out x and z
   double x,z;
   x = positions[0];
@@ -36,15 +45,15 @@ void equations_of_motion(double*positions, double*k, double t, double*params, gs
   //
   /* MODELING CHOICES ABOVE */
 
-  //Calculate the retreat
+  //Check if the lag is too large or has gone negative
   if ((lag < 0)||(lag > 20.0)){
-      printf("LAGERR: %.1f %.1e\n",t,lag);
-      fflush(stdout);
+    //printf("LAGERR: %.1f %.1e\n",t,lag);
+    //fflush(stdout);
+    k[0] = 0;
+    k[1] = 0;
+    return;
   }
-  if ((t < 0)||(t > 1500000.0)){
-    printf("TIMEERR: %.1f %.1f\n",t,lag);
-    fflush(stdout);
-  }
+  //Calculate the retreat
   double Rt = gsl_spline2d_eval(ret_spl, t, lag, xacc, yacc);
 
   //Calculate the derivatives and return
