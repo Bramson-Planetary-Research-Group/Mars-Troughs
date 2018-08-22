@@ -80,11 +80,17 @@ b = 5e-6
 c = 1
 guess = np.array([model_var, alpha, beta, gamma, a, b, c])
 
+#Find the best fit using the usual optimizer method
+nll = lambda *args: -lnpost(*args)
+print "Starting best fit"
+result = op.minimize(nll, guess, tol=1e-3)
+print "\tbest fit complete with ",result['success']
+
 #Set up the walkers in the MCMC
 nwalkers = len(guess)*2+2
-nsteps = 1000
+nsteps = 10000
 ndim = len(guess)
-pos = [guess + 1e-3*guess*np.random.randn(ndim) for k in range(nwalkers)]
+pos = [result['x'] + 1e-3*result['x']*np.random.randn(ndim) for k in range(nwalkers)]
 sampler = emcee.EnsembleSampler(nwalkers, ndim, lnpost, threads=4)
 print "Running MCMC"
 sampler.run_mcmc(pos, nsteps)
