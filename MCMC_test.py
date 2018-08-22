@@ -38,8 +38,9 @@ xi, zi = 0, 0
 #Mathematically this looks like: lnPost = lnPrior + lnLike
 def lnprior(params):
     """Log of the prior on the parameters.
-    None right now.
     """
+    model_var = params[0]
+    if model_var < 0: return -np.inf #variance can't be negative
     return 0
 
 def lnlike(params):
