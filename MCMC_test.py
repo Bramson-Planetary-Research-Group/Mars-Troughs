@@ -40,7 +40,7 @@ def lnprior(params):
     """Log of the prior on the parameters.
     """
     model_var = params[0]
-    if model_var < 0: return -np.inf #variance can't be negative
+    if model_var < 0 or model_var > 500**2: return -np.inf #variance can't be negative, or greater than 10 pixels in each x direction.
     return 0
 
 def lnlike(params):
@@ -56,14 +56,22 @@ def lnlike(params):
     #Calculate the trough path
     in_params = params[1:]
     x_out, z_out = trough_model.get_trough_path(xi, zi, ts, in_params, times, ins, lags, R)
-    if max(x_out) < max(x_data):
-        return -1e99 #Force the model to go far enough in +x direction
-    z_spline = interp.interp1d(x_out, z_out)
-    #x_spline = interp.interp1d(z_out, x_out)
-
-    #Compute the log likelihood, which is just -0.5*chi2 and return the sum
-    LL = -0.5*(z_data[1:] - z_spline(x_data[1:]))**2/model_var - 0.5*np.log(model_var)
+    
+    #Compute the log likelihood, which is just -0.5*chi2-0.5det(Cov) and return the sum
+    horizontal_comparison = True
+    if horizontal_comparison:
+        if min(z_out) > min(z_data): #z values are negative
+            return -1e99 #Force the model to go far enough in -z direction
+        x_spline = interp.interp1d(z_out, x_out)
+        LL = -0.5*(x_data[1:] - x_spline(z_data[1:]))**2/model_var - 0.5*np.log(model_var)
+    else:
+        if max(x_out) < max(x_data):
+            return -1e99 #Force the model to go far enough in +x direction
+        z_spline = interp.interp1d(x_out, z_out)
+        LL = -0.5*(z_data[1:] - z_spline(x_data[1:]))**2/model_var - 0.5*np.log(model_var)
     return LL.sum()
+
+
 
 def lnpost(params):
     #compute the prior

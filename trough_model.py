@@ -29,9 +29,26 @@ R = np.loadtxt("R_lookuptable.txt")
 ts = np.linspace(min(times), times[-10], len(times)*100)
 
 #Define the initial positions
+#Get rid of this line eventually
 xi, zi = 0, 0
 
-def get_trough_path(parameters):
-    """Get the trough
 
-    """
+class trough_object(object):
+
+    def __init__(self):
+        #Define the times for where we want the model
+        self.times = np.linspace(min(times), times[-10], len(times)*100)
+
+    def set_params(self, parameters, names=None):
+        """Call this function to set parameters used to calculate a migration path.
+        """
+        self.params = parameters
+        
+    def get_trough_path(self):
+        """Get the trough path.
+        """
+        in_params = self.params
+        xi,zi = 0, 0
+        times = self.ts
+        ins = self.ins
+        x_out, z_out = ctm.get_trough_path(xi, zi, ts, in_params, times, ins, lags, R)
