@@ -9,6 +9,13 @@ import corner
 chain = np.load("mcmc_chain_trough.npy")
 print chain.shape
 
+likes = np.load("mcmc_likes_trough.npy")
+ind = np.argmax(likes)
+
+ml_params = chain[ind]
+#print "Most likely parameters:\n\t", ml_params
+#exit()
+
 fig = corner.corner(chain)
 fig.savefig("corner.png")
 plt.show()

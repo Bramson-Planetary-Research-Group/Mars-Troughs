@@ -8,12 +8,12 @@ sys.path.insert(0, "./src/")
 import C_trough_model as trough_model
 
 #Read in the data
-data = np.loadtxt("RealXandZ.txt")
+data = np.loadtxt("txt_files/RealXandZ.txt")
 x_data,z_data = data
 x_data *= 1000 #Change x from km to m
 
 #Read in the insolation and mess with it a bit
-ins, times = np.loadtxt("Insolation.txt", skiprows=1).T
+ins, times = np.loadtxt("txt_files/Insolation.txt", skiprows=1).T
 max_ins = np.max(ins)
 times[1:] = -times[1:]
 ins = ins/max_ins #Normalize it
@@ -25,7 +25,7 @@ lags[0] -= 1
 lags[-1] = 20
 
 #Read in the retreats
-R = np.loadtxt("R_lookuptable.txt")
+R = np.loadtxt("txt_files/R_lookuptable.txt")
 print R.shape
 
 #Times for which we want x(t) and z(t)

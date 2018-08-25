@@ -9,12 +9,12 @@ import C_trough_model as trough_model
 import emcee #used for MCMC analyses
 
 #Read in the data
-data = np.loadtxt("RealXandZ.txt")
+data = np.loadtxt("txt_files/RealXandZ.txt")
 x_data,z_data = data
 x_data *= 1000 #Change x from km to m
 
 #Read in the insolation and mess with it a bit
-ins, times = np.loadtxt("Insolation.txt", skiprows=1).T
+ins, times = np.loadtxt("txt_files/Insolation.txt", skiprows=1).T
 max_ins = np.max(ins)
 times[1:] = -times[1:]
 ins = ins/max_ins #Normalize it
@@ -26,7 +26,7 @@ lags[0] -= 1
 lags[-1] = 20
 
 #Read in the retreats
-R = np.loadtxt("R_lookuptable.txt")
+R = np.loadtxt("txt_files/R_lookuptable.txt")
 
 #Times for which we want x(t) and z(t)
 ts = np.linspace(min(times), times[-10], len(times)*100)
@@ -62,7 +62,7 @@ def lnlike(params):
     #x_spline = interp.interp1d(z_out, x_out)
 
     #Compute the log likelihood, which is just -0.5*chi2 and return the sum
-    LL = -0.5*(z_data[1:] - z_spline(x_data[1:]))**2/model_var
+    LL = -0.5*(z_data[1:] - z_spline(x_data[1:]))**2/model_var - 0.5*np.log(model_var)
     return LL.sum()
 
 def lnpost(params):
@@ -89,7 +89,7 @@ print "\tbest fit complete with ",result['success']
 
 #Set up the walkers in the MCMC
 nwalkers = len(guess)*2+2
-nsteps = 10000
+nsteps = 1000
 ndim = len(guess)
 pos = [result['x'] + 1e-3*result['x']*np.random.randn(ndim) for k in range(nwalkers)]
 sampler = emcee.EnsembleSampler(nwalkers, ndim, lnpost, threads=4)
