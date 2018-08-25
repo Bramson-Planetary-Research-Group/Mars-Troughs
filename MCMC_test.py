@@ -94,6 +94,8 @@ nll = lambda *args: -lnpost(*args)
 print "Starting best fit"
 result = op.minimize(nll, guess, tol=1e-3)
 print "\tbest fit complete with ",result['success']
+print result
+exit()
 
 #Set up the walkers in the MCMC
 nwalkers = len(guess)*2+2

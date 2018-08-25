@@ -6,7 +6,7 @@ from ctypes import c_double, c_int, POINTER, cdll
 library_path = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))+"/c_troughs.so"
 cflib = cdll.LoadLibrary(library_path)
 
-def get_trough_path(xi, zi, ts, parameters, times, insolation, lags, retreats):
+def get_trough_path(xi, zi, ts, parameters, times, insolation, lags, retreats, do_cleanup=False):
     """Get the trough path from the driver.
 
     Args:
@@ -15,6 +15,7 @@ def get_trough_path(xi, zi, ts, parameters, times, insolation, lags, retreats):
         ts: times that we want the modeled path
         parameters: array containing the free parameters of the model
         times: array containing the times that we have the insolation
+        do_cleanup: boolean saying whether we just call the driver function to clean up splines
 
     Returns:
         x: array containing all x positions
@@ -30,7 +31,8 @@ def get_trough_path(xi, zi, ts, parameters, times, insolation, lags, retreats):
                        POINTER(c_double), POINTER(c_double), #x, z
                        POINTER(c_double), #insolations
                        POINTER(c_double), c_int, #lags, N_lags
-                       POINTER(c_double)] #retreats
+                       POINTER(c_double), #retreats
+                       c_int] #retreats
                        
     #Create an array for x and z
     N = len(ts)
@@ -55,9 +57,15 @@ def get_trough_path(xi, zi, ts, parameters, times, insolation, lags, retreats):
     lags_in = lags.ctypes.data_as(POINTER(c_double))
     retreats = np.ascontiguousarray(retreats.flatten())
     retreats_in = retreats.ctypes.data_as(POINTER(c_double))
-    
+
+    #Convert boolean to int, just in case
+    if do_cleanup:
+        clean = 1
+    else:
+        clean = 0
+        
     #Call the driver
-    driver(xi, zi, params_in, Np, ts_in, N, times_in, Nt, x_in, z_in, ins_in, lags_in, Nlags, retreats_in)
+    driver(xi, zi, params_in, Np, ts_in, N, times_in, Nt, x_in, z_in, ins_in, lags_in, Nlags, retreats_in, clean)
     
     #Return x and z
     return x, z
