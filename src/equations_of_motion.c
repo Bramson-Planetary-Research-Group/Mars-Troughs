@@ -26,14 +26,24 @@ void equations_of_motion(double*positions, double*k, double t, double*params, gs
   /* MODELING CHOICES BELOW */
   //
   //Read out the free parameters
-  double alpha = params[0];
+  /*double alpha = params[0];
   double beta = params[1];
   double gamma = params[2];
   //l0 = params[****]; //Constant lag model
   //Quadratic lag model
   double a = params[3];
   double b = params[4];
-  double c = 5.0;//params[5];
+  double c = 5.0;//params[5];*/
+  
+  //Read out the free parameters
+  double alpha = 0;
+  double beta = params[0];
+  double gamma = params[1];
+  //l0 = params[****]; //Constant lag model
+  //Quadratic lag model
+  double a = params[2];
+  double b = params[3];
+  double c = 5.0;//params[4];
 
   //printf("%e %e %e %e %e %e\n",alpha, beta, gamma, a, b, c);
   //Calculate accumulation(t) model

@@ -43,7 +43,7 @@ trough = trough_model.trough_object()
 def lnprior(params):
     """Log of the prior on the parameters.
     """
-    model_var = params[0]
+    model_var = np.exp(params[0])
     if model_var < 0: return -np.inf #variance can't be negative, or greater than 10 pixels in each x direction.
     return 0
 
@@ -56,7 +56,9 @@ def lnlike(params):
     """
     #Currently using the XX model
     #model_var, alpha, beta, gamma, a, b, c = params
-    model_var, alpha, beta, gamma, a, b = params
+    #lnmodel_var, alpha, beta, gamma, a, b = params
+    lnmodel_var, beta, gamma, a, b = params
+    model_var = np.exp(lnmodel_var)
 
     #Calculate the trough path
     in_params = params[1:]
@@ -88,15 +90,16 @@ def lnpost(params):
     return lpr + lnlike(params)
 
 #A first guess
-model_var = 500.**2 #meters^2
-alpha = -1.6e-10
+lnmodel_var = np.log(500.**2) #ln(meters^2)
+#alpha = -1.6e-10
 beta  = -2.3e-9
 gamma = 3.2e-4
 a = 2.7e-12
 b = -6.1e-7
 #c = 5.0 #fixing to most likely
 #guess = np.array([model_var, alpha, beta, gamma, a, b, c])
-guess = np.array([model_var, alpha, beta, gamma, a, b])
+#guess = np.array([lnmodel_var, alpha, beta, gamma, a, b])
+guess = np.array([lnmodel_var, beta, gamma, a, b])
 
 #Find the best fit using the usual optimizer method
 nll = lambda *args: -lnpost(*args)
