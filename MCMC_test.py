@@ -3,9 +3,10 @@ import scipy.optimize as op
 import scipy.interpolate as interp
 import scipy.integrate as integ
 import matplotlib.pyplot as plt
-import os, sys
-sys.path.insert(0, "./src/")
-import C_trough_model as trough_model
+#import os, sys
+#sys.path.insert(0, "./src/")
+#import C_trough_model as trough_model
+import trough_model
 import emcee #used for MCMC analyses
 
 #Read in the data
@@ -34,13 +35,16 @@ ts = np.linspace(min(times), times[-10], len(times)*100)
 #Define the initial positions
 xi, zi = 0, 0
 
+#Make a trough object
+trough = trough_model.trough_object()
+
 #Define the log-posterior probability of our model given the data
 #Mathematically this looks like: lnPost = lnPrior + lnLike
 def lnprior(params):
     """Log of the prior on the parameters.
     """
     model_var = params[0]
-    if model_var < 0 or model_var > 500**2: return -np.inf #variance can't be negative, or greater than 10 pixels in each x direction.
+    if model_var < 0 or model_var > 500: return -np.inf #variance can't be negative, or greater than 10 pixels in each x direction.
     return 0
 
 def lnlike(params):
@@ -55,7 +59,10 @@ def lnlike(params):
 
     #Calculate the trough path
     in_params = params[1:]
-    x_out, z_out = trough_model.get_trough_path(xi, zi, ts, in_params, times, ins, lags, R)
+    #x_out, z_out = trough_model.get_trough_path(xi, zi, ts, in_params, times, ins, lags, R)
+
+    trough.set_parameters(in_params)
+    x_out, z_out = trough.get_trough_path()
     
     #Compute the log likelihood, which is just -0.5*chi2-0.5det(Cov) and return the sum
     horizontal_comparison = True
@@ -95,7 +102,7 @@ print "Starting best fit"
 result = op.minimize(nll, guess, tol=1e-3)
 print "\tbest fit complete with ",result['success']
 print result
-exit()
+#exit()
 
 #Set up the walkers in the MCMC
 nwalkers = len(guess)*2+2
