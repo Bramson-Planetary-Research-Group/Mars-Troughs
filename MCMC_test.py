@@ -44,7 +44,7 @@ def lnprior(params):
     """Log of the prior on the parameters.
     """
     model_var = params[0]
-    if model_var < 0 or model_var > 500: return -np.inf #variance can't be negative, or greater than 10 pixels in each x direction.
+    if model_var < 0: return -np.inf #variance can't be negative, or greater than 10 pixels in each x direction.
     return 0
 
 def lnlike(params):
@@ -55,7 +55,8 @@ def lnlike(params):
     square of the errorbars on the data points.
     """
     #Currently using the XX model
-    model_var, alpha, beta, gamma, a, b, c = params
+    #model_var, alpha, beta, gamma, a, b, c = params
+    model_var, alpha, beta, gamma, a, b = params
 
     #Calculate the trough path
     in_params = params[1:]
@@ -87,14 +88,15 @@ def lnpost(params):
     return lpr + lnlike(params)
 
 #A first guess
-model_var = 400. #meters^2
-alpha = -2e-10
-beta  = -1e-8
-gamma = 4e-4
-a = 3e-12
-b = 2e-6
-c = 1
-guess = np.array([model_var, alpha, beta, gamma, a, b, c])
+model_var = 500.**2 #meters^2
+alpha = -1.6e-10
+beta  = -2.3e-9
+gamma = 3.2e-4
+a = 2.7e-12
+b = -6.1e-7
+#c = 5.0 #fixing to most likely
+#guess = np.array([model_var, alpha, beta, gamma, a, b, c])
+guess = np.array([model_var, alpha, beta, gamma, a, b])
 
 #Find the best fit using the usual optimizer method
 nll = lambda *args: -lnpost(*args)

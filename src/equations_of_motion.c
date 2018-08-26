@@ -33,7 +33,7 @@ void equations_of_motion(double*positions, double*k, double t, double*params, gs
   //Quadratic lag model
   double a = params[3];
   double b = params[4];
-  double c = params[5];
+  double c = 5.0;//params[5];
 
   //printf("%e %e %e %e %e %e\n",alpha, beta, gamma, a, b, c);
   //Calculate accumulation(t) model
