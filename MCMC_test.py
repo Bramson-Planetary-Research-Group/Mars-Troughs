@@ -81,11 +81,11 @@ def lnpost(params):
 
 #A first guess
 model_var = 400. #meters^2
-alpha = -1e-10
+alpha = -2e-10
 beta  = -1e-8
-gamma = 1e-4
-a = 5e-12
-b = 5e-6
+gamma = 4e-4
+a = 3e-12
+b = 2e-6
 c = 1
 guess = np.array([model_var, alpha, beta, gamma, a, b, c])
 
