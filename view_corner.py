@@ -16,7 +16,7 @@ ml_params = chain[ind]
 print "Most likely parameters:\n\t", ml_params
 
 nwalkers = len(ml_params)*2+2
-nburn = nwalkers*100
+nburn = nwalkers*1000
 
 fig = corner.corner(chain[nburn:])
 fig.savefig("chains/corner.png")

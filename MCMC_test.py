@@ -110,8 +110,8 @@ print result
 #exit()
 
 #Set up the walkers in the MCMC
-nwalkers = len(guess)*2+2
-nsteps = 1000
+nwalkers = len(guess)*4+2
+nsteps = 10000
 ndim = len(guess)
 pos = [result['x'] + 1e-3*result['x']*np.random.randn(ndim) for k in range(nwalkers)]
 sampler = emcee.EnsembleSampler(nwalkers, ndim, lnpost, threads=4)
