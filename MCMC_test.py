@@ -45,6 +45,8 @@ def lnprior(params):
     """
     model_var = np.exp(params[0])
     if model_var < 0: return -np.inf #variance can't be negative, or greater than 10 pixels in each x direction.
+    b = params[-1]
+    if b < 0: return -np.inf
     return 0
 
 def lnlike(params):
@@ -57,9 +59,12 @@ def lnlike(params):
     #Currently using the XX model
     #model_var, alpha, beta, gamma, a, b, c = params
     #lnmodel_var, alpha, beta, gamma, a, b = params
-    lnmodel_var, beta, gamma, a, b = params
+    #lnmodel_var, beta, gamma, a, b = params
+    #lnmodel_var, gamma, a, b = params
+    lnmodel_var, gamma, b = params
     model_var = np.exp(lnmodel_var)
-
+    b = -np.exp(b)
+    
     #Calculate the trough path
     in_params = params[1:]
     #x_out, z_out = trough_model.get_trough_path(xi, zi, ts, in_params, times, ins, lags, R)
@@ -92,14 +97,16 @@ def lnpost(params):
 #A first guess
 lnmodel_var = np.log(500.**2) #ln(meters^2)
 #alpha = -1.6e-10
-beta  = -2.3e-9
+#beta  = -2.3e-9
 gamma = 3.2e-4
-a = 2.7e-12
-b = -6.1e-7
+#a = 2.7e-12
+b = np.log(6.1e7)#-6.1e-7
 #c = 5.0 #fixing to most likely
 #guess = np.array([model_var, alpha, beta, gamma, a, b, c])
 #guess = np.array([lnmodel_var, alpha, beta, gamma, a, b])
-guess = np.array([lnmodel_var, beta, gamma, a, b])
+#guess = np.array([lnmodel_var, beta, gamma, a, b])
+#guess = np.array([lnmodel_var, gamma, a, b])
+guess = np.array([lnmodel_var, gamma, b])
 
 #Find the best fit using the usual optimizer method
 nll = lambda *args: -lnpost(*args)
@@ -111,7 +118,7 @@ print result
 
 #Set up the walkers in the MCMC
 nwalkers = len(guess)*4+2
-nsteps = 10000
+nsteps = 2000
 ndim = len(guess)
 pos = [result['x'] + 1e-3*result['x']*np.random.randn(ndim) for k in range(nwalkers)]
 sampler = emcee.EnsembleSampler(nwalkers, ndim, lnpost, threads=4)
