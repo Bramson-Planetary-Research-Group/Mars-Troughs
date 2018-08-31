@@ -25,7 +25,7 @@ def color_by_age(x, z):
     x = x[inds]
     z = z[inds]
     t = ts[inds]
-    step = 20
+    step = 100
     plot_colorline(x[::step], z[::step], t[::step])
     return
 
@@ -36,6 +36,7 @@ def plot_colorline(x,y,c):
     #cs = [cmap(ci) for ci in c]
     cs = cm.jet((c-np.min(c))/(np.max(c)-np.min(c)))
     ax = plt.gca()
+    #ax.plot(x, y)
     for i in np.arange(len(x)-1):
         #if i == 0: label="model"
         #else: label = None
@@ -65,7 +66,7 @@ color_by_age(x_out, z_out)
 #plt.plot(x_out, z_out, )
 
 err = np.sqrt(np.exp(ml_params[0])) #sqrt of variance parameter
-plt.errorbar(x_data, z_data, xerr=err, label='data', c='k', marker='o')
+plt.errorbar(x_data, z_data, xerr=err, label='data', c='k', marker='o', ls='')
 
 plt.xlabel("Horizonal migration [m]")
 plt.ylabel("Vertical migration [m]")
