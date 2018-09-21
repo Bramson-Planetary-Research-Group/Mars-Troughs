@@ -66,10 +66,8 @@ def lnlike(params):
     
     #Calculate the trough path
     in_params = params[1:]
-    in_params[-1] = -np.exp(in_params[-1]) #b = -np.exp(b)
-    #x_out, z_out = trough_model.get_trough_path(xi, zi, ts, in_params, times, ins, lags, R)
+    #in_params[-1] = -np.exp(in_params[-1]) #b = -np.exp(b)
 
-    print in_params
     trough.set_parameters(in_params)
     x_out, z_out = trough.get_trough_path()
     
@@ -101,8 +99,8 @@ lnmodel_var = np.log(500.**2) #ln(meters^2)
 #beta  = -2.3e-9
 gamma = 3.2e-4
 a = 2.7e-12
-b = -6.1e-7#-6.1e-7
-b = np.log(-b)
+b = -6.1e-7
+#b = np.log(-b)
 #c = 5.0 #fixing to most likely
 #guess = np.array([model_var, alpha, beta, gamma, a, b, c])
 #guess = np.array([lnmodel_var, alpha, beta, gamma, a, b])
@@ -116,11 +114,11 @@ print "Starting best fit"
 result = op.minimize(nll, guess, tol=1e-3)
 print "\tbest fit complete with ",result['success']
 print result
-exit()
+#exit()
 
 #Set up the walkers in the MCMC
 nwalkers = len(guess)*4+2
-nsteps = 100
+nsteps = 10000
 ndim = len(guess)
 pos = [result['x'] + 1e-3*result['x']*np.random.randn(ndim) for k in range(nwalkers)]
 sampler = emcee.EnsembleSampler(nwalkers, ndim, lnpost, threads=4)

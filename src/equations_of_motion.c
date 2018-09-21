@@ -36,16 +36,19 @@ void equations_of_motion(double*positions, double*k, double t, double*params, gs
   double c = 5.0;//params[5];*/
   
   //Read out the free parameters
-  /*double alpha = 0;
+  /*
+  double alpha = 0;
   double beta = params[0];
   double gamma = params[1];
   //l0 = params[****]; //Constant lag model
   //Quadratic lag model
   double a = params[2];
   double b = params[3];
-  double c = 5.0;//params[4];*/
+  double c = 5.0;//params[4];
+  */
 
   //Read out the free parameters
+  
   double alpha = 0;
   double beta = 0;
   double gamma = params[0];
