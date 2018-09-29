@@ -1,3 +1,10 @@
+# setup files
+*.egg-info
+
+# sym link
+mars_troughs/include
+include/include
+
 # MCMC chains
 *.npy
 

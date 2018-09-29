@@ -1,4 +1,7 @@
 # Mars-Troughs
+
+## THIS IS CURRENTLY BEING REBUILT USING CFFI. Ignore these instructions until the update is complete.
+
 Code for modeling the troughs on the north polar ice cap on Mars.
 
 To use do the following:

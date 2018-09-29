@@ -1,0 +1,1 @@
+This folder contains the Python bindings for the actual trough modeling code written in C. The statistical analysis is all done in Python.
