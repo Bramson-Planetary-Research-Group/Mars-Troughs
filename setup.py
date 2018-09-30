@@ -42,9 +42,9 @@ dist = setup(name="mars_troughs",
              packages=['mars_troughs'],
              package_data={'mars_troughs' : headers },
              ext_modules=[ext],
-             install_requires=['cffi','numpy']),
-#             setup_requires=['pytest_runner'],
-#             tests_require=['pytest'])
+             install_requires=['cffi','numpy'],
+             setup_requires=['pytest_runner'],
+             tests_require=['pytest'])
 
 #setup.py doesn't put the .so file in the mars_troughss directory, 
 #so this bit makes it possible to
@@ -52,6 +52,7 @@ dist = setup(name="mars_troughs",
 #Not really advisable, but everyone does it at some
 #point, so might as well facilitate it.
 build_lib = glob.glob(os.path.join('build','*','mars_troughs','_mars_troughs*.so'))
+
 if len(build_lib) >= 1:
     lib = os.path.join('mars_troughs','_mars_troughs.so')
     if os.path.lexists(lib): os.unlink(lib)
