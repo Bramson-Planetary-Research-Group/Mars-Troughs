@@ -36,3 +36,23 @@ void initialize_splines(double*times, int Ntimes, double * insolation, double*la
   }
   return;
 }
+
+/* Get the insolation as a function of time given the parameters and the model
+ * being specified.
+ */
+void get_accumulation(int model_flag, double*params, double*times, double*accumulation, int Ntimes){
+  int i;
+  double ins_t;
+  switch(model_flag){
+  case 0:
+    //A model linear in the insolation.
+    for(i = 0; i < Ntimes; i++){
+      ins_t = gsl_spline_eval(ins_spl, times[i], acc);
+      accumulation[i] = params[0]*ins_t + params[0];
+    }
+    break;
+  default:
+    printf("Model not currently implemented.");
+  }
+  return;
+}
