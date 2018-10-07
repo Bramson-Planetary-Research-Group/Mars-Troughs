@@ -56,3 +56,5 @@ void get_accumulation(int model_flag, double*params, double*times, double*accumu
   }
   return;
 }
+
+void get_lag(){return;}
