@@ -62,7 +62,7 @@ class Trough(object):
         return self.ins_spline(time)
 
     def get_retreat(self, lag, time):
-        return self.ret_spline(lag, time)
+        return self.ret_spline(time, lag)
 
     def get_accumulation(self):
         #Model dependent
@@ -75,16 +75,3 @@ class Trough(object):
     def lnlikelihood(self):
         #Model dependent
         pass
-
-if __name__ == "__main__":
-    print("test")
-    tr = Trough([0], 0)
-    tmin, tmax = tr.ins_times[0], tr.ins_times[-1]
-    times = np.linspace(tmin, tmax, 10000)
-
-    try:
-        import matplotlib.pyplot as plt
-        plt.plot(times, tr.get_insolation(times))
-        plt.show()
-    except Exception:
-        print("Install matplotlib to visualize the test.")
