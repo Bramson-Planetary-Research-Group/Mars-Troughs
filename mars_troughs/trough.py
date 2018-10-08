@@ -50,6 +50,9 @@ class Trough(object):
         #Temporary splines
         self.ins_spline = IUS(ins_times, insolation)
         self.ret_spline = interp2d(self.ins_times, self.lags, self.retreats)
+        #Initialize the C splines
+        #Broken for now, since we need to C-order everything
+        #_lib.initialize_basic_splines(self.ins_times, len(self.ins_times), self.insolation, self.lags, len(self.lags), self.retreats, 1)
         pass
 
     def set_model(self, params):
@@ -59,9 +62,14 @@ class Trough(object):
         return
         
     def get_insolation(self, time):
+        #Change to a library call
+        #ins = np.zeros_like(time, order="C")
+        #_lib.get_insolation(time, len(time), ins)
+        #return ins
         return self.ins_spline(time)
 
     def get_retreat(self, lag, time):
+        #Change to a library call
         return self.ret_spline(time, lag)
 
     def get_accumulation(self):

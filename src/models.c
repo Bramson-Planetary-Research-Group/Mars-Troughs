@@ -18,7 +18,7 @@ static gsl_spline2d*ret_spl;
 static gsl_interp_accel*xacc;
 static gsl_interp_accel*yacc;
 
-void initialize_splines(double*times, int Ntimes, double * insolation, double*lags, int Nlags, double*retreats, int reinit){
+void initialize_basic_splines(double*times, int Ntimes, double *insolation, double*lags, int Nlags, double*retreats, int reinit){
   //If the splines haven't been initialized, then do that
   if (init_flag == 1){
     //Allocate
@@ -33,6 +33,14 @@ void initialize_splines(double*times, int Ntimes, double * insolation, double*la
     gsl_spline_init(ins_spl, times, insolation, Ntimes);
     gsl_spline2d_init(ret_spl, times, lags, retreats, Ntimes, Nlags);
     init_flag = 0;
+  }
+  return;
+}
+
+void get_insolation(double*times, int Ntimes, double*insolation){
+  int i;
+  for(i = 0; i < Ntimes; i++){
+    insolation[i] = gsl_spline_eval(ins_spl, times[i], acc);
   }
   return;
 }
