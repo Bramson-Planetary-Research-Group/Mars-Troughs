@@ -4,6 +4,7 @@ import numpy as np
 import cffi
 import glob
 import os
+here = os.path.dirname(__file__)
 #Both of these are temporary until interpolators are implemented in C
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
 from scipy.interpolate import interp2d
@@ -37,7 +38,7 @@ class Trough(object):
         self.params = params
         self.model_number = model_number
         #Load in supporting data
-        insolation, ins_times = np.loadtxt("Insolation.txt", skiprows=1).T
+        insolation, ins_times = np.loadtxt(here+"/Insolation.txt", skiprows=1).T
         ins_times = -ins_times #positive times are now in the past
         self.insolation = insolation
         self.ins_times  = ins_times
@@ -45,7 +46,7 @@ class Trough(object):
         self.lags       = lags = np.arange(16)+1
         self.lags[0] -= 1
         self.lags[-1] = 20
-        self.retreats   = np.loadtxt("R_lookuptable.txt").T
+        self.retreats   = np.loadtxt(here+"/R_lookuptable.txt").T
         #Temporary splines
         self.ins_spline = IUS(ins_times, insolation)
         self.ret_spline = interp2d(self.ins_times, self.lags, self.retreats)
