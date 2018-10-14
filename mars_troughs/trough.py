@@ -7,12 +7,13 @@ import os
 here = os.path.dirname(__file__)
 #Both of these are temporary until interpolators are implemented in C
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
-from scipy.interpolate import interp2d
+from scipy.interpolate import RectBivariateSpline as RBS
 
 mars_troughs_dir = os.path.dirname(__file__)
 include_dir = os.path.join(mars_troughs_dir,'include')
 lib_file = os.path.join(mars_troughs_dir,'_mars_troughs.so')
-# Some installation (e.g. Travis with python 3.x) name this e.g. _mars_troughs.cpython-34m.so,
+# Some installation (e.g. Travis with python 3.x) name
+# this e.g. _mars_troughs.cpython-34m.so,
 # so if the normal name doesn't exist, look for something else.
 if not os.path.exists(lib_file):
     alt_files = glob.glob(os.path.join(os.path.dirname(__file__),'_mars_troughs*.so'))
@@ -47,9 +48,12 @@ class Trough(object):
         self.lags[0] -= 1
         self.lags[-1] = 20
         self.retreats   = np.loadtxt(here+"/R_lookuptable.txt").T
-        #Temporary splines
+        #Splines
         self.ins_spline = IUS(ins_times, insolation)
-        self.ret_spline = interp2d(self.ins_times, self.lags, self.retreats)
+        self.iins_spline = self.ins_spline.antiderivative()
+        self.ins2_spline = IUS(ins_times, insolation**2)
+        self.iins2_spline = self.ins2_spline.antiderivative()
+        self.ret_spline = RBS(self.ins_times, self.lags, self.retreats)
         #Initialize the C splines
         #Broken for now, since we need to C-order everything
         #_lib.initialize_basic_splines(self.ins_times, len(self.ins_times), self.insolation, self.lags, len(self.lags), self.retreats, 1)
@@ -83,3 +87,6 @@ class Trough(object):
     def lnlikelihood(self):
         #Model dependent
         pass
+
+if __name__ == "__main__":
+    print("Test main() in trough.py")
