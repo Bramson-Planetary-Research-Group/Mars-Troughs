@@ -4,7 +4,7 @@ import numpy as np
 import cffi
 import glob
 import os
-here = os.path.dirname(__file__)
+here = os.path.dirname(__file__)+"./"
 #Both of these are temporary until interpolators are implemented in C
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
 from scipy.interpolate import RectBivariateSpline as RBS
@@ -36,7 +36,7 @@ class Trough(object):
             params (array like): model parameters
             model_number (int): index of the model
         """
-        self.params = params
+        self.params = np.array(params)
         self.model_number = model_number
         #Load in supporting data
         insolation, ins_times = np.loadtxt(here+"/Insolation.txt", skiprows=1).T
@@ -53,7 +53,8 @@ class Trough(object):
         self.iins_spline = self.ins_spline.antiderivative()
         self.ins2_spline = IUS(ins_times, insolation**2)
         self.iins2_spline = self.ins2_spline.antiderivative()
-        self.ret_spline = RBS(self.ins_times, self.lags, self.retreats)
+        self.ret_spline = RBS(self.lags, self.ins_times, self.retreats)
+        self.re2_spline = RBS(self.lags, self.ins_times, self.retreats**2)
         #Initialize the C splines
         #Broken for now, since we need to C-order everything
         #_lib.initialize_basic_splines(self.ins_times, len(self.ins_times), self.insolation, self.lags, len(self.lags), self.retreats, 1)
@@ -66,18 +67,40 @@ class Trough(object):
         return
         
     def get_insolation(self, time):
-        #Change to a library call
-        #ins = np.zeros_like(time, order="C")
-        #_lib.get_insolation(time, len(time), ins)
-        #return ins
         return self.ins_spline(time)
-
+        
     def get_retreat(self, lag, time):
         #Change to a library call
         return self.ret_spline(time, lag)
 
-    def get_accumulation(self):
+    def get_accumulation(self, time):
         #Model dependent
+        num = self.model_number
+        p = self.params
+        if num == 0:
+            a = p[1:2] #a*Ins(t)
+            return -1*(a*self.ins_spline(time))
+        if num == 1:
+            a,b = p[1:3] #a*Ins(t) + b*Ins(t)^2
+            return -1*(
+                a*self.ins_spline(time)+
+                b*self.ins2_spline(time))
+        pass
+
+    def get_integ_accumulation(self, time):
+        #This is the depth the trough has traveled
+        #Model dependent
+        num = self.model_number
+        p = self.params
+        if num == 0:
+            a = p[1:2] #a*Ins(t)
+            return -1*(
+                a*(self.iins_spline(time) - self.iins_spline(0)))
+        if num == 1:
+            a,b = p[1:3] #a*Ins(t) + b*Ins(t)^2
+            return -1*(
+                a*(self.iins_spline(time) - self.iins_spline(0))+
+                b*(self.iins2_spline(time) - self.iins2_spline(0)))
         pass
 
     def get_trajectory(self):
@@ -90,3 +113,21 @@ class Trough(object):
 
 if __name__ == "__main__":
     print("Test main() in trough.py")
+    test_params = [-1, 1e-8]
+    model_number = 0
+    tr = Trough(test_params, model_number)
+    
+    import matplotlib.pyplot as plt
+    times = tr.ins_times
+    fig, ax = plt.subplots(ncols=1, nrows=3, sharex=True)
+    ax[0].set_ylabel("Insolation")
+    ax[1].set_ylabel("-Accumulation")
+    ax[2].set_ylabel(r"$y(t) = \int_0^t{\rm d}t\ A(t)$")
+    ax[-1].set_xlabel(r"Lookback Time (yrs)")
+    ax[1].ticklabel_format(style='scientific', scilimits=(0,0), useMathText=True)
+    ax[2].ticklabel_format(axis='x', style='sci', scilimits=(0,0), useMathText=True)
+    ax[0].plot(times, tr.get_insolation(times))
+    ax[1].plot(times, tr.get_accumulation(times))
+    ax[2].plot(times, tr.get_integ_accumulation(times))
+    
+    plt.show()
