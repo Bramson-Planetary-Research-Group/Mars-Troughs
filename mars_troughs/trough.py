@@ -3,8 +3,8 @@
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
 from scipy.interpolate import RectBivariateSpline as RBS
-import os
-here = os.path.dirname(__file__)+"./"
+import os, inspect
+here = os.path.dirname(os.path.abspath(inspect.stack()[0][1]))+"/"
 
 class Trough(object):
     def __init__(self, acc_params, lag_params, acc_model_number, lag_model_number, errorbar):
@@ -55,8 +55,8 @@ class Trough(object):
         self.retreat_model_spline = IUS(ins_times, self.Retreat_model_at_t)
         self.iretreat_model_spline = self.retreat_model_spline.antiderivative()
         #Load in the real data
-        #xdata, ydata = np.loadtxt("RealXandZ.txt")
-        xdata, ydata = np.loadtxt("TMP_xz.txt", unpack=True)
+        #xdata, ydata = np.loadtxt(here+"/RealXandZ.txt")
+        xdata, ydata = np.loadtxt(here+"/TMP_xz.txt", unpack=True)
         self.xdata = xdata*1000 #convert to meters
         self.ydata = ydata #meters
         self.Ndata = len(self.xdata) #number of data points
