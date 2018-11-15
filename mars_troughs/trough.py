@@ -55,9 +55,11 @@ class Trough(object):
         self.retreat_model_spline = IUS(ins_times, self.Retreat_model_at_t)
         self.iretreat_model_spline = self.retreat_model_spline.antiderivative()
         #Load in the real data
-        xdata, ydata = np.loadtxt("RealXandZ.txt")
+        #xdata, ydata = np.loadtxt("RealXandZ.txt")
+        xdata, ydata = np.loadtxt("TMP_xz.txt", unpack=True)
         self.xdata = xdata*1000 #convert to meters
         self.ydata = ydata #meters
+        self.Ndata = len(self.xdata) #number of data points
         
     def set_model(self, acc_params, lag_params):
         """Setup a new model, with new accumulation and lag parameters.
@@ -135,9 +137,25 @@ class Trough(object):
         y = self.get_yt(self.ins_times)
         return x,y
 
+    def get_nearest_points(self):
+        x = self.get_xt(self.ins_times)
+        y = self.get_yt(self.ins_times)
+        xd = self.xdata
+        yd = self.ydata
+        xn = np.zeros_like(xd)
+        yn = np.zeros_like(yd)
+        for i in range(len(xd)):
+            ind = np.argmin((x-xd[i])**2 + (y-yd[i])**2)
+            xn[i] = x[ind]
+            yn[i] = y[ind]
+        return xn, yn
+
     def lnlikelihood(self):
-        #Model dependent
-        pass
+        xd = self.xdata
+        yd = self.ydata
+        xn, yn = self.get_nearest_points()
+        chi2 = (yd-yn)**2/self.errorbar**2
+        return -0.5*chi2.sum() - self.Ndata*np.log(self.errorbar)
 
 if __name__ == "__main__":
     print("Test main() in trough.py")
@@ -145,7 +163,7 @@ if __name__ == "__main__":
     acc_model_number = 1
     test_lag_params = [1, 1e-9]
     lag_model_number = 1
-    errorbar = 1000.
+    errorbar = 100.
     tr = Trough(test_acc_params, test_lag_params,
                 acc_model_number, lag_model_number,
                 errorbar)
@@ -185,5 +203,8 @@ if __name__ == "__main__":
 
     #Compare the trajectory with data
     plt.plot(tr.get_xt(times), tr.get_yt(times))
-    plt.errorbar(tr.xdata, tr.ydata, yerr=None, xerr=tr.errorbar, c='k', marker='.', ls='')
+    plt.errorbar(tr.xdata, tr.ydata, yerr=tr.errorbar, c='k', marker='.', ls='')
+    xn,yn = tr.get_nearest_points()
+    plt.plot(xn, yn, ls='', marker='o', c='r')
+    print(tr.lnlikelihood())
     plt.show()
