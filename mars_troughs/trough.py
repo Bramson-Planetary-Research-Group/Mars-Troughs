@@ -50,30 +50,35 @@ class Trough(object):
         self.re2_spline = RBS(self.lags, self.ins_times, self.retreats**2)
         #Pre-calculate the lags at all times
         self.lags_t = self.get_lag_at_t(self.ins_times)
-        self.lag_spline = IUS(ins_times, self.lags_t)
-        self.Retreat_model_at_t = self.get_Rt_model(self.lags_t, self.ins_times)
-        self.retreat_model_spline = IUS(ins_times, self.Retreat_model_at_t)
-        self.iretreat_model_spline = self.retreat_model_spline.antiderivative()
+        self.compute_splines()
         #Load in the real data
         #xdata, ydata = np.loadtxt(here+"/RealXandZ.txt")
         xdata, ydata = np.loadtxt(here+"/TMP_xz.txt", unpack=True)
-        self.xdata = xdata*1000 #convert to meters
+        self.xdata = xdata*1000 #meters
         self.ydata = ydata #meters
         self.Ndata = len(self.xdata) #number of data points
         
-    def set_model(self, acc_params, lag_params):
+    def set_model(self, acc_params, lag_params, errorbar):
         """Setup a new model, with new accumulation and lag parameters.
         """
         assert len(acc_params)==len(self.acc_params), \
             "New and original accumulation parameters must have the same shape."
         assert len(lag_params)==len(self.lag_params), \
             "New and original lag parameters must have the same shape."
+        #Set the new errorbar
+        self.errorbar = errorbar
+        #Set the new accumulation and lag parameters
         self.acc_params = acc_params
         self.lag_params = lag_params
+        #Compute the lag at all times
         self.lags_t = self.get_lag_at_t(self.ins_times)
-        self.lag_spline = IUS(ins_times, self.lags_t)
+        return
+
+    def compute_splines(self):
+        #To be called after set_model
+        self.lag_spline = IUS(self.ins_times, self.lags_t)
         self.Retreat_model_at_t = self.get_Rt_model(self.lags_t, self.ins_times)
-        self.retreat_model_spline = IUS(ins_times, self.Retreat_model_at_t)
+        self.retreat_model_spline = IUS(self.ins_times, self.Retreat_model_at_t)
         self.iretreat_model_spline = self.retreat_model_spline.antiderivative()
         return
         
