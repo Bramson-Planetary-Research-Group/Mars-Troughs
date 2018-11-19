@@ -62,9 +62,9 @@ class Trough(object):
         """Setup a new model, with new accumulation and lag parameters.
         """
         assert len(acc_params)==len(self.acc_params), \
-            "New and original accumulation parameters must have the same shape."
+            "New and original accumulation parameters must have the same shape. %d vs %d"%(len(acc_params), len(self.acc_params))
         assert len(lag_params)==len(self.lag_params), \
-            "New and original lag parameters must have the same shape."
+            "New and original lag parameters must have the same shape. %d vs %d"%(len(lag_params), len(self.lag_params))
         #Set the new errorbar
         self.errorbar = errorbar
         #Set the new accumulation and lag parameters
