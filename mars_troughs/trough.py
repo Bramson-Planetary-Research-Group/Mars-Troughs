@@ -35,12 +35,12 @@ class Trough(object):
         insolation, ins_times = np.loadtxt(here+"/Insolation.txt", skiprows=1).T
         ins_times = -ins_times #positive times are now in the past
         self.insolation = insolation
-        self.ins_times  = ins_times
+        self.ins_times = ins_times
         #Create the look up table for retreats
-        self.lags       = lags = np.arange(16)+1
+        self.lags = lags = np.arange(16)+1
         self.lags[0] -= 1
         self.lags[-1] = 20
-        self.retreats   = np.loadtxt(here+"/R_lookuptable.txt").T
+        self.retreats = np.loadtxt(here+"/R_lookuptable.txt").T
         #Splines
         self.ins_spline = IUS(ins_times, insolation)
         self.iins_spline = self.ins_spline.antiderivative()
