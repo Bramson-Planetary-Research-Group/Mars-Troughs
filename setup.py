@@ -1,8 +1,4 @@
-from __future__ import print_function
-import sys, os, glob
-import setuptools
 from setuptools import setup, Extension
-import subprocess
 
 #Create the distribution
 dist = setup(name="mars_troughs",
