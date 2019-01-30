@@ -7,7 +7,8 @@ import os, inspect
 here = os.path.dirname(os.path.abspath(inspect.stack()[0][1]))+"/"
 
 class Trough(object):
-    def __init__(self, acc_params, lag_params, acc_model_number, lag_model_number, errorbar):
+    def __init__(self, acc_params, lag_params, acc_model_number,
+                 lag_model_number, errorbar=1.):
         """Constructor for the trough object.
 
         Args:
@@ -15,7 +16,7 @@ class Trough(object):
             acc_model_number (int): index of the accumulation model
             lag_params (array like): model parameters for lag(t)
             lag_model_number (int): index of the lag(t) model
-            errorbar (float): errorbar of the real data
+            errorbar (float): errorbar of the datapoints in pixels; default=1
         """
         #Trough angle
         self.angle_degrees = 2.9 #degrees
@@ -31,6 +32,7 @@ class Trough(object):
         self.acc_model_number = acc_model_number
         self.lag_model_number = lag_model_number
         self.errorbar = errorbar
+        self.meters_per_pixel = np.array([500., 20.]) #meters per pixel
         #Load in supporting data
         insolation, ins_times = np.loadtxt(here+"/Insolation.txt", skiprows=1).T
         ins_times = -ins_times #positive times are now in the past
@@ -159,8 +161,10 @@ class Trough(object):
         xd = self.xdata
         yd = self.ydata
         xn, yn = self.get_nearest_points()
-        chi2 = (yd-yn)**2/self.errorbar**2
-        return -0.5*chi2.sum() - self.Ndata*np.log(self.errorbar)
+        #Variance in meters in both directions
+        xvar, yvar = (self.errorbar * self.meters_per_pixel)**2
+        chi2 = (xd-xn)**2/xvar + (yd-yn)**2/yvar
+        return -0.5*chi2.sum() - 0.5*self.Ndata*np.log(xvar*yvar)
 
 if __name__ == "__main__":
     print("Test main() in trough.py")
