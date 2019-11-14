@@ -137,7 +137,7 @@ class Trough(object):
         #This is the horizontal distance the trough has traveled
         #Model dependent
         yt = self.get_yt(time)
-        return -self.cot_angle*yt + self.sec_angle * (self.iretreat_model_spline(time) - self.iretreat_model_spline(0))
+        return -self.cot_angle*yt + self.csc_angle * (self.iretreat_model_spline(time) - self.iretreat_model_spline(0))
 
     def get_trajectory(self):
         x = self.get_xt(self.ins_times)
