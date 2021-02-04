@@ -1,0 +1,17 @@
+name: troughs
+dependencies:
+  - python>=3.8
+  - twine
+  - numpy
+  - scipy
+  - matplotlib
+  - emcee
+  - corner
+  - pytest
+  - coverage
+  - isort
+  - black
+  - flake8
+  - pre-commit
+  - sphinx_rtd_theme
+  - sphinx-autoapi
