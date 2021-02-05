@@ -1,12 +1,5 @@
-"""
-Python bindings for code used to model martian troughs.
-"""
-
-import cffi
-import glob
-import os
-import numpy as np
+from .trough import Trough
 
 __author__ = "Tom McClintock <tmcclintock@email.arizona.edu>"
-
-from .trough import *
+__version__ = "0.0.1"
+__docs__ = "Simulating martian ice troughs."
