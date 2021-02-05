@@ -1,11 +1,8 @@
-import inspect
-import os
+import importlib.resources as pkg_resources
 
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
 from scipy.interpolate import RectBivariateSpline as RBS
-
-here = os.path.dirname(os.path.abspath(inspect.stack()[0][1])) + "/"
 
 
 class Trough(object):
@@ -26,6 +23,18 @@ class Trough(object):
             lag_model_number (int): index of the lag(t) model
             errorbar (float): errorbar of the datapoints in pixels; default=1
         """
+        # Load in all data
+        with pkg_resources.path(__package__, "Insolation.txt") as path:
+            insolation, ins_times = np.loadtxt(path, skiprows=1).T
+        with pkg_resources.path(__package__, "R_lookuptable.txt") as path:
+            retreats = np.loadtxt(path).T
+        with pkg_resources.path(__package__, "TMP_xz.txt") as path:
+            xdata, ydata = np.loadtxt(path, unpack=True)
+            # TODO: remember what this means... lol
+            # I'm pretty sure one file has temp data and the other
+            # has real data.
+            # xdata, ydata = np.loadtxt(here+"/RealXandZ.txt")
+
         # Trough angle
         self.angle_degrees = 2.9  # degrees
         self.sin_angle = np.sin(self.angle_degrees * np.pi / 180.0)
@@ -41,32 +50,32 @@ class Trough(object):
         self.lag_model_number = lag_model_number
         self.errorbar = errorbar
         self.meters_per_pixel = np.array([500.0, 20.0])  # meters per pixel
-        # Load in supporting data
-        insolation, ins_times = np.loadtxt(here + "/Insolation.txt", skiprows=1).T
-        ins_times = -ins_times  # positive times are now in the past
+
+        # Positive times are now in the past
+        ins_times = -ins_times
+
+        # Attach data to this object
         self.insolation = insolation
         self.ins_times = ins_times
-        # Create the look up table for retreats
+        self.retreats = retreats
+        self.xdata = xdata * 1000  # meters
+        self.ydata = ydata  # meters
+        self.Ndata = len(self.xdata)  # number of data points
+
+        # Create splines
         self.lags = np.arange(16) + 1
         self.lags[0] -= 1
         self.lags[-1] = 20
-        self.retreats = np.loadtxt(here + "/R_lookuptable.txt").T
-        # Splines
         self.ins_spline = IUS(ins_times, insolation)
         self.iins_spline = self.ins_spline.antiderivative()
         self.ins2_spline = IUS(ins_times, insolation ** 2)
         self.iins2_spline = self.ins2_spline.antiderivative()
         self.ret_spline = RBS(self.lags, self.ins_times, self.retreats)
         self.re2_spline = RBS(self.lags, self.ins_times, self.retreats ** 2)
+
         # Pre-calculate the lags at all times
         self.lags_t = self.get_lag_at_t(self.ins_times)
         self.compute_splines()
-        # Load in the real data
-        # xdata, ydata = np.loadtxt(here+"/RealXandZ.txt")
-        xdata, ydata = np.loadtxt(here + "/TMP_xz.txt", unpack=True)
-        self.xdata = xdata * 1000  # meters
-        self.ydata = ydata  # meters
-        self.Ndata = len(self.xdata)  # number of data points
 
     def set_model(self, acc_params, lag_params, errorbar):
         """Setup a new model, with new accumulation and lag parameters.
