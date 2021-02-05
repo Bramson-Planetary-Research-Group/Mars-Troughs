@@ -1,23 +1,45 @@
 # Mars-Troughs
 
-This repository contains routines for modeling trough migration patterns on the northern polar ice caps on Mars. This amounts to solving some differential equations regarding the trough trajectory, with inputs for these trajectories supplied by the output files from a heat transfer simulation of the Martian crust.
+This repository contains routines for modeling trough migration patterns on the northern polar ice caps on Mars. This means solving some differential equations, with inputs for these trajectories supplied by the output files from a heat transfer simulation of the Martian crust.
 
-Downloading and installing this code is fairly straight forward:
+## Installation
+
+You should first install the development environment with `conda`:
 ```bash
-git clone https://github.com/tmcclintock/Mars-Troughs.git
-cd Mars-Troughs
+conda env create -f environment.yml
+```
+If you do not plan on doing development you can just install the dependencies
+in `requirements.txt` with `pip`:
+```bash
+pip install -r requirements.txt
+```
+
+To install after cloning this repository you can do:
+```bash
 python setup.py install
 ```
-The requirements are light, and come with any package manager. They are:
-* numpy
-* scipy
-* pytest
+If you want to develop the code, install in editable mode with `pip` from
+the root of the repository:
+```bash
+pip install -e .
+```
 
 Once installed, run the unit tests from the home directory `Mars-Troughs/` with
 ```bash
 pytest
 ```
 If you encounter any errors, please feel free to [open an issue](https://github.com/tmcclintock/Mars-Troughs/issues).
+
+## Developing
+
+Before committing any code, you are encouraged to set up [`pre-commit`](https://pre-commit.com/), which will clean up code for you before committing it to
+the repository:
+```bash
+pre-commit install
+```
+If you see any "failures" while running `git commit`, it means that one of
+the `pre-commit` packages either automatically made a change to your code,
+or is suggesting a code. Just add/commit again and you are all set!
 
 ## Usage
 
@@ -44,3 +66,5 @@ times = trough.ins_times #times over which the trajectory is computed
 x = trough.get_xt(times)
 y = trough.get_yt(times)
 ```
+
+For a better example with visualizations, see `example.py`.
