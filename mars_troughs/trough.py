@@ -5,14 +5,14 @@ from scipy.interpolate import InterpolatedUnivariateSpline as IUS
 from scipy.interpolate import RectBivariateSpline as RBS
 
 
-class Trough(object):
+class Trough:
     def __init__(
         self,
         acc_params,
         lag_params,
-        acc_model_number,
-        lag_model_number,
-        errorbar=1.0,
+        acc_model_number: int,
+        lag_model_number: int,
+        errorbar: float = 1.0,
     ):
         """Constructor for the trough object.
 
@@ -30,10 +30,8 @@ class Trough(object):
             retreats = np.loadtxt(path).T
         with pkg_resources.path(__package__, "TMP_xz.txt") as path:
             xdata, ydata = np.loadtxt(path, unpack=True)
-            # TODO: remember what this means... lol
-            # I'm pretty sure one file has temp data and the other
-            # has real data.
-            # xdata, ydata = np.loadtxt(here+"/RealXandZ.txt")
+            # The ReadlXandZ.txt file has the same data but organized
+            # in an inconvenient way.
 
         # Trough angle
         self.angle_degrees = 2.9  # degrees
@@ -78,8 +76,7 @@ class Trough(object):
         self.compute_splines()
 
     def set_model(self, acc_params, lag_params, errorbar):
-        """Setup a new model, with new accumulation and lag parameters.
-        """
+        """Setup a new model, with new accumulation and lag parameters."""
         assert len(acc_params) == len(self.acc_params), (
             "New and original accumulation parameters must have the same shape. %d vs %d"
             % (len(acc_params), len(self.acc_params))
