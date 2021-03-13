@@ -18,8 +18,11 @@ To install after cloning this repository you can do:
 ```bash
 python setup.py install
 ```
-If you want to develop the code, install in editable mode with `pip` from
-the root of the repository:
+If you want to develop the code, there are two ways to install in an editable/develop mode so that your code changes are "seen" automatically by your environment. The first method is preferred if you are using an Anaconda environment:
+```bash
+conda develop .
+```
+Use this second method if you are using `pip` to manage your packages by using the "editable" model:
 ```bash
 pip install -e .
 ```
