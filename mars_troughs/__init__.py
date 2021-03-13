@@ -1,3 +1,4 @@
+from .dataset import Dataset
 from .trough import Trough
 
 __author__ = "Tom McClintock <tmcclintock@email.arizona.edu>"
