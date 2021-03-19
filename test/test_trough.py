@@ -1,5 +1,7 @@
 from unittest import TestCase
 
+import numpy as np
+
 from mars_troughs import Trough
 
 
@@ -18,3 +20,14 @@ class TroughTest(TestCase):
             errorbar,
         )
         assert tr is not None
+
+    def test__L2_distance(self):
+        N = 10
+        for N in [10, 100, 357, 1000]:
+            x1 = np.arange(N)
+            x2 = N / 2.0 + 0.1
+            y1 = np.arange(N) + 20
+            y2 = N / 2.0 + 20.1
+            dist = Trough._L2_distance(x1, x2, y1, y2)
+            assert (dist == ((x1 - x2) ** 2 + (y1 - y2) ** 2)).all()
+            assert np.argmin(dist) in [N // 2, N // 2 + 1]
