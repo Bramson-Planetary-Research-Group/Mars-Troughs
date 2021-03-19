@@ -6,20 +6,40 @@ from mars_troughs import Trough
 
 
 class TroughTest(TestCase):
-    def test_smoke(self):
-        test_acc_params = [1e-6, 1e-11]
-        acc_model_number = 1
-        test_lag_params = [1, 1e-7]
-        lag_model_number = 1
-        errorbar = 100.0
-        tr = Trough(
-            test_acc_params,
-            test_lag_params,
-            acc_model_number,
-            lag_model_number,
-            errorbar,
+    def setUp(self):
+        self.acc_params = [1e-6, 1e-11]
+        self.acc_model_number = 1
+        self.lag_params = [1, 1e-7]
+        self.lag_model_number = 1
+        self.errorbar = 100.0
+
+    def get_trough_object(self):
+        return Trough(
+            self.acc_params,
+            self.lag_params,
+            self.acc_model_number,
+            self.lag_model_number,
+            self.errorbar,
         )
+
+    def test_smoke(self):
+        tr = self.get_trough_object()
         assert tr is not None
+
+    def test_get_nearest_points(self):
+        tr = self.get_trough_object()
+        # Junk data
+        x = y = -np.arange(10) * 100
+        xo, yo = tr.get_nearest_points(x, y)
+        assert xo.shape == x.shape
+        assert yo.shape == y.shape
+
+    def test_lnlikelihood(self):
+        tr = self.get_trough_object()
+        # Junk data
+        x = y = -np.arange(10) * 100
+        LL = tr.lnlikelihood(x, y)
+        assert LL < 0
 
     def test__L2_distance(self):
         N = 10

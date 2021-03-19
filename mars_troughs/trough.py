@@ -230,4 +230,4 @@ class Trough:
         # Variance in meters in both directions
         xvar, yvar = (self.errorbar * self.meters_per_pixel) ** 2
         chi2 = (x_data - x_model) ** 2 / xvar + (y_data - y_model) ** 2 / yvar
-        return -0.5 * chi2.sum() - 0.5 * self.Ndata * np.log(xvar * yvar)
+        return -0.5 * chi2.sum() - 0.5 * len(x_data) * np.log(xvar * yvar)
