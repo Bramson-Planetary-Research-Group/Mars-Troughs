@@ -128,7 +128,13 @@ class Trough:
             return -1 * (a * self.ins_spline(time) + b * self.ins2_spline(time))
         return  # error, since no number is returned
 
-    def get_yt(self, time):  # Model dependent
+    def get_yt(self, time: np.ndarray) -> np.ndarray:
+        """
+        The vertical distance the trough travels as a function of time.
+
+        Args:
+            time (np.ndarray): times at which we want the path.
+        """
         # This is the depth the trough has traveled
         num = self.acc_model_number
         p = self.acc_params
@@ -143,7 +149,13 @@ class Trough:
             )
         return  # error
 
-    def get_xt(self, time):
+    def get_xt(self, time: np.ndarray) -> np.ndarray:
+        """
+        The horizontal distance the trough travels as a function of time.
+
+        Args:
+            time (np.ndarray): times at which we want the path.
+        """
         # This is the horizontal distance the trough has traveled
         # Model dependent
         yt = self.get_yt(time)
@@ -151,9 +163,17 @@ class Trough:
             self.iretreat_model_spline(time) - self.iretreat_model_spline(0)
         )
 
-    def get_trajectory(self):
-        x = self.get_xt(self.ins_times)
-        y = self.get_yt(self.ins_times)
+    def get_trajectory(self, times: Optional[np.ndarray] = None):
+        """
+        The coordinates of the trough model as a function of time.
+
+        Args:
+            times (Optional[np.ndarray]): if ``None``, default to the
+                times of the observed solar insolation
+        """
+        times = times or self.ins_times
+        x = self.get_xt(times)
+        y = self.get_yt(times)
         return x, y
 
     @staticmethod
