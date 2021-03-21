@@ -13,18 +13,26 @@ class TroughTest(TestCase):
         self.lag_model_number = 1
         self.errorbar = 100.0
 
-    def get_trough_object(self):
+    def get_trough_object(self, **kwargs):
         return Trough(
             self.acc_params,
             self.lag_params,
             self.acc_model_number,
             self.lag_model_number,
             self.errorbar,
+            **kwargs,
         )
 
     def test_smoke(self):
         tr = self.get_trough_object()
         assert tr is not None
+
+    def test_angle(self):
+        tr1 = self.get_trough_object(angle=2.9)
+        tr2 = self.get_trough_object(angle=3.9)
+        assert tr1.angle != tr2.angle
+        assert tr1.csc_angle != tr2.csc_angle
+        assert tr1.cot_angle != tr2.cot_angle
 
     def test_get_nearest_points(self):
         tr = self.get_trough_object()
