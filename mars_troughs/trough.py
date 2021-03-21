@@ -14,6 +14,7 @@ class Trough:
         acc_model_number: int,
         lag_model_number: int,
         errorbar: float = 1.0,
+        angle: float = 2.9,
     ):
         """Constructor for the trough object.
 
@@ -22,7 +23,8 @@ class Trough:
             acc_model_number (int): index of the accumulation model
             lag_params (array like): model parameters for lag(t)
             lag_model_number (int): index of the lag(t) model
-            errorbar (float): errorbar of the datapoints in pixels; default=1
+            errorbar (float, optional): errorbar of the datapoints in pixels; default=1
+            angle (float, optional): south-facing slope angle in degrees. Default is 2.9.
         """
         # Load in all data
         with pkg_resources.path(__package__, "Insolation.txt") as path:
@@ -31,13 +33,8 @@ class Trough:
             retreats = np.loadtxt(path).T
 
         # Trough angle
-        self.angle_degrees = 2.9  # degrees
-        self.sin_angle = np.sin(self.angle_degrees * np.pi / 180.0)
-        self.cos_angle = np.cos(self.angle_degrees * np.pi / 180.0)
-        self.csc_angle = 1.0 / self.sin_angle
-        self.sec_angle = 1.0 / self.cos_angle
-        self.tan_angle = self.sin_angle / self.cos_angle
-        self.cot_angle = 1.0 / self.tan_angle
+        self.angle = angle
+
         # Set up the trough model
         self.acc_params = np.array(acc_params)
         self.lag_params = np.array(lag_params)
@@ -231,3 +228,31 @@ class Trough:
         xvar, yvar = (self.errorbar * self.meters_per_pixel) ** 2
         chi2 = (x_data - x_model) ** 2 / xvar + (y_data - y_model) ** 2 / yvar
         return -0.5 * chi2.sum() - 0.5 * len(x_data) * np.log(xvar * yvar)
+
+    @property
+    def angle(self) -> float:
+        """
+        Slope angle in degrees.
+        """
+        return self._angle * 180.0 / np.pi
+
+    @angle.setter
+    def angle(self, value: float) -> float:
+        """Setter for the angle"""
+        self._angle = value * np.pi / 180.0
+        self._csc = 1.0 / np.sin(self._angle)
+        self._cot = np.cos(self._angle) * self._csc
+
+    @property
+    def csc_angle(self) -> float:
+        """
+        Cosecant of the slope angle.
+        """
+        return self._csc
+
+    @property
+    def cot_angle(self) -> float:
+        """
+        Cotangent of the slope angle.
+        """
+        return self._cot
