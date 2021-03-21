@@ -1,16 +1,19 @@
 """
 Models for the lag as a function of time.
 """
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from typing import Dict
 
 import numpy as np
 
+from mars_troughs.model import Model
 
-class LagModel(ABC):
-    @property
-    def parameters(self) -> Dict[str, float]:
-        raise NotImplementedError
+
+class LagModel(Model):
+    """
+    Abstract class for lag models, that have a method called :meth:`lag`
+    that returns the lag as a function of time.
+    """
 
     @abstractmethod
     def lag(self, time: np.ndarray) -> np.ndarray:
