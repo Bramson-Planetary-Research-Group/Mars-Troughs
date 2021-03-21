@@ -27,7 +27,7 @@ class ConstantLag(LagModel):
     """
 
     def __init__(self, constant: float = 1.0):
-        self.constant = 1.0
+        self.constant = constant
 
     @property
     def parameters(self) -> Dict[str, float]:
@@ -40,7 +40,7 @@ class ConstantLag(LagModel):
         Args:
             time (np.ndarray): ignored
         """
-        return self.constant
+        return self.constant * np.ones_like(time)
 
 
 class LinearLag(LagModel):
