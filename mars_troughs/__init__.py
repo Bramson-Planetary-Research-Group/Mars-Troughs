@@ -1,3 +1,4 @@
+from .accumulation_model import AccumulationModel, LinearInsolationAccumulation
 from .dataset import Dataset
 from .lag_model import ConstantLag, LagModel, LinearLag
 from .model import Model
