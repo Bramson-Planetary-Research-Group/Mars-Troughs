@@ -1,18 +1,20 @@
 import importlib.resources as pkg_resources
+from typing import Callable, Optional, Tuple, Union
 
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
 from scipy.interpolate import RectBivariateSpline as RBS
 
 
-class Trough(object):
+class Trough:
     def __init__(
         self,
         acc_params,
         lag_params,
-        acc_model_number,
-        lag_model_number,
-        errorbar=1.0,
+        acc_model_number: int,
+        lag_model_number: int,
+        errorbar: float = 1.0,
+        angle: float = 2.9,
     ):
         """Constructor for the trough object.
 
@@ -21,28 +23,18 @@ class Trough(object):
             acc_model_number (int): index of the accumulation model
             lag_params (array like): model parameters for lag(t)
             lag_model_number (int): index of the lag(t) model
-            errorbar (float): errorbar of the datapoints in pixels; default=1
+            errorbar (float, optional): errorbar of the datapoints in pixels; default=1
+            angle (float, optional): south-facing slope angle in degrees. Default is 2.9.
         """
         # Load in all data
         with pkg_resources.path(__package__, "Insolation.txt") as path:
             insolation, ins_times = np.loadtxt(path, skiprows=1).T
         with pkg_resources.path(__package__, "R_lookuptable.txt") as path:
             retreats = np.loadtxt(path).T
-        with pkg_resources.path(__package__, "TMP_xz.txt") as path:
-            xdata, ydata = np.loadtxt(path, unpack=True)
-            # TODO: remember what this means... lol
-            # I'm pretty sure one file has temp data and the other
-            # has real data.
-            # xdata, ydata = np.loadtxt(here+"/RealXandZ.txt")
 
         # Trough angle
-        self.angle_degrees = 2.9  # degrees
-        self.sin_angle = np.sin(self.angle_degrees * np.pi / 180.0)
-        self.cos_angle = np.cos(self.angle_degrees * np.pi / 180.0)
-        self.csc_angle = 1.0 / self.sin_angle
-        self.sec_angle = 1.0 / self.cos_angle
-        self.tan_angle = self.sin_angle / self.cos_angle
-        self.cot_angle = 1.0 / self.tan_angle
+        self.angle = angle
+
         # Set up the trough model
         self.acc_params = np.array(acc_params)
         self.lag_params = np.array(lag_params)
@@ -58,9 +50,6 @@ class Trough(object):
         self.insolation = insolation
         self.ins_times = ins_times
         self.retreats = retreats
-        self.xdata = xdata * 1000  # meters
-        self.ydata = ydata  # meters
-        self.Ndata = len(self.xdata)  # number of data points
 
         # Create splines
         self.lags = np.arange(16) + 1
@@ -78,8 +67,7 @@ class Trough(object):
         self.compute_splines()
 
     def set_model(self, acc_params, lag_params, errorbar):
-        """Setup a new model, with new accumulation and lag parameters.
-        """
+        """Setup a new model, with new accumulation and lag parameters."""
         assert len(acc_params) == len(self.acc_params), (
             "New and original accumulation parameters must have the same shape. %d vs %d"
             % (len(acc_params), len(self.acc_params))
@@ -137,7 +125,13 @@ class Trough(object):
             return -1 * (a * self.ins_spline(time) + b * self.ins2_spline(time))
         return  # error, since no number is returned
 
-    def get_yt(self, time):  # Model dependent
+    def get_yt(self, time: np.ndarray) -> np.ndarray:
+        """
+        The vertical distance the trough travels as a function of time.
+
+        Args:
+            time (np.ndarray): times at which we want the path.
+        """
         # This is the depth the trough has traveled
         num = self.acc_model_number
         p = self.acc_params
@@ -152,7 +146,13 @@ class Trough(object):
             )
         return  # error
 
-    def get_xt(self, time):
+    def get_xt(self, time: np.ndarray) -> np.ndarray:
+        """
+        The horizontal distance the trough travels as a function of time.
+
+        Args:
+            time (np.ndarray): times at which we want the path.
+        """
         # This is the horizontal distance the trough has traveled
         # Model dependent
         yt = self.get_yt(time)
@@ -160,29 +160,99 @@ class Trough(object):
             self.iretreat_model_spline(time) - self.iretreat_model_spline(0)
         )
 
-    def get_trajectory(self):
-        x = self.get_xt(self.ins_times)
-        y = self.get_yt(self.ins_times)
+    def get_trajectory(self, times: Optional[np.ndarray] = None):
+        """
+        The coordinates of the trough model as a function of time.
+
+        Args:
+            times (Optional[np.ndarray]): if ``None``, default to the
+                times of the observed solar insolation
+        """
+        times = times or self.ins_times
+        x = self.get_xt(times)
+        y = self.get_yt(times)
         return x, y
 
-    def get_nearest_points(self):
-        x = self.get_xt(self.ins_times)
-        y = self.get_yt(self.ins_times)
-        xd = self.xdata
-        yd = self.ydata
-        xn = np.zeros_like(xd)
-        yn = np.zeros_like(yd)
-        for i in range(len(xd)):
-            ind = np.argmin((x - xd[i]) ** 2 + (y - yd[i]) ** 2)
-            xn[i] = x[ind]
-            yn[i] = y[ind]
-        return xn, yn
+    @staticmethod
+    def _L2_distance(x1, x2, y1, y2) -> Union[float, np.ndarray]:
+        """
+        The L2 (Eulerean) distance (squared) between two 2D vectors.
 
-    def lnlikelihood(self):
-        xd = self.xdata
-        yd = self.ydata
-        xn, yn = self.get_nearest_points()
+        Args:
+            x1 (Union[float, np.ndarray]): x-coordinate of the first vector
+            x2 (Union[float, np.ndarray]): x-coordinate of the second vector
+            y1 (Union[float, np.ndarray]): y-coordinate of the first vector
+            y2 (Union[float, np.ndarray]): y-coordinate of the second vector
+        """
+        return (x1 - x2) ** 2 + (y1 - y2) ** 2
+
+    def get_nearest_points(
+        self,
+        x_data: np.ndarray,
+        y_data: np.ndarray,
+        dist_func: Optional[Callable] = None,
+    ) -> Tuple[np.ndarray, np.ndarray]:
+        """
+        Obtain the nearest coordinates along the model trough path
+        to the data trough path.
+
+        Args:
+            x_data (np.ndarray): x-coordinates of the data
+            y_data (np.ndarray): y-coordinatse of the data
+            dist_func (Optional[Callable]): function to compute distances,
+                defaults to the L2 distance
+                :meth:`mars_troughs.trough.Trough._L2_distance`
+        """
+        dist_func = dist_func or Trough._L2_distance
+        x_model, y_model = self.get_trajectory()
+        x_out = np.zeros_like(x_data)
+        y_out = np.zeros_like(y_data)
+        for i, (xdi, ydi) in enumerate(zip(x_data, y_data)):
+            dist = dist_func(x_model, xdi, y_model, ydi)
+            ind = np.argmin(dist)
+            x_out[i] = x_model[ind]
+            y_out[i] = y_model[ind]
+        return x_out, y_out
+
+    def lnlikelihood(self, x_data: np.ndarray, y_data: np.ndarray):
+        """
+        Log-likelihood of the data given the model. Note that this
+        is the natural log (ln).
+
+        Args:
+            x_data (np.ndarray): x-coordinates of the trough path
+            y_data (np.ndarray): y-coordinates of the trough path
+        """
+        x_model, y_model = self.get_nearest_points(x_data, y_data)
         # Variance in meters in both directions
         xvar, yvar = (self.errorbar * self.meters_per_pixel) ** 2
-        chi2 = (xd - xn) ** 2 / xvar + (yd - yn) ** 2 / yvar
-        return -0.5 * chi2.sum() - 0.5 * self.Ndata * np.log(xvar * yvar)
+        chi2 = (x_data - x_model) ** 2 / xvar + (y_data - y_model) ** 2 / yvar
+        return -0.5 * chi2.sum() - 0.5 * len(x_data) * np.log(xvar * yvar)
+
+    @property
+    def angle(self) -> float:
+        """
+        Slope angle in degrees.
+        """
+        return self._angle * 180.0 / np.pi
+
+    @angle.setter
+    def angle(self, value: float) -> float:
+        """Setter for the angle"""
+        self._angle = value * np.pi / 180.0
+        self._csc = 1.0 / np.sin(self._angle)
+        self._cot = np.cos(self._angle) * self._csc
+
+    @property
+    def csc_angle(self) -> float:
+        """
+        Cosecant of the slope angle.
+        """
+        return self._csc
+
+    @property
+    def cot_angle(self) -> float:
+        """
+        Cotangent of the slope angle.
+        """
+        return self._cot
