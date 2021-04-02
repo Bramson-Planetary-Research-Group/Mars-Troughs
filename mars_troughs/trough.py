@@ -230,6 +230,7 @@ class Trough:
             x2 (Union[float, np.ndarray]): x-coordinate of the second vector
             y1 (Union[float, np.ndarray]): y-coordinate of the first vector
             y2 (Union[float, np.ndarray]): y-coordinate of the second vector
+        Output: L2 distance (int or float)
         """
         return (x1 - x2) ** 2 + (y1 - y2) ** 2
 
