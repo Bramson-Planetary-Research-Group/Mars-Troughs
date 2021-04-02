@@ -27,6 +27,19 @@ class TroughTest(TestCase):
         tr = self.get_trough_object()
         assert tr is not None
 
+    def test_get_trajectory(self):
+        tr = self.get_trough_object()
+        x, y = tr.get_trajectory()
+        assert len(x) == len(y)
+        assert len(x) == len(tr.ins_times)
+
+    def test_get_trajectory_input_times(self):
+        tr = self.get_trough_object()
+        times = np.linspace(0, 100)
+        x, y = tr.get_trajectory(times)
+        assert len(x) == len(y)
+        assert len(x) == len(times)
+
     def test_angle(self):
         tr1 = self.get_trough_object(angle=2.9)
         tr2 = self.get_trough_object(angle=3.9)
