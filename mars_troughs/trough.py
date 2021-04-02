@@ -160,10 +160,15 @@ class Trough:
 
     def get_yt(self, time: np.ndarray) -> np.ndarray:
         """
-        The vertical distance the trough travels as a function of time.
+        Calculates the vertical distance traveled by a point in the 
+        center of the high side of the trough. The vertical distance is 
+        calculated at each input time. This distance  is a function of the 
+        accumulation rate parameter H, as in dy/dt=H.
 
         Args:
-            time (np.ndarray): times at which we want the path.
+            time (np.ndarray): times at which we want to calculate the path.
+        Output:
+            vertical distances (np.ndarray) of the same size as time input.
         """
         # This is the depth the trough has traveled
         num = self.acc_model_number
