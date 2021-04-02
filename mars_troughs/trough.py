@@ -158,7 +158,7 @@ class Trough:
             return -1 * (a * self.ins_spline(time) + b * self.ins2_spline(time))
         return  # error, since no number is returned
 
-    def get_yt(self, time: np.ndarray) -> np.ndarray:
+    def get_yt(self, time: np.ndarray) -> np.ndarray: # Model dependent
         """
         Calculates the vertical distance traveled by a point in the 
         center of the high side of the trough. The vertical distance is 
@@ -170,7 +170,6 @@ class Trough:
         Output:
             vertical distances (np.ndarray) of the same size as time input.
         """
-        # This is the depth the trough has traveled
         num = self.acc_model_number
         p = self.acc_params
         if num == 0:
@@ -184,7 +183,7 @@ class Trough:
             )
         return  # error
 
-    def get_xt(self, time: np.ndarray) -> np.ndarray:
+    def get_xt(self, time: np.ndarray) -> np.ndarray: # Model dependent
         """
         Calculates the horizontal distance traveled by a point in the 
         center of the high side of the trough. The horizontal distance is 
@@ -197,8 +196,6 @@ class Trough:
         Output:
             horizontal distances (np.ndarray) of the same size as time input
         """
-        # This is the horizontal distance the trough has traveled
-        # Model dependent
         yt = self.get_yt(time)
         return -self.cot_angle * yt + self.csc_angle * (
             self.iretreat_model_spline(time) - self.iretreat_model_spline(0)
