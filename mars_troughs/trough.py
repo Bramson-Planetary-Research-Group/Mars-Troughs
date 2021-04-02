@@ -94,6 +94,16 @@ class Trough:
         return
 
     def get_insolation(self, time):
+        """
+        Calculates the values of insolation (in W/m^2) per time. 
+        These values are obtained from splines of the
+        times and insolation data in the Insolation.txt file.
+        
+        Args:
+            time (np.ndarray): times at which we want to calculate the Insolation.
+        Output:
+            insolation values (np.ndarray) of the same size as time input
+        """
         return self.ins_spline(time)
 
     def get_retreat(self, lag, time):
