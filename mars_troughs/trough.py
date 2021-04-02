@@ -110,6 +110,18 @@ class Trough:
         return self.ret_spline(time, lag)
 
     def get_lag_at_t(self, time):  # Model dependent
+        """
+    
+        Calculates the values of lag in mm per time. 
+        Lag can be constant at all times (lag = a) if model = 0 
+        or it can change linearly with time (lag = a + b*t) if model = 1.
+        a and b are the elements of lag_params.
+    
+        Args:
+            time (np.ndarray): times at which we want to calculate the lag. 
+        Output:
+            lag values (np.ndarray) of the same size as time input
+        """
         num = self.lag_model_number
         p = self.lag_params
         if num == 0:
