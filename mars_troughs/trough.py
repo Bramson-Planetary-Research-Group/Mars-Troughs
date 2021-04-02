@@ -168,9 +168,12 @@ class Trough:
             times (Optional[np.ndarray]): if ``None``, default to the
                 times of the observed solar insolation
         """
-        times = times or self.ins_times
-        x = self.get_xt(times)
-        y = self.get_yt(times)
+        if np.all(times) == None:
+            x = self.get_xt(self.ins_times)
+            y = self.get_yt(self.ins_times)
+        else:
+            x = self.get_xt(times)
+            y = self.get_yt(times)
         return x, y
 
     @staticmethod
