@@ -186,10 +186,16 @@ class Trough:
 
     def get_xt(self, time: np.ndarray) -> np.ndarray:
         """
-        The horizontal distance the trough travels as a function of time.
+        Calculates the horizontal distance traveled by a point in the 
+        center of the high side of the trough. The horizontal distance is 
+        calculated at each input time. This distance is a function of the 
+        accumulation rate parameter H and the retreat of ice R
+        as in dx/dt=(R+Hcos(slope))/sin(slope).
 
         Args:
             time (np.ndarray): times at which we want the path.
+        Output:
+            horizontal distances (np.ndarray) of the same size as time input
         """
         # This is the horizontal distance the trough has traveled
         # Model dependent
