@@ -203,11 +203,14 @@ class Trough:
 
     def get_trajectory(self, times: Optional[np.ndarray] = None):
         """
-        The coordinates of the trough model as a function of time.
+        Obtains the x and y coordinates of the trough model as a function 
+        of time by concatenating the outputs of get_xt() and get_yt().
 
         Args:
             times (Optional[np.ndarray]): if ``None``, default to the
                 times of the observed solar insolation
+        Output:
+            x and y coordinates (tuple) of size 2 x len(times)
         """
         if np.all(times) == None:
             x = self.get_xt(self.ins_times)
