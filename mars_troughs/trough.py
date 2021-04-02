@@ -241,8 +241,8 @@ class Trough:
         dist_func: Optional[Callable] = None,
     ) -> Tuple[np.ndarray, np.ndarray]:
         """
-        Obtain the nearest coordinates along the model trough path
-        to the data trough path.
+        Finds the coordinates of the nearest points between the model TMP
+        and the data TMP.
 
         Args:
             x_data (np.ndarray): x-coordinates of the data
@@ -250,6 +250,9 @@ class Trough:
             dist_func (Optional[Callable]): function to compute distances,
                 defaults to the L2 distance
                 :meth:`mars_troughs.trough.Trough._L2_distance`
+        Output:
+            x and y coordinates of the model TMP that are closer to the data TMP.
+            (Tuple), size 2 x len(x_data)
         """
         dist_func = dist_func or Trough._L2_distance
         x_model, y_model = self.get_trajectory()
