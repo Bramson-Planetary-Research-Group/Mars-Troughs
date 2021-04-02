@@ -267,12 +267,14 @@ class Trough:
 
     def lnlikelihood(self, x_data: np.ndarray, y_data: np.ndarray):
         """
-        Log-likelihood of the data given the model. Note that this
-        is the natural log (ln).
+        Calculates the log-likelihood of the data given the model. 
+        Note that this is the natural log (ln).
 
         Args:
             x_data (np.ndarray): x-coordinates of the trough path
             y_data (np.ndarray): y-coordinates of the trough path
+        Output:
+            log-likelihood value (float)
         """
         x_model, y_model = self.get_nearest_points(x_data, y_data)
         # Variance in meters in both directions
