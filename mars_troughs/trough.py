@@ -144,7 +144,6 @@ class Trough:
 
     def get_lag_at_t(self, time):  # Model dependent
         """
-    
         Calculates the values of lag in mm per time. 
         Lag can be constant at all times (lag = a) if model = 0 
         or it can change linearly with time (lag = a + b*t) if model = 1.
@@ -166,6 +165,18 @@ class Trough:
         return  # error, since no number is returned
 
     def get_Rt_model(self, lags, times):
+        """
+        Computes the amount of retreat of ice at the input lag and times.
+        
+        Args:
+            time (int,float,list or np.ndarray): times at which we want to 
+                                                 calculate the retreat.
+            lag (int,float,list or np.ndarray): lag for which we want to 
+                                                calculate
+                                                the retreat.
+        Output:
+            Amount of retreat (np.ndarray) of size len(time) x len(lag)
+        """
         ret = self.ret_spline.ev(lags, times)
         return ret
 
