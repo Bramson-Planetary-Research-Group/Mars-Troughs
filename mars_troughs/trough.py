@@ -128,6 +128,18 @@ class Trough:
         return self.ins_spline(time)
 
     def get_retreat(self, lag, time):
+        """
+        Computes the amount of retreat of ice at the input lag and times.
+        
+        Args:
+            time (int,float,list or np.ndarray): times at which we want to 
+                                                 calculate the retreat.
+            lag (int,float,list or np.ndarray): lag for which we want to 
+                                                calculate
+                                                the retreat.
+        Output:
+            Amount of retreat (np.ndarray) of size len(time) x len(lag)
+        """
         return self.ret_spline(time, lag)
 
     def get_lag_at_t(self, time):  # Model dependent
