@@ -99,6 +99,14 @@ class Trough:
         return
 
     def compute_splines(self):
+        """
+        Computes splines of models of 1) lag and 2) retreat of ice per time.
+    
+        Args:
+            None
+        Output:
+            None
+        """
         # To be called after set_model
         self.lag_spline = IUS(self.ins_times, self.lags_t)
         self.Retreat_model_at_t = self.get_Rt_model(self.lags_t, self.ins_times)
