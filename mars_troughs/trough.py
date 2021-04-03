@@ -67,7 +67,20 @@ class Trough:
         self.compute_splines()
 
     def set_model(self, acc_params, lag_params, errorbar):
-        """Setup a new model, with new accumulation and lag parameters."""
+        """
+        Updates trough model with new accumulation and lag parameters.
+        Model number is kept the same for both acumulation and lag.
+           
+        Args:
+            acc_params (list): Accumulation parameter(s) (same length 
+                                     as current acumulation parameter(s)).
+            lag_params (list): Lag parameter(s) (same length 
+                                     as current lag parameter(s)).
+            errorbar (float): Errorbar of the datapoints in pixels
+        Output:
+            None
+           
+        """
         assert len(acc_params) == len(self.acc_params), (
             "New and original accumulation parameters must have the same shape. %d vs %d"
             % (len(acc_params), len(self.acc_params))
