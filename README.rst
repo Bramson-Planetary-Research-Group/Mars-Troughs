@@ -60,7 +60,7 @@ Once installed, run the unit tests from the top level of the repository with:
    pytest
 
 If you encounter any errors, please feel free to
-`open an issue<https://github.com/tmcclintock/Mars-Troughs/issues>`_.
+`open an issue <https://github.com/tmcclintock/Mars-Troughs/issues>`_.
 
 Developing
 ----------
@@ -68,6 +68,7 @@ Developing
 Before committing any code, you are encouraged to set up
 `pre-commit<https://pre-commit.com/>`_, which will clean up code for you
 before committing it to the repository:
+
 .. code-block:: bash
 
    pre-commit install
