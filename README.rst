@@ -1,7 +1,7 @@
-.. |TRAVIS| image:: https://github.com/tmcclintock/FrisPy/workflows/Build%20Status/badge.svg?branch=master
-	    :target: https://github.com/tmcclintock/FrisPy/actions
-.. |COVERALLS| image:: https://coveralls.io/repos/github/tmcclintock/FrisPy/badge.svg?branch=master
-	       :target: https://coveralls.io/github/tmcclintock/FrisPy?branch=master
+.. |TRAVIS| image:: https://github.com/Bramson-Planetary-Research-Group/Mars-Troughs/workflows/Build%20Status/badge.svg?branch=master
+	    :target: https://github.com/Bramson-Planetary-Research-Group/Mars-Troughs/actions
+.. |COVERALLS| image:: https://coveralls.io/repos/github/Bramson-Planetary-Research-Group/Mars-Troughs/badge.svg?branch=master
+	       :target: https://coveralls.io/github/Bramson-Planetary-Research-Group/Mars-Troughs?branch=master
 .. |LICENSE| image:: https://img.shields.io/badge/License-MIT-yellow.svg
 	     :target: https://opensource.org/licenses/MIT
 
