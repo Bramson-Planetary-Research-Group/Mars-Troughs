@@ -1,9 +1,14 @@
-import importlib.resources as pkg_resources
+"""
+The trough model.
+"""
+from pathlib import Path
 from typing import Callable, Optional, Tuple, Union
 
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
 from scipy.interpolate import RectBivariateSpline as RBS
+
+from mars_troughs import DATAPATHS
 
 
 class Trough:
@@ -15,22 +20,26 @@ class Trough:
         lag_model_number: int,
         errorbar: float = 1.0,
         angle: float = 2.9,
+        insolation_path: Union[str, Path] = DATAPATHS.INSOLATION,
+        retreat_path: Union[str, Path] = DATAPATHS.RETREAT,
     ):
         """Constructor for the trough object.
 
         Args:
-            acc_params (array like): model parameters for accumulation
-            acc_model_number (int): index of the accumulation model
-            lag_params (array like): model parameters for lag(t)
-            lag_model_number (int): index of the lag(t) model
-            errorbar (float, optional): errorbar of the datapoints in pixels; default=1
-            angle (float, optional): south-facing slope angle in degrees. Default is 2.9.
+          acc_params (array like): model parameters for accumulation
+          acc_model_number (int): index of the accumulation model
+          lag_params (array like): model parameters for lag(t)
+          lag_model_number (int): index of the lag(t) model
+          errorbar (float, optional): errorbar of the datapoints in pixels; default=1
+          angle (float, optional): south-facing slope angle in degrees. Default is 2.9.
+          insolation_path (Union[str, Path], optional): path to the file with
+            insolation data.
+          retreat_path (Union[str, Path], optional): path to the file with
+            retreat data
         """
         # Load in all data
-        with pkg_resources.path(__package__, "Insolation.txt") as path:
-            insolation, ins_times = np.loadtxt(path, skiprows=1).T
-        with pkg_resources.path(__package__, "R_lookuptable.txt") as path:
-            retreats = np.loadtxt(path).T
+        insolation, ins_times = np.loadtxt(insolation_path, skiprows=1).T
+        retreats = np.loadtxt(retreat_path).T
 
         # Trough angle
         self.angle = angle
