@@ -66,7 +66,7 @@ Developing
 ----------
 
 Before committing any code, you are encouraged to set up
-`pre-commit<https://pre-commit.com/>`_, which will clean up code for you
+`pre-commit <https://pre-commit.com/>`_, which will clean up code for you
 before committing it to the repository:
 
 .. code-block:: bash
