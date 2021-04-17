@@ -8,7 +8,7 @@ class _DataPaths:
     DATAPATHS variable instead.
     """
 
-    DATA: Path = (Path(__file__) / ".." / ".." / "data").resolve()
+    DATA: Path = (Path(__file__) / ".." / "data").resolve()
     INSOLATION: Path = DATA / "Insolation.txt"
     RETREAT: Path = DATA / "R_lookuptable.txt"
     TMP: Path = DATA / "TMP_xz.txt"
