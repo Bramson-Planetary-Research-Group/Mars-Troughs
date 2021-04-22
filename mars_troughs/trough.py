@@ -59,11 +59,13 @@ class Trough:
         self.insolation = insolation
         self.ins_times = ins_times
         self.retreats = retreats
-
-        # Create splines
+        
+        # Set range of lag values
         self.lags = np.arange(16) + 1
         self.lags[0] -= 1
         self.lags[-1] = 20
+
+        # Create splines
         self.ins_spline = IUS(ins_times, insolation)
         self.iins_spline = self.ins_spline.antiderivative()
         self.ins2_spline = IUS(ins_times, insolation ** 2)
