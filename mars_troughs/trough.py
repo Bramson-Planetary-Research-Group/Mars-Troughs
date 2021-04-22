@@ -76,7 +76,7 @@ class Trough:
         self.re2_spline = RBS(self.lags, self.ins_times, self.retreats ** 2)
 
         # Pre-calculate the lag per time (dependent on model parameters)
-        self.lags_t = self.get_lag_at_t(self.ins_times)
+        self.lag_model_t = self.get_lag_model_t(self.ins_times)
         
         # Compute splines of lag and retreat of ice per time that do 
         #depend on model parameters
@@ -111,7 +111,7 @@ class Trough:
         self.acc_params = acc_params
         self.lag_params = lag_params
         # Compute the lag at all times
-        self.lags_t = self.get_lag_at_t(self.ins_times)
+        self.lag_model_t = self.get_lag_model_t(self.ins_times)
         return
 
     def compute_splines(self): # To be called after set_model
@@ -125,9 +125,9 @@ class Trough:
             None
         """
         # lag model per time
-        self.lag_spline = IUS(self.ins_times, self.lags_t)
+        self.lag_model_t_spline = IUS(self.ins_times, self.lag_model_t)
         # retreat model of ice per time 
-        self.retreat_model_t=self.ret_spline.ev(self.lags_t, self.ins_times)
+        self.retreat_model_t=self.ret_spline.ev(self.lag_model_t, self.ins_times)
         self.retreat_model_t_spline = IUS(self.ins_times, self.retreat_model_t)
         self.iretreat_model_t_spline = self.retreat_model_t_spline.antiderivative()
         return
@@ -146,7 +146,7 @@ class Trough:
         return self.ins_spline(time)
 
 
-    def get_lag_at_t(self, time):  # Model dependent
+    def get_lag_model_t(self, time):  # Model dependent
         """
         Calculates the values of lag in mm per time.
         Lag can be constant at all times (lag = a) if model = 0
