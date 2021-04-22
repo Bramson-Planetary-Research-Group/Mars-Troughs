@@ -65,11 +65,13 @@ class Trough:
         self.lags[0] -= 1
         self.lags[-1] = 20
 
-        # Create splines
+        # Create data splines (no dependency on model parameters)
+        # Insolation
         self.ins_spline = IUS(ins_times, insolation)
         self.iins_spline = self.ins_spline.antiderivative()
         self.ins2_spline = IUS(ins_times, insolation ** 2)
         self.iins2_spline = self.ins2_spline.antiderivative()
+        # Retreat of ice
         self.ret_spline = RBS(self.lags, self.ins_times, self.retreats)
         self.re2_spline = RBS(self.lags, self.ins_times, self.retreats ** 2)
 
