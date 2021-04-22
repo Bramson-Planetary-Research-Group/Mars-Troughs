@@ -1,21 +1,18 @@
-import importlib.resources as pkg_resources
+from pathlib import Path
 
 
-def __get_path(key):
-    if key == "insolation":
-        with pkg_resources.path(__package__, "Insolation.txt") as path:
-            return path
-    elif key == "retreat":
-        with pkg_resources.path(__package__, "R_lookuptable.txt") as path:
-            return path
-    elif key == "tmp":
-        with pkg_resources.path(__package__, "TMP_xz.txt") as path:
-            return path
-    else:
-        raise KeyError(key)  # pragma: no cover
+class _DataPaths:
+    """
+    A class for holding paths to data files.
+    Do not reference directly. Use the global
+    DATAPATHS variable instead.
+    """
+
+    DATA: Path = (Path(__file__) / ".." / "data").resolve()
+    INSOLATION: Path = DATA / "Insolation.txt"
+    RETREAT: Path = DATA / "R_lookuptable.txt"
+    TMP: Path = DATA / "TMP_xz.txt"
 
 
-DEFAULT_DATAPATH_DICT = {
-    key: __get_path(key) for key in ["insolation", "retreat", "tmp"]
-}
-"""A dictionary that matches data parts to paths to the data files."""
+DATAPATHS = _DataPaths()
+"""Global object that holds paths."""
