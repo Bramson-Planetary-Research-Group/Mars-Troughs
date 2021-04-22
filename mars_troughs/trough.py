@@ -75,7 +75,7 @@ class Trough:
         self.ret_spline = RBS(self.lags, self.ins_times, self.retreats)
         self.re2_spline = RBS(self.lags, self.ins_times, self.retreats ** 2)
 
-        # Pre-calculate the lags at all times
+        # Pre-calculate the lag per time (dependent on model parameters)
         self.lags_t = self.get_lag_at_t(self.ins_times)
         self.compute_splines()
 
