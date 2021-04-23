@@ -177,7 +177,7 @@ class Trough:
         the lag_model_t and time values.
 
         Args:
-            lag_t (np.ndarray): lag per time 
+            lag_t (np.ndarray): lag at time 
             time (np.ndarray): times at which we want to calculate the retreat
         Output:
             retreat values (np.ndarray) of the same size as time input
