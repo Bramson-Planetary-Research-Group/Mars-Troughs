@@ -59,21 +59,31 @@ class Trough:
         self.insolation = insolation
         self.ins_times = ins_times
         self.retreats = retreats
-
-        # Create splines
+        
+        # Set range of lag values
         self.lags = np.arange(16) + 1
         self.lags[0] -= 1
         self.lags[-1] = 20
-        self.ins_spline = IUS(ins_times, insolation)
-        self.iins_spline = self.ins_spline.antiderivative()
-        self.ins2_spline = IUS(ins_times, insolation ** 2)
-        self.iins2_spline = self.ins2_spline.antiderivative()
-        self.ret_spline = RBS(self.lags, self.ins_times, self.retreats)
-        self.re2_spline = RBS(self.lags, self.ins_times, self.retreats ** 2)
 
-        # Pre-calculate the lags at all times
-        self.lags_t = self.get_lag_at_t(self.ins_times)
-        self.compute_splines()
+        # Create data splines of insolation and retreat of ice (no dependency 
+        # on model parameters) 
+        # Insolation
+        self.ins_data_spline = IUS(ins_times, insolation)
+        self.iins_data_spline = self.ins_data_spline.antiderivative()
+        self.ins2_data_spline = IUS(ins_times, insolation ** 2)
+        self.iins2_data_spline = self.ins2_data_spline.antiderivative()
+        # Retreat of ice
+        self.ret_data_spline = RBS(self.lags, self.ins_times, self.retreats)
+        self.re2_data_spline = RBS(self.lags, self.ins_times, self.retreats ** 2)
+
+        # Calculate the model of lag per time 
+        self.lag_model_t = self.get_lag_model_t(self.ins_times)
+        
+        # Calculate the model of retreat of ice per time 
+        self.retreat_model_t=self.get_retreat_model_t(self.lag_model_t,self.ins_times)
+        
+        # Compute splines of models of lag and retreat of ice per time 
+        self.compute_model_splines()
 
     def set_model(self, acc_params, lag_params, errorbar):
         """
@@ -104,23 +114,24 @@ class Trough:
         self.acc_params = acc_params
         self.lag_params = lag_params
         # Compute the lag at all times
-        self.lags_t = self.get_lag_at_t(self.ins_times)
+        self.lag_model_t = self.get_lag_model_t(self.ins_times)
         return
 
-    def compute_splines(self):
+    def compute_model_splines(self): # To be called after set_model
         """
-        Computes splines of models of 1) lag and 2) retreat of ice per time.
+        Computes splines of models of 1) lag per time and 
+        2) retreat of ice per time. 
 
         Args:
             None
         Output:
             None
         """
-        # To be called after set_model
-        self.lag_spline = IUS(self.ins_times, self.lags_t)
-        self.Retreat_model_at_t = self.get_Rt_model(self.lags_t, self.ins_times)
-        self.retreat_model_spline = IUS(self.ins_times, self.Retreat_model_at_t)
-        self.iretreat_model_spline = self.retreat_model_spline.antiderivative()
+        # spline of lag model per time
+        self.lag_model_t_spline = IUS(self.ins_times, self.lag_model_t)
+        # spline of retreat model of ice per time 
+        self.retreat_model_t_spline = IUS(self.ins_times, self.retreat_model_t)
+        self.iretreat_model_t_spline = self.retreat_model_t_spline.antiderivative()
         return
 
     def get_insolation(self, time):
@@ -134,24 +145,10 @@ class Trough:
         Output:
             insolation values (np.ndarray) of the same size as time input
         """
-        return self.ins_spline(time)
+        return self.ins_data_spline(time)
 
-    def get_retreat(self, lag, time):
-        """
-        Computes the amount of retreat of ice at the input lag and times.
 
-        Args:
-            time (int,float,list or np.ndarray): times at which we want to
-                                                 calculate the retreat.
-            lag (int,float,list or np.ndarray): lag for which we want to
-                                                calculate
-                                                the retreat.
-        Output:
-            Amount of retreat (np.ndarray) of size len(time) x len(lag)
-        """
-        return self.ret_spline(time, lag)
-
-    def get_lag_at_t(self, time):  # Model dependent
+    def get_lag_model_t(self, time):  # Model dependent
         """
         Calculates the values of lag in mm per time.
         Lag can be constant at all times (lag = a) if model = 0
@@ -172,22 +169,21 @@ class Trough:
             a, b = p[0:2]  # lag(t) = a + b*t
             return a + b * time
         return  # error, since no number is returned
-
-    def get_Rt_model(self, lags, times):
+    
+    def get_retreat_model_t(self, lag_t, time):
         """
-        Computes the amount of retreat of ice at the input lag and times.
+        Calculates the values of retreat of ice per time (mm/year).
+        These values are obtained by evaluating self.ret_data_spline using
+        the lag_model_t and time values.
 
         Args:
-            time (int,float,list or np.ndarray): times at which we want to
-                                                 calculate the retreat.
-            lag (int,float,list or np.ndarray): lag for which we want to
-                                                calculate
-                                                the retreat.
+            lag_t (np.ndarray): lag at time 
+            time (np.ndarray): times at which we want to calculate the retreat
         Output:
-            Amount of retreat (np.ndarray) of size len(time) x len(lag)
+            retreat values (np.ndarray) of the same size as time input
         """
-        ret = self.ret_spline.ev(lags, times)
-        return ret
+        return self.ret_data_spline.ev(lag_t, time)
+
 
     def get_accumulation(self, time):  # Model dependent
         """
@@ -205,15 +201,15 @@ class Trough:
         p = self.acc_params
         if num == 0:
             a = p[0]  # a*Ins(t)
-            return -1 * (a * self.ins_spline(time))
+            return -1 * (a * self.ins_data_spline(time))
         if num == 1:
             a, b = p[0:2]  # a*Ins(t) + b*Ins(t)^2
-            return -1 * (a * self.ins_spline(time) + b * self.ins2_spline(time))
+            return -1 * (a * self.ins_data_spline(time) + b * self.ins2_data_spline(time))
         return  # error, since no number is returned
 
     def get_yt(self, time: np.ndarray) -> np.ndarray:  # Model dependent
         """
-        Calculates the vertical distance traveled by a point in the
+        Calculates the vertical distance (in m) traveled by a point in the
         center of the high side of the trough. The vertical distance is
         calculated at each input time. This distance  is a function of the
         accumulation rate parameter H, as in dy/dt=H.
@@ -227,18 +223,18 @@ class Trough:
         p = self.acc_params
         if num == 0:
             a = p[0]  # a*Ins(t)
-            return -1 * (a * (self.iins_spline(time) - self.iins_spline(0)))
+            return -1 * (a * (self.iins_data_spline(time) - self.iins_data_spline(0)))
         if num == 1:
             a, b = p[0:2]  # a*Ins(t) + b*Ins(t)^2
             return -1 * (
-                a * (self.iins_spline(time) - self.iins_spline(0))
-                + b * (self.iins2_spline(time) - self.iins2_spline(0))
+                a * (self.iins_data_spline(time) - self.iins_data_spline(0))
+                + b * (self.iins2_data_spline(time) - self.iins2_data_spline(0))
             )
         return  # error
 
     def get_xt(self, time: np.ndarray) -> np.ndarray:  # Model dependent
         """
-        Calculates the horizontal distance traveled by a point in the
+        Calculates the horizontal distance (in m) traveled by a point in the
         center of the high side of the trough. The horizontal distance is
         calculated at each input time. This distance is a function of the
         accumulation rate parameter H and the retreat of ice R
@@ -247,23 +243,24 @@ class Trough:
         Args:
             time (np.ndarray): times at which we want the path.
         Output:
-            horizontal distances (np.ndarray) of the same size as time input
+            horizontal distances (np.ndarray) of the same size as time input.
         """
         yt = self.get_yt(time)
         return -self.cot_angle * yt + self.csc_angle * (
-            self.iretreat_model_spline(time) - self.iretreat_model_spline(0)
+            self.iretreat_model_t_spline(time) - self.iretreat_model_t_spline(0)
         )
 
     def get_trajectory(self, times: Optional[np.ndarray] = None):
         """
-        Obtains the x and y coordinates of the trough model as a function
-        of time by concatenating the outputs of get_xt() and get_yt().
+        Obtains the x and y coordinates (in m) of the trough model as a 
+        function of time by concatenating the outputs of get_xt() 
+        and get_yt().
 
         Args:
             times (Optional[np.ndarray]): if ``None``, default to the
-                times of the observed solar insolation
+                times of the observed solar insolation.
         Output:
-            x and y coordinates (tuple) of size 2 x len(times)
+            x and y coordinates (tuple) of size 2 x len(times) (in m).
         """
         if np.all(times) is None:
             x = self.get_xt(self.ins_times)
