@@ -127,9 +127,9 @@ class Trough:
         Output:
             None
         """
-        # lag model per time
+        # spline of lag model per time
         self.lag_model_t_spline = IUS(self.ins_times, self.lag_model_t)
-        # retreat model of ice per time 
+        # spline of retreat model of ice per time 
         self.retreat_model_t_spline = IUS(self.ins_times, self.retreat_model_t)
         self.iretreat_model_t_spline = self.retreat_model_t_spline.antiderivative()
         return
@@ -172,7 +172,7 @@ class Trough:
     
     def get_retreat_model_t(self, lag_t, time):
         """
-        Calculates the values of retreat of ice per time.
+        Calculates the values of retreat of ice per time (mm/year).
         These values are obtained by evaluating self.ret_data_spline using
         the lag_model_t and time values.
 
@@ -209,7 +209,7 @@ class Trough:
 
     def get_yt(self, time: np.ndarray) -> np.ndarray:  # Model dependent
         """
-        Calculates the vertical distance traveled by a point in the
+        Calculates the vertical distance (in m) traveled by a point in the
         center of the high side of the trough. The vertical distance is
         calculated at each input time. This distance  is a function of the
         accumulation rate parameter H, as in dy/dt=H.
@@ -234,7 +234,7 @@ class Trough:
 
     def get_xt(self, time: np.ndarray) -> np.ndarray:  # Model dependent
         """
-        Calculates the horizontal distance traveled by a point in the
+        Calculates the horizontal distance (in m) traveled by a point in the
         center of the high side of the trough. The horizontal distance is
         calculated at each input time. This distance is a function of the
         accumulation rate parameter H and the retreat of ice R
@@ -243,7 +243,7 @@ class Trough:
         Args:
             time (np.ndarray): times at which we want the path.
         Output:
-            horizontal distances (np.ndarray) of the same size as time input
+            horizontal distances (np.ndarray) of the same size as time input.
         """
         yt = self.get_yt(time)
         return -self.cot_angle * yt + self.csc_angle * (
@@ -252,14 +252,15 @@ class Trough:
 
     def get_trajectory(self, times: Optional[np.ndarray] = None):
         """
-        Obtains the x and y coordinates of the trough model as a function
-        of time by concatenating the outputs of get_xt() and get_yt().
+        Obtains the x and y coordinates (in m) of the trough model as a 
+        function of time by concatenating the outputs of get_xt() 
+        and get_yt().
 
         Args:
             times (Optional[np.ndarray]): if ``None``, default to the
-                times of the observed solar insolation
+                times of the observed solar insolation.
         Output:
-            x and y coordinates (tuple) of size 2 x len(times)
+            x and y coordinates (tuple) of size 2 x len(times) (in m).
         """
         if np.all(times) is None:
             x = self.get_xt(self.ins_times)
