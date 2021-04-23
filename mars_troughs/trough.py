@@ -65,15 +65,16 @@ class Trough:
         self.lags[0] -= 1
         self.lags[-1] = 20
 
-        # Create data splines (no dependency on model parameters)
+        # Create data splines of insolation and retreat of ice (no dependency 
+        # on model parameters) 
         # Insolation
         self.ins_spline = IUS(ins_times, insolation)
         self.iins_spline = self.ins_spline.antiderivative()
         self.ins2_spline = IUS(ins_times, insolation ** 2)
         self.iins2_spline = self.ins2_spline.antiderivative()
         # Retreat of ice
-        self.ret_spline = RBS(self.lags, self.ins_times, self.retreats)
-        self.re2_spline = RBS(self.lags, self.ins_times, self.retreats ** 2)
+        self.ret_data_spline = RBS(self.lags, self.ins_times, self.retreats)
+        self.re2_data_spline = RBS(self.lags, self.ins_times, self.retreats ** 2)
 
         # Calculate the model of lag per time 
         self.lag_model_t = self.get_lag_model_t(self.ins_times)
@@ -172,7 +173,7 @@ class Trough:
     def get_retreat_model_t(self, lag_t, time):
         """
         Calculates the values of retreat of ice per time.
-        These values are obtained by evaluating self.ret_spline using
+        These values are obtained by evaluating self.ret_data_spline using
         the lag_model_t and time values.
 
         Args:
@@ -181,7 +182,7 @@ class Trough:
         Output:
             retreat values (np.ndarray) of the same size as time input
         """
-        return self.ret_spline.ev(lag_t, time)
+        return self.ret_data_spline.ev(lag_t, time)
 
 
     def get_accumulation(self, time):  # Model dependent
