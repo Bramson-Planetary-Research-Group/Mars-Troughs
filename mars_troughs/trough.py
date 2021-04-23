@@ -75,11 +75,13 @@ class Trough:
         self.ret_spline = RBS(self.lags, self.ins_times, self.retreats)
         self.re2_spline = RBS(self.lags, self.ins_times, self.retreats ** 2)
 
-        # Pre-calculate the lag per time (dependent on model parameters)
+        # Calculate the model of lag per time 
         self.lag_model_t = self.get_lag_model_t(self.ins_times)
         
-        # Compute splines of lag and retreat of ice per time that do 
-        #depend on model parameters
+        # Calculate the model of retreat of ice per time 
+        self.retreat_model_t=self.get_retreat_model_t(self.lag_model_t,self.ins_times)
+        
+        # Compute splines of models of lag and retreat of ice per time 
         self.compute_splines()
 
     def set_model(self, acc_params, lag_params, errorbar):
@@ -127,7 +129,6 @@ class Trough:
         # lag model per time
         self.lag_model_t_spline = IUS(self.ins_times, self.lag_model_t)
         # retreat model of ice per time 
-        self.retreat_model_t=self.ret_spline.ev(self.lag_model_t, self.ins_times)
         self.retreat_model_t_spline = IUS(self.ins_times, self.retreat_model_t)
         self.iretreat_model_t_spline = self.retreat_model_t_spline.antiderivative()
         return
@@ -167,6 +168,20 @@ class Trough:
             a, b = p[0:2]  # lag(t) = a + b*t
             return a + b * time
         return  # error, since no number is returned
+    
+    def get_retreat_model_t(self, lag_t, time):
+        """
+        Calculates the values of retreat of ice per time.
+        These values are obtained by evaluating self.ret_spline using
+        the lag_model_t and time values.
+
+        Args:
+            lag_t (np.ndarray): lag per time 
+            time (np.ndarray): times at which we want to calculate the retreat
+        Output:
+            retreat values (np.ndarray) of the same size as time input
+        """
+        return self.ret_spline.ev(lag_t, time)
 
 
     def get_accumulation(self, time):  # Model dependent
