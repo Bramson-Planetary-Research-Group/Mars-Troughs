@@ -68,10 +68,10 @@ class Trough:
         # Create data splines of insolation and retreat of ice (no dependency 
         # on model parameters) 
         # Insolation
-        self.ins_spline = IUS(ins_times, insolation)
-        self.iins_spline = self.ins_spline.antiderivative()
-        self.ins2_spline = IUS(ins_times, insolation ** 2)
-        self.iins2_spline = self.ins2_spline.antiderivative()
+        self.ins_data_spline = IUS(ins_times, insolation)
+        self.iins_data_spline = self.ins_data_spline.antiderivative()
+        self.ins2_data_spline = IUS(ins_times, insolation ** 2)
+        self.iins2_data_spline = self.ins2_data_spline.antiderivative()
         # Retreat of ice
         self.ret_data_spline = RBS(self.lags, self.ins_times, self.retreats)
         self.re2_data_spline = RBS(self.lags, self.ins_times, self.retreats ** 2)
@@ -83,7 +83,7 @@ class Trough:
         self.retreat_model_t=self.get_retreat_model_t(self.lag_model_t,self.ins_times)
         
         # Compute splines of models of lag and retreat of ice per time 
-        self.compute_splines()
+        self.compute_model_splines()
 
     def set_model(self, acc_params, lag_params, errorbar):
         """
@@ -117,7 +117,7 @@ class Trough:
         self.lag_model_t = self.get_lag_model_t(self.ins_times)
         return
 
-    def compute_splines(self): # To be called after set_model
+    def compute_model_splines(self): # To be called after set_model
         """
         Computes splines of models of 1) lag per time and 
         2) retreat of ice per time. 
@@ -145,7 +145,7 @@ class Trough:
         Output:
             insolation values (np.ndarray) of the same size as time input
         """
-        return self.ins_spline(time)
+        return self.ins_data_spline(time)
 
 
     def get_lag_model_t(self, time):  # Model dependent
@@ -201,10 +201,10 @@ class Trough:
         p = self.acc_params
         if num == 0:
             a = p[0]  # a*Ins(t)
-            return -1 * (a * self.ins_spline(time))
+            return -1 * (a * self.ins_data_spline(time))
         if num == 1:
             a, b = p[0:2]  # a*Ins(t) + b*Ins(t)^2
-            return -1 * (a * self.ins_spline(time) + b * self.ins2_spline(time))
+            return -1 * (a * self.ins_data_spline(time) + b * self.ins2_data_spline(time))
         return  # error, since no number is returned
 
     def get_yt(self, time: np.ndarray) -> np.ndarray:  # Model dependent
@@ -223,12 +223,12 @@ class Trough:
         p = self.acc_params
         if num == 0:
             a = p[0]  # a*Ins(t)
-            return -1 * (a * (self.iins_spline(time) - self.iins_spline(0)))
+            return -1 * (a * (self.iins_data_spline(time) - self.iins_data_spline(0)))
         if num == 1:
             a, b = p[0:2]  # a*Ins(t) + b*Ins(t)^2
             return -1 * (
-                a * (self.iins_spline(time) - self.iins_spline(0))
-                + b * (self.iins2_spline(time) - self.iins2_spline(0))
+                a * (self.iins_data_spline(time) - self.iins_data_spline(0))
+                + b * (self.iins2_data_spline(time) - self.iins2_data_spline(0))
             )
         return  # error
 
