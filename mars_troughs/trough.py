@@ -138,6 +138,10 @@ class Trough:
             linear_lag=LinearLag(intersect,slope)
             self.lag_model_t=linear_lag.get_lag_at_t(ins_times)
         return
+        
+        # Update retreat model per time with new lag_model_t
+        self.retreat_model_t=self.get_retreat_model_t(self.lag_model_t, 
+                                                      self.ins_times)
 
     def compute_model_splines(self): # To be called after set_model
         """
