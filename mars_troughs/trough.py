@@ -168,29 +168,6 @@ class Trough:
             insolation values (np.ndarray) of the same size as time input
         """
         return self.ins_data_spline(time)
-
-
-    def get_lag_model_t(self, time):  # Model dependent
-        """
-        Calculates the values of lag in mm per time.
-        Lag can be constant at all times (lag = a) if model = 0
-        or it can change linearly with time (lag = a + b*t) if model = 1.
-        a and b are the elements of lag_params.
-
-        Args:
-            time (np.ndarray): times at which we want to calculate the lag.
-        Output:
-            lag values (np.ndarray) of the same size as time input
-        """
-        num = self.lag_model_number
-        p = self.lag_params
-        if num == 0:
-            a = p[0]  # lag = constant
-            return a * np.ones_like(time)
-        if num == 1:
-            a, b = p[0:2]  # lag(t) = a + b*t
-            return a + b * time
-        return  # error, since no number is returned
     
     def get_retreat_model_t(self, lag_t, time):
         """
