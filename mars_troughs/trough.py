@@ -9,7 +9,7 @@ from scipy.interpolate import InterpolatedUnivariateSpline as IUS
 from scipy.interpolate import RectBivariateSpline as RBS
 
 from mars_troughs import DATAPATHS
-
+from mars_troughs import ConstantLag,LinearLag
 
 class Trough:
     def __init__(
@@ -77,7 +77,17 @@ class Trough:
         self.re2_data_spline = RBS(self.lags, self.ins_times, self.retreats ** 2)
 
         # Calculate the model of lag per time 
-        self.lag_model_t = self.get_lag_model_t(self.ins_times)
+        num=self.lag_model_number
+        p=self.lag_params
+        
+        if num == 0: 
+            constant = p[0]
+            constant_lag=ConstantLag(constant)
+            self.lag_model_t=constant_lag.get_lag_at_t(ins_times)
+        if num == 1:
+            intersect,slope = p[0:2]
+            linear_lag=LinearLag(intersect,slope)
+            self.lag_model_t=linear_lag.get_lag_at_t(ins_times)
         
         # Calculate the model of retreat of ice per time 
         self.retreat_model_t=self.get_retreat_model_t(self.lag_model_t,self.ins_times)
@@ -113,8 +123,20 @@ class Trough:
         # Set the new accumulation and lag parameters
         self.acc_params = acc_params
         self.lag_params = lag_params
+
         # Compute the lag at all times
-        self.lag_model_t = self.get_lag_model_t(self.ins_times)
+        num=self.lag_model_number
+        p=self.lag_params
+        ins_times=self.ins_times
+        
+        if num == 0: 
+            constant = p[0]
+            constant_lag=ConstantLag(constant)
+            self.lag_model_t=constant_lag.get_lag_at_t(ins_times)
+        if num == 1:
+            intersect,slope = p[0:2]
+            linear_lag=LinearLag(intersect,slope)
+            self.lag_model_t=linear_lag.get_lag_at_t(ins_times)
         return
 
     def compute_model_splines(self): # To be called after set_model
