@@ -219,7 +219,7 @@ class Trough:
                                                #slope1*ins(t)+ slope2*ins(t)^2
             square_accu=SquareAccuIns(times,ins,intercept,slope1,slope2)
             y=square_accu.get_yt(times)
-            x=square_accu.get_xy(times)
+            x=square_accu.get_xt(times,int_retreat_spline)
             
         return x, y
 
