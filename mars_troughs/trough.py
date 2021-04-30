@@ -10,6 +10,7 @@ from scipy.interpolate import RectBivariateSpline as RBS
 
 from mars_troughs import DATAPATHS
 from mars_troughs import ConstantLag,LinearLag
+from mars_troughs import LinearAccuIns,SquareAccuIns
 
 class Trough:
     def __init__(
@@ -188,49 +189,6 @@ class Trough:
         return self.ret_data_spline.ev(lag_t, time)
 
 
-    def get_yt(self, time: np.ndarray) -> np.ndarray:  # Model dependent
-        """
-        Calculates the vertical distance (in m) traveled by a point in the
-        center of the high side of the trough. The vertical distance is
-        calculated at each input time. This distance  is a function of the
-        accumulation rate parameter H, as in dy/dt=H.
-
-        Args:
-            time (np.ndarray): times at which we want to calculate the path.
-        Output:
-            vertical distances (np.ndarray) of the same size as time input.
-        """
-        num = self.acc_model_number
-        p = self.acc_params
-        if num == 0:
-            a = p[0]  # a*Ins(t)
-            return -1 * (a * (self.iins_data_spline(time) - self.iins_data_spline(0)))
-        if num == 1:
-            a, b = p[0:2]  # a*Ins(t) + b*Ins(t)^2
-            return -1 * (
-                a * (self.iins_data_spline(time) - self.iins_data_spline(0))
-                + b * (self.iins2_data_spline(time) - self.iins2_data_spline(0))
-            )
-        return  # error
-
-    def get_xt(self, time: np.ndarray) -> np.ndarray:  # Model dependent
-        """
-        Calculates the horizontal distance (in m) traveled by a point in the
-        center of the high side of the trough. The horizontal distance is
-        calculated at each input time. This distance is a function of the
-        accumulation rate parameter H and the retreat of ice R
-        as in dx/dt=(R+Hcos(slope))/sin(slope).
-
-        Args:
-            time (np.ndarray): times at which we want the path.
-        Output:
-            horizontal distances (np.ndarray) of the same size as time input.
-        """
-        yt = self.get_yt(time)
-        return -self.cot_angle * yt + self.csc_angle * (
-            self.iretreat_model_t_spline(time) - self.iretreat_model_t_spline(0)
-        )
-
     def get_trajectory(self, times: Optional[np.ndarray] = None):
         """
         Obtains the x and y coordinates (in m) of the trough model as a 
@@ -244,11 +202,25 @@ class Trough:
             x and y coordinates (tuple) of size 2 x len(times) (in m).
         """
         if np.all(times) is None:
-            x = self.get_xt(self.ins_times)
-            y = self.get_yt(self.ins_times)
-        else:
-            x = self.get_xt(times)
-            y = self.get_yt(times)
+            times=self.times 
+            
+        num=self.acc_model_number
+        p=self.acc_params
+        ins=self.insolation
+        int_retreat_spline=self.iretreat_model_t_spline
+        
+        if num==0:
+            intercept,slope=p[0:2] #A= intercept + slope*ins(t)
+            linear_accu=LinearAccuIns(times,ins,intercept,slope)
+            y=linear_accu.get_yt(times)
+            x=linear_accu.get_xt(times,int_retreat_spline)
+        if num==1:
+            intercept,slope1,slope2=p[0:3] #A= intercept + 
+                                               #slope1*ins(t)+ slope2*ins(t)^2
+            square_accu=SquareAccuIns(times,ins,intercept,slope1,slope2)
+            y=square_accu.get_yt(times)
+            x=square_accu.get_xy(times)
+            
         return x, y
 
     @staticmethod
@@ -313,30 +285,4 @@ class Trough:
         chi2 = (x_data - x_model) ** 2 / xvar + (y_data - y_model) ** 2 / yvar
         return -0.5 * chi2.sum() - 0.5 * len(x_data) * np.log(xvar * yvar)
 
-    @property
-    def angle(self) -> float:
-        """
-        Slope angle in degrees.
-        """
-        return self._angle * 180.0 / np.pi
 
-    @angle.setter
-    def angle(self, value: float) -> float:
-        """Setter for the angle"""
-        self._angle = value * np.pi / 180.0
-        self._csc = 1.0 / np.sin(self._angle)
-        self._cot = np.cos(self._angle) * self._csc
-
-    @property
-    def csc_angle(self) -> float:
-        """
-        Cosecant of the slope angle.
-        """
-        return self._csc
-
-    @property
-    def cot_angle(self) -> float:
-        """
-        Cotangent of the slope angle.
-        """
-        return self._cot
