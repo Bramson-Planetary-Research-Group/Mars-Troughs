@@ -13,7 +13,7 @@ class AccumulationModel():
     """
 
     @abstractmethod
-    def accumulation(self, time: np.ndarray) -> np.ndarray:
+    def get_accumulation_at_t(self, time: np.ndarray) -> np.ndarray:
         raise NotImplementedError
 
 
@@ -34,6 +34,7 @@ class AccumulationDepInsolation(AccumulationModel):
         self.iins_data_spline = self.ins_data_spline.antiderivative()
         self.ins2_data_spline = IUS(times, insolation ** 2)
         self.iins2_data_spline = self.ins2_data_spline.antiderivative()
+        
 
 
 class LinearAccuIns(AccumulationDepInsolation):
@@ -47,7 +48,9 @@ class LinearAccuIns(AccumulationDepInsolation):
         slope1 (float, optional): default is 1e-6 m per unit
             of solar insolation.
     """
-    def __init__(self, intercept: float = 0.0, slope: float = 1e-6):
+    def __init__(self, times, insolation, intercept: float = 0.0, slope: float = 1e-6):
+        
+        super().__init__(times, insolation)
         
         self.intercept=intercept
         self.slope=slope
@@ -84,7 +87,8 @@ class LinearAccuIns(AccumulationDepInsolation):
         return self.intercept -1 * (self.slope * (self.iins_data_spline(time) 
                                                  - self.iins_data_spline(0)))
     
-    def get_xt(self, time: np.ndarray):  
+    def get_xt(self, time: np.ndarray, integral_retreat_spline: np.ndarray, 
+                                                       angle: float = 2.9):  
         """
         Calculates the horizontal distance x (in m) traveled by a point in the
         center of the high side of the trough. This distance x is a function of 
@@ -97,10 +101,40 @@ class LinearAccuIns(AccumulationDepInsolation):
         Output:
             horizontal distances (np.ndarray) of the same size as time input.
         """
+        self.iretreat_model_t_spline=integral_retreat_spline
+        self.angle=angle           
         yt = self.get_yt(time)
         
         return -self.cot_angle * yt + self.csc_angle * (
          self.iretreat_model_t_spline(time) - self.iretreat_model_t_spline(0))
+    
+    @property
+    def angle(self) -> float:
+        """
+        Slope angle in degrees.
+        """
+        return self._angle * 180.0 / np.pi
+
+    @angle.setter
+    def angle(self, value: float) -> float:
+        """Setter for the angle"""
+        self._angle = value * np.pi / 180.0
+        self._csc = 1.0 / np.sin(self._angle)
+        self._cot = np.cos(self._angle) * self._csc
+
+    @property
+    def csc_angle(self) -> float:
+        """
+        Cosecant of the slope angle.
+        """
+        return self._csc
+
+    @property
+    def cot_angle(self) -> float:
+        """
+        Cotangent of the slope angle.
+        """
+        return self._cot
         
 # class SquareAccuIns(AccumulationDepInsolation):
 #     """
