@@ -188,28 +188,6 @@ class Trough:
         return self.ret_data_spline.ev(lag_t, time)
 
 
-    def get_accumulation(self, time):  # Model dependent
-        """
-        Calculates the values of accumulation (in m^3/W) per time.
-        If model number = 0, Acc(t) = a*I(t) where I(t) is insolation at t
-        If model number = 1, Acc(t) = a*I(t) + b*I(t)^2.
-        a and b are the elements of acc_params.
-
-        Args:
-            time (np.ndarray): times at which we want to calculate the Acc.
-        Output:
-            accumulation values (np.ndarray) of the same size as time input
-        """
-        num = self.acc_model_number
-        p = self.acc_params
-        if num == 0:
-            a = p[0]  # a*Ins(t)
-            return -1 * (a * self.ins_data_spline(time))
-        if num == 1:
-            a, b = p[0:2]  # a*Ins(t) + b*Ins(t)^2
-            return -1 * (a * self.ins_data_spline(time) + b * self.ins2_data_spline(time))
-        return  # error, since no number is returned
-
     def get_yt(self, time: np.ndarray) -> np.ndarray:  # Model dependent
         """
         Calculates the vertical distance (in m) traveled by a point in the
