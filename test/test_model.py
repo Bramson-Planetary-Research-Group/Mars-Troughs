@@ -1,3 +1,7 @@
+"""
+Test of the ``Model`` class using dummies.
+"""
+
 from unittest import TestCase
 
 from mars_troughs import Model
