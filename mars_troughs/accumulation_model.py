@@ -16,19 +16,20 @@ class AccumulationModel(Model):
     """
 
     @abstractmethod
-    def accumulation(self, time: np.ndarray) -> np.ndarray:
+    def get_accumulation_at_t(self, time: np.ndarray) -> np.ndarray:
         raise NotImplementedError
 
 
 class InsolationAccumulationModel(AccumulationModel):
     """
-    An accumulation model that depends only on solar insolation.
-    Interpolated splines are created for the insolation as a function
-    of time for faster integration.
+    An accumulation rate model that depends on solar insolation, A(Ins(t)).
+    A in in m/year. Interpolated splines are created for the insolation as 
+    a function of time for faster integration.
 
     Args:
         times (np.ndarray): times at which the solar insolation is known
-        insolations (np.ndarray): value of the solar insolations
+                            (in years)
+        insolation (np.ndarray): values of the solar insolation (in W/m^2)
     """
 
     def __init__(self, times: np.ndarray, insolations: np.ndarray):
@@ -42,14 +43,17 @@ class InsolationAccumulationModel(AccumulationModel):
 
 class LinearInsolationAccumulation(InsolationAccumulationModel):
     """
-    Accumulation is linear in solar insolation.
+    Accumulation is linear in solar insolation. 
+    A(ins(t)) = intercept + slope*ins(t).
 
     Args:
-        times (np.ndarray): times at which the solar insolation is known
-        insolations (np.ndarray): value of the solar insolations
-        intercept (float, optional): default is 0 millimeters
-        slope (float, optional): default is 1e-6 mm per unit
-            of solar insolation square.
+        times (np.ndarray): times at which the solar insolation is known 
+                            (in years)
+        insolation values (np.ndarray): values of solar insolation (in W/m^2)
+        intercept (float, optional): accumulation rate at present time.
+                                     Default is 1 m
+        slope (float, optional): default is 1e-6 m/year per unit
+                                 of solar insolation.
     """
 
     def __init__(
@@ -67,5 +71,32 @@ class LinearInsolationAccumulation(InsolationAccumulationModel):
     def parameters(self) -> Dict[str, float]:
         return {"intercept": self.intercept, "slope": self.slope}
 
-    def accumulation(self, time: np.ndarray) -> np.ndarray:
-        raise NotImplementedError
+    def get_accumulation_at_t(self, time: np.ndarray) -> np.ndarray:
+        """
+        Calculates the accumulation rate per time
+
+        Args:
+            time (np.ndarray): times at which we want to calculate A, in years.
+        Output:
+            np.ndarray of the same size as time input containing values of 
+            accumulation rates A in m/year
+        
+        """
+        return self.intercept +  (self.slope * self.ins_data_spline(time))
+    
+    def get_yt(self, time: np.ndarray):
+        """
+        Calculates the vertical distance y (in m) at times t traveled by a point
+        in the center of the high side of the trough. This distance  is a 
+        function of the accumulation rate A as y(t)=int(A(ins(t)), dt) or 
+        dy/dt=A(ins(t))
+
+        Args:
+            time (np.ndarray): times at which we want to calculate y, in years.
+        Output:
+            np.ndarray of the same size as time input containing values of 
+            the vertical distance y, in meters.
+        
+        """
+        return self.intercept -1 * (self.slope * (self.iins_data_spline(time) 
+                                                 - self.iins_data_spline(0)))
