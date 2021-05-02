@@ -35,8 +35,8 @@ class InsolationAccumulationModel(AccumulationModel):
     def __init__(self, times: np.ndarray, insolations: np.ndarray):
         self._ins_times = times
         self._insolations = insolations
-        self._ins_spline = IUS(self._ins_times, self._insolations)
-        self._ins_spline_integ = self._ins_spline.antiderivative()
+        self._ins_data_spline = IUS(self._ins_times, self._insolations)
+        self._int_ins_data_spline = self._ins_spline.antiderivative()
         self._ins2_spline = IUS(self._ins_times, self._insolations ** 2)
         self._ins2_spline_integ = self.ins2_spline.antiderivative()
 
@@ -82,7 +82,7 @@ class LinearInsolationAccumulation(InsolationAccumulationModel):
             accumulation rates A in m/year
         
         """
-        return self.intercept +  (self.slope * self.ins_data_spline(time))
+        return self.intercept +  (self.slope * self._ins_data_spline(time))
     
     def get_yt(self, time: np.ndarray):
         """
@@ -98,5 +98,5 @@ class LinearInsolationAccumulation(InsolationAccumulationModel):
             the vertical distance y, in meters.
         
         """
-        return self.intercept -1 * (self.slope * (self.iins_data_spline(time) 
-                                                 - self.iins_data_spline(0)))
+        return self.intercept -1 *(self.slope * (self._int_ins_data_spline(time) 
+                                               - self._int_ins_data_spline(0)))
