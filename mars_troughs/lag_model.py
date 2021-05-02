@@ -33,8 +33,8 @@ class ConstantLag(LagModel):
         self.constant = constant
 
     @property
-    def parameters(self) -> Dict[str, float]:
-        return {"constant": self.constant}
+    def parameter_names(self) -> Dict[str, float]:
+        return ["constant"]
 
     def lag(self, time: np.ndarray) -> np.ndarray:
         """
@@ -62,8 +62,8 @@ class LinearLag(LagModel):
         self.slope = slope
 
     @property
-    def parameters(self) -> Dict[str, float]:
-        return {"intercept": self.intercept, "slope": self.slope}
+    def parameter_names(self) -> Dict[str, float]:
+        return ["intercept", "slope"]
 
     def lag(self, time: np.ndarray) -> np.ndarray:
         """
