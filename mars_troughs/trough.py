@@ -9,7 +9,8 @@ from scipy.interpolate import InterpolatedUnivariateSpline as IUS
 from scipy.interpolate import RectBivariateSpline as RBS
 
 from mars_troughs import DATAPATHS
-
+from mars_troughs import ConstantLag,LinearLag
+from mars_troughs import LinearInsolationAccumulation, QuadraticInsolationAccumulation
 
 class Trough:
     def __init__(
@@ -65,22 +66,27 @@ class Trough:
         self.lags[0] -= 1
         self.lags[-1] = 20
 
-        # Create data splines of insolation and retreat of ice (no dependency 
+        # Create data splines of retreat of ice (no dependency 
         # on model parameters) 
-        # Insolation
-        self.ins_data_spline = IUS(ins_times, insolation)
-        self.iins_data_spline = self.ins_data_spline.antiderivative()
-        self.ins2_data_spline = IUS(ins_times, insolation ** 2)
-        self.iins2_data_spline = self.ins2_data_spline.antiderivative()
-        # Retreat of ice
         self.ret_data_spline = RBS(self.lags, self.ins_times, self.retreats)
         self.re2_data_spline = RBS(self.lags, self.ins_times, self.retreats ** 2)
-
-        # Calculate the model of lag per time 
-        self.lag_model_t = self.get_lag_model_t(self.ins_times)
+        
+        #Create lag model object        
+        if self.lag_model_number == 0: 
+            constant = self.lag_params[0]
+            self.lagModel=ConstantLag(constant)
+        elif self.lag_model_number == 1:
+            intersect,slope = self.lag_params[0:2]
+            self.lagModel=LinearLag(intersect,slope)
+        else:
+            print("Error: lag model number should be 0 or 1")
+            
+        #Calculate model of lag per time
+        self.lag_model_t=self.lagModel.get_lag_at_t(self.ins_times)
         
         # Calculate the model of retreat of ice per time 
-        self.retreat_model_t=self.get_retreat_model_t(self.lag_model_t,self.ins_times)
+        self.retreat_model_t=self.get_retreat_model_t(self.lag_model_t,
+                                                      self.ins_times)
         
         # Compute splines of models of lag and retreat of ice per time 
         self.compute_model_splines()
@@ -113,8 +119,21 @@ class Trough:
         # Set the new accumulation and lag parameters
         self.acc_params = acc_params
         self.lag_params = lag_params
-        # Compute the lag at all times
-        self.lag_model_t = self.get_lag_model_t(self.ins_times)
+        
+        # Update lag model
+        if self.lag_model_number == 0: 
+            constant = self.lag_params[0]
+            self.lagModel=ConstantLag(constant)
+        else:
+            intersect,slope = self.lag_params[0:2]
+            self.lagModel=LinearLag(intersect,slope)
+            
+        # Update the model of lag at all times
+        self.lag_model_t=self.lagModel.get_lag_at_t(self.ins_times)
+        
+        # Update the model of retreat of ice per time 
+        self.retreat_model_t=self.get_retreat_model_t(self.lag_model_t,
+                                                      self.ins_times)
         return
 
     def compute_model_splines(self): # To be called after set_model
@@ -147,28 +166,6 @@ class Trough:
         """
         return self.ins_data_spline(time)
 
-
-    def get_lag_model_t(self, time):  # Model dependent
-        """
-        Calculates the values of lag in mm per time.
-        Lag can be constant at all times (lag = a) if model = 0
-        or it can change linearly with time (lag = a + b*t) if model = 1.
-        a and b are the elements of lag_params.
-
-        Args:
-            time (np.ndarray): times at which we want to calculate the lag.
-        Output:
-            lag values (np.ndarray) of the same size as time input
-        """
-        num = self.lag_model_number
-        p = self.lag_params
-        if num == 0:
-            a = p[0]  # lag = constant
-            return a * np.ones_like(time)
-        if num == 1:
-            a, b = p[0:2]  # lag(t) = a + b*t
-            return a + b * time
-        return  # error, since no number is returned
     
     def get_retreat_model_t(self, lag_t, time):
         """
