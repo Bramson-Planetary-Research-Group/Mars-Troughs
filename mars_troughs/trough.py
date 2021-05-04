@@ -213,13 +213,15 @@ class Trough:
             x and y coordinates (tuple) of size 2 x len(times) (in m).
         """
         if np.all(times) is None:
-            times=self.times 
+            times=self.ins_times
             
         int_retreat_model_t_spline=self.int_retreat_model_t_spline
-        angle=self.angle
+        cot_angle=self.cot_angle
+        csc_angle=self.csc_angle
         
         y=self.accuModel.get_yt(times)
-        x=self.accuModel.get_xt(times,int_retreat_model_t_spline,angle)
+        x=self.accuModel.get_xt(times,int_retreat_model_t_spline,cot_angle,
+                                                                 csc_angle)
         
         return x,y
             
@@ -285,3 +287,31 @@ class Trough:
         xvar, yvar = (self.errorbar * self.meters_per_pixel) ** 2
         chi2 = (x_data - x_model) ** 2 / xvar + (y_data - y_model) ** 2 / yvar
         return -0.5 * chi2.sum() - 0.5 * len(x_data) * np.log(xvar * yvar)
+    
+    @property
+    def angle(self) -> float:
+        """
+        Slope angle in degrees.
+        """
+        return self._angle * 180.0 / np.pi
+
+    @angle.setter
+    def angle(self, value: float) -> float:
+        """Setter for the angle"""
+        self._angle = value * np.pi / 180.0
+        self._csc = 1.0 / np.sin(self._angle)
+        self._cot = np.cos(self._angle) * self._csc
+
+    @property
+    def csc_angle(self) -> float:
+        """
+        Cosecant of the slope angle.
+        """
+        return self._csc
+
+    @property
+    def cot_angle(self) -> float:
+        """
+        Cotangent of the slope angle.
+        """
+        return self._cot

@@ -41,7 +41,7 @@ class InsolationAccumulationModel(AccumulationModel):
         self._int_ins2_data_spline = self._ins2_data_spline.antiderivative()
         
     def get_xt(self, time: np.ndarray, int_retreat_model_t_spline: np.ndarray, 
-                                                       angle: float = 2.9):  
+                                                       cot_angle,csc_angle):  
         """
         Calculates the horizontal distance x (in m) traveled by a point in the
         center of the high side of the trough. This distance x is a function of 
@@ -54,40 +54,12 @@ class InsolationAccumulationModel(AccumulationModel):
         Output:
             horizontal distances (np.ndarray) of the same size as time input, in
             meters.
-        """
-        self.angle=angle           
+        """          
         yt = self.get_yt(time)
         
-        return -self.cot_angle * yt + self.csc_angle * (
+        return -cot_angle * yt + csc_angle * (
                int_retreat_model_t_spline(time) - int_retreat_model_t_spline(0))
     
-    @property
-    def angle(self) -> float:
-        """
-        Slope angle in degrees.
-        """
-        return self._angle * 180.0 / np.pi
-
-    @angle.setter
-    def angle(self, value: float) -> float:
-        """Setter for the angle"""
-        self._angle = value * np.pi / 180.0
-        self._csc = 1.0 / np.sin(self._angle)
-        self._cot = np.cos(self._angle) * self._csc
-
-    @property
-    def csc_angle(self) -> float:
-        """
-        Cosecant of the slope angle.
-        """
-        return self._csc
-
-    @property
-    def cot_angle(self) -> float:
-        """
-        Cotangent of the slope angle.
-        """
-        return self._cot
 
 class LinearInsolationAccumulation(InsolationAccumulationModel):
     """

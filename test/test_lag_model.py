@@ -26,7 +26,7 @@ class ConstantLagTest(TestCase):
         time = np.linspace(0, 1e6, 1000)
         for const in [1.0, 2.0, 2.5]:
             model = ConstantLag(const)
-            lags = model.lag(time)
+            lags = model.get_lag_at_t(time)
             assert (lags == np.ones_like(time) * const).all()
 
 
@@ -51,5 +51,5 @@ class LinearLagTest(TestCase):
             model = LinearLag(inter, slope)
             assert model.intercept == inter
             assert model.slope == slope
-            lags = model.lag(time)
+            lags = model.get_lag_at_t(time)
             assert (lags == inter + slope * time).all()
