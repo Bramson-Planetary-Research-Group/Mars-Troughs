@@ -192,3 +192,23 @@ class QuadraticInsolationAccumulation(InsolationAccumulationModel):
         """
         return self.intercept + self.linearCoeff * self._ins_data_spline(time) \
                               + self.quadCoeff * self._ins2_data_spline(time)
+        
+    def get_yt(self, time: np.ndarray):
+        """
+        Calculates the vertical distance y (in m) at times t traveled by a point
+        in the center of the high side of the trough. This distance  is a 
+        function of the accumulation rate A as y(t)=int(A(ins(t)) dt) or 
+        dy/dt=A(ins(t))
+
+        Args:
+            time (np.ndarray): times at which we want to calculate y, in years.
+        Output:
+            np.ndarray of the same size as time input containing values of 
+            the vertical distance y, in meters.
+        
+        """
+        return self.intercept  + (
+               self.linearCoeff * (self._int_ins_data_spline(time) - 
+                              self._int_ins_data_spline(0))
+             + self.quadCoeff * (self._int_ins2_data_spline(time) - 
+                              self._int_ins2_data_spline(0)))
