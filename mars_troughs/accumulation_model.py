@@ -23,7 +23,7 @@ class AccumulationModel(Model):
 class InsolationAccumulationModel(AccumulationModel):
     """
     An accumulation rate model that depends on solar insolation, A(Ins(t)).
-    A in in m/year. Interpolated splines are created for the insolation as 
+    A is in m/year. Interpolated splines are created for the insolation as 
     a function of time for faster integration.
 
     Args:
@@ -45,7 +45,7 @@ class InsolationAccumulationModel(AccumulationModel):
         """
         Calculates the horizontal distance x (in m) traveled by a point in the
         center of the high side of the trough. This distance x is a function of 
-        the accumulation rate A and the retreat rate of ice R
+        the accumulation rate A(ins(t)) and the retreat rate of ice R(l(t),t)
         as in dx/dt=(R(l(t),t)+A(ins(t))cos(theta))/sin(theta). Where theta
         is the slope angle of the trough.
 
@@ -128,14 +128,14 @@ class LinearInsolationAccumulation(InsolationAccumulationModel):
             time (np.ndarray): times at which we want to calculate A, in years.
         Output:
             np.ndarray of the same size as time input containing values of 
-            accumulation rates A in m/year
+            accumulation rates A, in m/year
         
         """
         return self.intercept + self.slope * self._ins_data_spline(time)
     
     def get_yt(self, time: np.ndarray):
         """
-        Calculates the vertical distance y (in m) at times t traveled by a point
+        Calculates the vertical distance y (in m) traveled by a point
         in the center of the high side of the trough. This distance  is a 
         function of the accumulation rate A as y(t)=int(A(ins(t)), dt) or 
         dy/dt=A(ins(t))
@@ -160,13 +160,13 @@ class QuadraticInsolationAccumulation(InsolationAccumulationModel):
         times (np.ndarray): times at which the solar insolation is known, in
                             years.
         insolations (np.ndarray): value of the solar insolations (in W/m^2)
-        intercept (float, optional): default is 0 m/year
+        intercept (float, optional): default is 1 m/year
         linearCoeff (float, optional): default is 1e-6 m/year per unit
             of solar insolation (m^3/(year*W)).
         quadCoeff (float, optional): default is 1e-6 m/year per unit
             of solar insolation squared (m^5/(year*W^2)).
     """
-    def __init__(self, times, insolation, intercept: float = 0.0, 
+    def __init__(self, times, insolation, intercept: float = 1.0, 
                  linearCoeff: float = 1e-6, quadCoeff: float = 1e-6):
         
         super().__init__(times, insolation)
@@ -187,7 +187,7 @@ class QuadraticInsolationAccumulation(InsolationAccumulationModel):
             time (np.ndarray): times at which we want to calculate A, in years.
         Output:
             np.ndarray of the same size as time input containing values of 
-            accumulation rates A in m/year
+            accumulation rates A, in m/year
         
         """
         return self.intercept + self.linearCoeff * self._ins_data_spline(time) \
@@ -195,7 +195,7 @@ class QuadraticInsolationAccumulation(InsolationAccumulationModel):
         
     def get_yt(self, time: np.ndarray):
         """
-        Calculates the vertical distance y (in m) at times t traveled by a point
+        Calculates the vertical distance y (in m) at traveled by a point
         in the center of the high side of the trough. This distance  is a 
         function of the accumulation rate A as y(t)=int(A(ins(t)) dt) or 
         dy/dt=A(ins(t))
