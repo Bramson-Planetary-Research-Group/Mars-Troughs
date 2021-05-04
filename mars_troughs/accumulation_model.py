@@ -100,7 +100,7 @@ class LinearInsolationAccumulation(InsolationAccumulationModel):
                             (in years)
         insolation values (np.ndarray): values of solar insolation (in W/m^2)
         intercept (float, optional): accumulation rate at present time.
-                                     Default is 1 m/year
+                                     Default is 1e-6 m/year
         slope (float, optional): default is 1e-6 m/year per unit
                                  of solar insolation (m^3/(year*W)).
     """
@@ -109,7 +109,7 @@ class LinearInsolationAccumulation(InsolationAccumulationModel):
         self,
         times: np.ndarray,
         insolations: np.ndarray,
-        intercept: float = 1.0,
+        intercept: float = 1e-6,
         slope: float = 1e-6,
         ):
         super().__init__(times, insolations)
