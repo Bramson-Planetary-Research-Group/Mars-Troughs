@@ -37,8 +37,8 @@ class InsolationAccumulationModel(AccumulationModel):
         self._insolations = insolations
         self._ins_data_spline = IUS(self._ins_times, self._insolations)
         self._int_ins_data_spline = self._ins_data_spline.antiderivative()
-        self._ins2_spline = IUS(self._ins_times, self._insolations ** 2)
-        self._ins2_spline_integ = self._ins2_spline.antiderivative()
+        self._ins2_data_spline = IUS(self._ins_times, self._insolations ** 2)
+        self._int_ins2_data_spline = self._ins2_data_spline.antiderivative()
         
     def get_xt(self, time: np.ndarray, int_retreat_model_t_spline: np.ndarray, 
                                                        angle: float = 2.9):  
@@ -91,17 +91,18 @@ class InsolationAccumulationModel(AccumulationModel):
 
 class LinearInsolationAccumulation(InsolationAccumulationModel):
     """
-    Accumulation is linear in solar insolation. 
+    Accumulation is linear in solar insolation.
     A(ins(t)) = intercept + slope*ins(t).
+    A is in m/year.
 
     Args:
         times (np.ndarray): times at which the solar insolation is known 
                             (in years)
         insolation values (np.ndarray): values of solar insolation (in W/m^2)
         intercept (float, optional): accumulation rate at present time.
-                                     Default is 1 m
+                                     Default is 1 m/year
         slope (float, optional): default is 1e-6 m/year per unit
-                                 of solar insolation.
+                                 of solar insolation (m^3/(year*W)).
     """
 
     def __init__(
@@ -121,7 +122,7 @@ class LinearInsolationAccumulation(InsolationAccumulationModel):
 
     def get_accumulation_at_t(self, time: np.ndarray) -> np.ndarray:
         """
-        Calculates the accumulation rate per time
+        Calculates the accumulation rate at times "time". 
 
         Args:
             time (np.ndarray): times at which we want to calculate A, in years.
@@ -130,7 +131,7 @@ class LinearInsolationAccumulation(InsolationAccumulationModel):
             accumulation rates A in m/year
         
         """
-        return self.intercept +  (self.slope * self._ins_data_spline(time))
+        return self.intercept + self.slope * self._ins_data_spline(time)
     
     def get_yt(self, time: np.ndarray):
         """
@@ -148,5 +149,46 @@ class LinearInsolationAccumulation(InsolationAccumulationModel):
         """
         return  -1 *(self.slope * (self._int_ins_data_spline(time) 
                                  - self._int_ins_data_spline(0)))
+ 
+class QuadraticInsolationAccumulation(InsolationAccumulationModel):
+    """
+    Accumulation rate A (in m/year) as a  quadratic polynomial of insolation.
+    A(ins(t)) = intercept + linearCoeff*ins(t)+ quadCoeff*ins(t)^2.
+    A is in m/year.
+
+    Args:
+        times (np.ndarray): times at which the solar insolation is known, in
+                            years.
+        insolations (np.ndarray): value of the solar insolations (in W/m^2)
+        intercept (float, optional): default is 0 m/year
+        linearCoeff (float, optional): default is 1e-6 m/year per unit
+            of solar insolation (m^3/(year*W)).
+        quadCoeff (float, optional): default is 1e-6 m/year per unit
+            of solar insolation squared (m^5/(year*W^2)).
+    """
+    def __init__(self, times, insolation, intercept: float = 0.0, 
+                 linearCoeff: float = 1e-6, quadCoeff: float = 1e-6):
+        
+        super().__init__(times, insolation)
+        
+        self.intercept=intercept
+        self.linearCoeff=linearCoeff
+        self.quadCoeff=quadCoeff
     
+    @property
+    def parameter_names(self) -> Dict[str, float]:
+        return ["intercept", "linearCoeff", "quadCoeff"]
     
+    def get_accumulation_at_t(self, time: np.ndarray):
+        """
+        Calculates the accumulation rate A at times "time".
+
+        Args:
+            time (np.ndarray): times at which we want to calculate A, in years.
+        Output:
+            np.ndarray of the same size as time input containing values of 
+            accumulation rates A in m/year
+        
+        """
+        return self.intercept + self.linearCoeff * self._ins_data_spline(time) \
+                              + self.quadCoeff * self._ins2_data_spline(time)
