@@ -109,7 +109,7 @@ class LinearInsolationAccumulation(InsolationAccumulationModel):
         """
         Calculates the vertical distance y (in m) traveled by a point
         in the center of the high side of the trough. This distance  is a 
-        function of the accumulation rate A as y(t)=int(A(ins(t)), dt) or 
+        function of the accumulation rate A as y(t)=integral(A(ins(t)), dt) or 
         dy/dt=A(ins(t))
 
         Args:
@@ -169,7 +169,7 @@ class QuadraticInsolationAccumulation(InsolationAccumulationModel):
         """
         Calculates the vertical distance y (in m) at traveled by a point
         in the center of the high side of the trough. This distance  is a 
-        function of the accumulation rate A as y(t)=int(A(ins(t)) dt) or 
+        function of the accumulation rate A as y(t)=integral(A(ins(t)), dt) or 
         dy/dt=A(ins(t))
 
         Args:
