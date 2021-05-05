@@ -1,4 +1,4 @@
-from .accumulation_model import AccumulationModel, LinearInsolationAccumulation
+from .accumulation_model import AccumulationModel, LinearInsolationAccumulation, QuadraticInsolationAccumulation 
 from .datapaths import DATAPATHS
 from .lag_model import ConstantLag, LagModel, LinearLag
 from .model import Model

@@ -7,7 +7,7 @@ from mars_troughs import Trough
 
 class TroughTest(TestCase):
     def setUp(self):
-        self.acc_params = [1e-6, 1e-11]
+        self.acc_params = [1e-6, 1e-11,1e-11]
         self.acc_model_number = 1
         self.lag_params = [1, 1e-7]
         self.lag_model_number = 1
