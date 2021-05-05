@@ -119,8 +119,8 @@ class LinearInsolationAccumulation(InsolationAccumulationModel):
             the vertical distance y, in meters.
         
         """
-        return  -1 *(self.slope * (self._int_ins_data_spline(time) 
-                                 - self._int_ins_data_spline(0)))
+        return  -(self.intercept*time + (self.slope *( 
+            self._int_ins_data_spline(time) - self._int_ins_data_spline(0))))
  
 class QuadraticInsolationAccumulation(InsolationAccumulationModel):
     """
@@ -179,8 +179,8 @@ class QuadraticInsolationAccumulation(InsolationAccumulationModel):
             the vertical distance y, in meters.
         
         """
-        return self.intercept  + (
+        return -(self.intercept*time  + (
                self.linearCoeff * (self._int_ins_data_spline(time) - 
                               self._int_ins_data_spline(0))
              + self.quadCoeff * (self._int_ins2_data_spline(time) - 
-                              self._int_ins2_data_spline(0)))
+                              self._int_ins2_data_spline(0))))
