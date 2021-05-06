@@ -8,6 +8,7 @@ import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
 
 from mars_troughs.model import Model
+from mars_troughs.linear_model import LinearModel, QuadModel
 
 
 class AccumulationModel(Model):
@@ -67,7 +68,7 @@ class InsolationAccumulationModel(AccumulationModel):
         )
 
 
-class LinearInsolationAccumulation(InsolationAccumulationModel):
+class LinearInsolationAccumulation(InsolationAccumulationModel, LinearModel):
     """
     Accumulation is linear in solar insolation.
     A(ins(t)) = intercept + slope*ins(t).
@@ -109,7 +110,8 @@ class LinearInsolationAccumulation(InsolationAccumulationModel):
             accumulation rates A, in m/year
 
         """
-        return self.intercept + self.slope * self._ins_data_spline(time)
+        return self.eval(time)
+        #return self.intercept + self.slope * self._ins_data_spline(time)
 
     def get_yt(self, time: np.ndarray):
         """
@@ -134,7 +136,7 @@ class LinearInsolationAccumulation(InsolationAccumulationModel):
         )
 
 
-class QuadraticInsolationAccumulation(InsolationAccumulationModel):
+class QuadraticInsolationAccumulation(InsolationAccumulationModel, QuadModel):
     """
     Accumulation rate A (in m/year) as a  quadratic polynomial of insolation.
     A(ins(t)) = intercept + linearCoeff*ins(t)+ quadCoeff*ins(t)^2.
@@ -181,11 +183,12 @@ class QuadraticInsolationAccumulation(InsolationAccumulationModel):
             accumulation rates A, in m/year
 
         """
-        return (
-            self.intercept
-            + self.linearCoeff * self._ins_data_spline(time)
-            + self.quadCoeff * self._ins2_data_spline(time)
-        )
+        #return (
+        #    self.intercept
+        #    + self.linearCoeff * self._ins_data_spline(time)
+        #    + self.quadCoeff * self._ins2_data_spline(time)
+        #)
+        return self.eval(self._ins_data_spline(time))
 
     def get_yt(self, time: np.ndarray):
         """

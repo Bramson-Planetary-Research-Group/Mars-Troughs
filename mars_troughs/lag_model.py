@@ -7,6 +7,7 @@ from typing import Dict
 import numpy as np
 
 from mars_troughs.model import Model
+from mars_troughs.linear_model import LinearModel
 
 
 class LagModel(Model):
@@ -51,7 +52,7 @@ class ConstantLag(LagModel):
         return self.constant * np.ones_like(time)
 
 
-class LinearLag(LagModel):
+class LinearLag(LagModel, LinearModel):
     """
     The lag thickness is linear in time. Lag changes as
     lag(t) = intercept + slope*t.
@@ -62,6 +63,8 @@ class LinearLag(LagModel):
         slope (float, optional): default is 1e-6 mm per year. The rate
             of change of the lag per time.
     """
+    
+
 
     def __init__(self, intercept: float = 1.0, slope: float = 1e-6):
         self.intercept = intercept
@@ -70,10 +73,10 @@ class LinearLag(LagModel):
     @property
     def parameter_names(self) -> Dict[str, float]:
         return ["intercept", "slope"]
-
+    
     def get_lag_at_t(self, time: np.ndarray) -> np.ndarray:
         """
-        Compute lag thickness at each value of time
+        Compute lag thickness at each value of time using Linear Model
 
         Args:
             time (np.ndarray): times at which we want to calculate the lag.
@@ -82,4 +85,4 @@ class LinearLag(LagModel):
             thickness.
 
         """
-        return self.intercept + self.slope * time
+        return self.eval(time)

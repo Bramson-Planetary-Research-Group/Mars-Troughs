@@ -5,6 +5,7 @@ from .accumulation_model import (
 )
 from .datapaths import DATAPATHS
 from .lag_model import ConstantLag, LagModel, LinearLag
+from .linear_model import LinearModel, QuadModel
 from .model import Model
 from .trough import Trough
 

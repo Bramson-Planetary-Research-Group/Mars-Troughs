@@ -86,6 +86,7 @@ class Trough:
             intercept, linearCoeff, quadCoeff = self.acc_params[0:3]
             self.accuModel = QuadraticInsolationAccumulation(
                 self.ins_times, self.insolation, intercept, linearCoeff, quadCoeff
+            
             )
         else:
             print("Error: accumulation model number should be 0 or 1")
