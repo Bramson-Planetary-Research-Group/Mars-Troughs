@@ -8,11 +8,14 @@ import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
 from scipy.interpolate import RectBivariateSpline as RBS
 
-from mars_troughs import DATAPATHS
+from mars_troughs import (
+    ConstantLag,
+    DATAPATHS,
+    LinearInsolationAccumulation,
+    LinearLag,
+    QuadraticInsolationAccumulation,
+)
 
-from mars_troughs import ConstantLag,LinearLag
-from mars_troughs import LinearInsolationAccumulation
-from mars_troughs import QuadraticInsolationAccumulation
 
 class Trough:
     def __init__(
@@ -62,47 +65,50 @@ class Trough:
         self.insolation = insolation
         self.ins_times = ins_times
         self.retreats = retreats
-        
+
         # Set range of lag values
         self.lags = np.arange(16) + 1
         self.lags[0] -= 1
         self.lags[-1] = 20
 
-        # Create data splines of retreat of ice (no dependency 
-        # on model parameters) 
+        # Create data splines of retreat of ice (no dependency
+        # on model parameters)
         self.ret_data_spline = RBS(self.lags, self.ins_times, self.retreats)
         self.re2_data_spline = RBS(self.lags, self.ins_times, self.retreats ** 2)
-        
+
         # Create accumulation model object
-        if self.acc_model_number == 0: 
-            intercept,slope = self.acc_params[0:2]
-            self.accuModel=LinearInsolationAccumulation(self.ins_times,
-                                        self.insolation,intercept,slope)
+        if self.acc_model_number == 0:
+            intercept, slope = self.acc_params[0:2]
+            self.accuModel = LinearInsolationAccumulation(
+                self.ins_times, self.insolation, intercept, slope
+            )
         elif self.acc_model_number == 1:
-            intercept,linearCoeff,quadCoeff=self.acc_params[0:3]
-            self.accuModel=QuadraticInsolationAccumulation(self.ins_times,
-                            self.insolation,intercept,linearCoeff,quadCoeff)
+            intercept, linearCoeff, quadCoeff = self.acc_params[0:3]
+            self.accuModel = QuadraticInsolationAccumulation(
+                self.ins_times, self.insolation, intercept, linearCoeff, quadCoeff
+            )
         else:
             print("Error: accumulation model number should be 0 or 1")
-        
-        # Create lag model object        
-        if self.lag_model_number == 0: 
+
+        # Create lag model object
+        if self.lag_model_number == 0:
             constant = self.lag_params[0]
-            self.lagModel=ConstantLag(constant)
+            self.lagModel = ConstantLag(constant)
         elif self.lag_model_number == 1:
-            intersect,slope = self.lag_params[0:2]
-            self.lagModel=LinearLag(intersect,slope)
+            intersect, slope = self.lag_params[0:2]
+            self.lagModel = LinearLag(intersect, slope)
         else:
             print("Error: lag model number should be 0 or 1")
-            
+
         # Calculate model of lag per time
-        self.lag_model_t=self.lagModel.get_lag_at_t(self.ins_times)
-        
-        # Calculate the model of retreat of ice per time 
-        self.retreat_model_t=self.get_retreat_model_t(self.lag_model_t,
-                                                      self.ins_times)
-        
-        # Compute splines of models of lag and retreat of ice per time 
+        self.lag_model_t = self.lagModel.get_lag_at_t(self.ins_times)
+
+        # Calculate the model of retreat of ice per time
+        self.retreat_model_t = self.get_retreat_model_t(
+            self.lag_model_t, self.ins_times
+        )
+
+        # Compute splines of models of lag and retreat of ice per time
         self.compute_model_splines()
 
     def set_model(self, acc_params, lag_params, errorbar):
@@ -135,30 +141,33 @@ class Trough:
         self.lag_params = lag_params
 
         # Update accumulation model object
-        ins_times=self.ins_times
-        insolation=self.insolation
-        
+        ins_times = self.ins_times
+        insolation = self.insolation
+
         if self.acc_model_number == 0:
-            intercept,slope=self.acc_params[0:2]
-            self.accuModel=LinearInsolationAccumulation(ins_times,insolation,
-                                                        intercept,slope)
+            intercept, slope = self.acc_params[0:2]
+            self.accuModel = LinearInsolationAccumulation(
+                ins_times, insolation, intercept, slope
+            )
         else:
-            intercept,linearCoeff,quadCoeff=self.acc_params[0:3]
-            self.accuModel=QuadraticInsolationAccumulation(ins_times,
-                                  insolation,intercept,linearCoeff,quadCoeff)
-        
+            intercept, linearCoeff, quadCoeff = self.acc_params[0:3]
+            self.accuModel = QuadraticInsolationAccumulation(
+                ins_times, insolation, intercept, linearCoeff, quadCoeff
+            )
+
         # Update the model of lag at all times
-        self.lag_model_t=self.lagModel.get_lag_at_t(self.ins_times)
-        
-        # Update the model of retreat of ice per time 
-        self.retreat_model_t=self.get_retreat_model_t(self.lag_model_t,
-                                                      self.ins_times)
+        self.lag_model_t = self.lagModel.get_lag_at_t(self.ins_times)
+
+        # Update the model of retreat of ice per time
+        self.retreat_model_t = self.get_retreat_model_t(
+            self.lag_model_t, self.ins_times
+        )
         return
 
-    def compute_model_splines(self): # To be called after set_model
+    def compute_model_splines(self):  # To be called after set_model
         """
-        Computes splines of models of 1) lag per time and 
-        2) retreat of ice per time. 
+        Computes splines of models of 1) lag per time and
+        2) retreat of ice per time.
 
         Args:
             None
@@ -167,9 +176,11 @@ class Trough:
         """
         # spline of lag model per time
         self.lag_model_t_spline = IUS(self.ins_times, self.lag_model_t)
-        # spline of retreat model of ice per time 
+        # spline of retreat model of ice per time
         self.retreat_model_t_spline = IUS(self.ins_times, self.retreat_model_t)
-        self.int_retreat_model_t_spline = self.retreat_model_t_spline.antiderivative()
+        self.int_retreat_model_t_spline = (
+            self.retreat_model_t_spline.antiderivative()
+        )
         return
 
     def get_insolation(self, time):
@@ -185,7 +196,6 @@ class Trough:
         """
         return self.ins_data_spline(time)
 
-    
     def get_retreat_model_t(self, lag_t, time):
         """
         Calculates the values of retreat of ice per time (mm/year).
@@ -193,17 +203,16 @@ class Trough:
         the lag_model_t and time values.
 
         Args:
-            lag_t (np.ndarray): lag at time 
+            lag_t (np.ndarray): lag at time
             time (np.ndarray): times at which we want to calculate the retreat
         Output:
             retreat values (np.ndarray) of the same size as time input
         """
         return self.ret_data_spline.ev(lag_t, time)
 
-
     def get_trajectory(self, times: Optional[np.ndarray] = None):
         """
-        Obtains the x and y coordinates (in m) of the trough model as a 
+        Obtains the x and y coordinates (in m) of the trough model as a
         function of time.
 
         Args:
@@ -213,18 +222,18 @@ class Trough:
             x and y coordinates (tuple) of size 2 x len(times) (in m).
         """
         if np.all(times) is None:
-            times=self.ins_times
-            
-        int_retreat_model_t_spline=self.int_retreat_model_t_spline
-        cot_angle=self.cot_angle
-        csc_angle=self.csc_angle
-        
-        y=self.accuModel.get_yt(times)
-        x=self.accuModel.get_xt(times,int_retreat_model_t_spline,cot_angle,
-                                                                 csc_angle)
-        
-        return x,y
-            
+            times = self.ins_times
+
+        int_retreat_model_t_spline = self.int_retreat_model_t_spline
+        cot_angle = self.cot_angle
+        csc_angle = self.csc_angle
+
+        y = self.accuModel.get_yt(times)
+        x = self.accuModel.get_xt(
+            times, int_retreat_model_t_spline, cot_angle, csc_angle
+        )
+
+        return x, y
 
     @staticmethod
     def _L2_distance(x1, x2, y1, y2) -> Union[float, np.ndarray]:
@@ -287,7 +296,7 @@ class Trough:
         xvar, yvar = (self.errorbar * self.meters_per_pixel) ** 2
         chi2 = (x_data - x_model) ** 2 / xvar + (y_data - y_model) ** 2 / yvar
         return -0.5 * chi2.sum() - 0.5 * len(x_data) * np.log(xvar * yvar)
-    
+
     @property
     def angle(self) -> float:
         """

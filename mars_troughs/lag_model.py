@@ -11,8 +11,8 @@ from mars_troughs.model import Model
 
 class LagModel(Model):
     """
-    Abstract class for lag models, that have a method 
-    called :meth:`get_lag_at_t` that returns the lag 
+    Abstract class for lag models, that have a method
+    called :meth:`get_lag_at_t` that returns the lag
     as a function of time.
     """
 
@@ -44,7 +44,7 @@ class ConstantLag(LagModel):
         Args:
             time (np.ndarray): times at which we want to calculate the lag.
         Output:
-            np.ndarray of the same size as time input containing values of lag. 
+            np.ndarray of the same size as time input containing values of lag.
             All elements in the array are the same since the lag is
             constant.
         """
@@ -53,7 +53,7 @@ class ConstantLag(LagModel):
 
 class LinearLag(LagModel):
     """
-    The lag thickness is linear in time. Lag changes as 
+    The lag thickness is linear in time. Lag changes as
     lag(t) = intercept + slope*t.
 
     Args:
@@ -79,7 +79,7 @@ class LinearLag(LagModel):
             time (np.ndarray): times at which we want to calculate the lag.
         Output:
             np.ndarray of the same size as time input containing values of lag
-            thickness. 
-        
+            thickness.
+
         """
         return self.intercept + self.slope * time
