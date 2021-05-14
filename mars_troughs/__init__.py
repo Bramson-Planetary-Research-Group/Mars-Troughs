@@ -2,9 +2,10 @@ from .accumulation_model import (
     AccumulationModel,
     LinearInsolationAccumulation,
     QuadraticInsolationAccumulation,
+    ACCUMULATION_MODEL_MAP,
 )
 from .datapaths import DATAPATHS
-from .lag_model import ConstantLag, LagModel, LinearLag
+from .lag_model import ConstantLag, LagModel, LinearLag, LAG_MODEL_MAP
 from .model import Model
 from .trough import Trough
 

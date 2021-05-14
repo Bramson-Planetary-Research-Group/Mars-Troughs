@@ -12,8 +12,10 @@ from mars_troughs import (
     ConstantLag,
     DATAPATHS,
     LinearInsolationAccumulation,
+    ACCUMULATION_MODEL_MAP,
     LinearLag,
     QuadraticInsolationAccumulation,
+    LAG_MODEL_MAP,
 )
 
 
@@ -22,8 +24,8 @@ class Trough:
         self,
         acc_params,
         lag_params,
-        acc_model_number: int,
-        lag_model_number: int,
+        acc_model_name: str,
+        lag_model_name: str,
         errorbar: float = 1.0,
         angle: float = 2.9,
         insolation_path: Union[str, Path] = DATAPATHS.INSOLATION,
@@ -33,9 +35,10 @@ class Trough:
 
         Args:
           acc_params (array like): model parameters for accumulation
-          acc_model_number (int): index of the accumulation model
+          acc_model_name (str): name of the accumulation model 
+                                (linear, quadratic, etc)
           lag_params (array like): model parameters for lag(t)
-          lag_model_number (int): index of the lag(t) model
+          lag_model_name (str): name of the lag(t) model (constant, linear, etc)
           errorbar (float, optional): errorbar of the datapoints in pixels; default=1
           angle (float, optional): south-facing slope angle in degrees. Default is 2.9.
           insolation_path (Union[str, Path], optional): path to the file with
@@ -53,8 +56,8 @@ class Trough:
         # Set up the trough model
         self.acc_params = np.array(acc_params)
         self.lag_params = np.array(lag_params)
-        self.acc_model_number = acc_model_number
-        self.lag_model_number = lag_model_number
+        self.acc_model_name = acc_model_name
+        self.lag_model_name = lag_model_name
         self.errorbar = errorbar
         self.meters_per_pixel = np.array([500.0, 20.0])  # meters per pixel
 
@@ -76,37 +79,19 @@ class Trough:
         self.ret_data_spline = RBS(self.lags, self.ins_times, self.retreats)
         self.re2_data_spline = RBS(self.lags, self.ins_times, self.retreats ** 2)
 
-        # Create accumulation model object
-        if self.acc_model_number == 0:
-            intercept, slope = self.acc_params[0:2]
-            self.accuModel = LinearInsolationAccumulation(
-                self.ins_times, self.insolation, intercept, slope
-            )
-        elif self.acc_model_number == 1:
-            intercept, linearCoeff, quadCoeff = self.acc_params[0:3]
-            self.accuModel = QuadraticInsolationAccumulation(
-                self.ins_times, self.insolation, intercept, linearCoeff, quadCoeff
-            )
-        else:
-            print("Error: accumulation model number should be 0 or 1")
-
-        # Create lag model object
-        if self.lag_model_number == 0:
-            constant = self.lag_params[0]
-            self.lagModel = ConstantLag(constant)
-        elif self.lag_model_number == 1:
-            intersect, slope = self.lag_params[0:2]
-            self.lagModel = LinearLag(intersect, slope)
-        else:
-            print("Error: lag model number should be 0 or 1")
+        # Create submodels
+        self.accuModel = ACCUMULATION_MODEL_MAP[self.acc_model_name](
+                                                                self.ins_times,
+                                                                self.insolation,
+                                                               *self.acc_params)
+        self.lagModel = LAG_MODEL_MAP[self.lag_model_name](*self.lag_params)
 
         # Calculate model of lag per time
         self.lag_model_t = self.lagModel.get_lag_at_t(self.ins_times)
 
         # Calculate the model of retreat of ice per time
         self.retreat_model_t = self.get_retreat_model_t(
-            self.lag_model_t, self.ins_times
-        )
+                                              self.lag_model_t, self.ins_times)
 
         # Compute splines of models of lag and retreat of ice per time
         self.compute_model_splines()
@@ -140,20 +125,12 @@ class Trough:
         self.acc_params = acc_params
         self.lag_params = lag_params
 
-        # Update accumulation model object
-        ins_times = self.ins_times
-        insolation = self.insolation
-
-        if self.acc_model_number == 0:
-            intercept, slope = self.acc_params[0:2]
-            self.accuModel = LinearInsolationAccumulation(
-                ins_times, insolation, intercept, slope
-            )
-        else:
-            intercept, linearCoeff, quadCoeff = self.acc_params[0:3]
-            self.accuModel = QuadraticInsolationAccumulation(
-                ins_times, insolation, intercept, linearCoeff, quadCoeff
-            )
+        # Update submodels
+        self.accuModel = ACCUMULATION_MODEL_MAP[self.acc_model_name](
+                                                                self.ins_times,
+                                                                self.insolations,
+                                                               *self.acc_params)
+        self.lagModel = LAG_MODEL_MAP[self.lag_model_name](*self.lag_params)
 
         # Update the model of lag at all times
         self.lag_model_t = self.lagModel.get_lag_at_t(self.ins_times)
