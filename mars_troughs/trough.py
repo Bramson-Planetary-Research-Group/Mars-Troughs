@@ -8,15 +8,7 @@ import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
 from scipy.interpolate import RectBivariateSpline as RBS
 
-from mars_troughs import (
-    ConstantLag,
-    DATAPATHS,
-    LinearInsolationAccumulation,
-    ACCUMULATION_MODEL_MAP,
-    LinearLag,
-    QuadraticInsolationAccumulation,
-    LAG_MODEL_MAP,
-)
+from mars_troughs import ACCUMULATION_MODEL_MAP, DATAPATHS, LAG_MODEL_MAP
 
 
 class Trough:
@@ -35,7 +27,7 @@ class Trough:
 
         Args:
           acc_params (array like): model parameters for accumulation
-          acc_model_name (str): name of the accumulation model 
+          acc_model_name (str): name of the accumulation model
                                 (linear, quadratic, etc)
           lag_params (array like): model parameters for lag(t)
           lag_model_name (str): name of the lag(t) model (constant, linear, etc)
@@ -81,9 +73,8 @@ class Trough:
 
         # Create submodels
         self.accuModel = ACCUMULATION_MODEL_MAP[self.acc_model_name](
-                                                                self.ins_times,
-                                                                self.insolation,
-                                                               *self.acc_params)
+            self.ins_times, self.insolation, *self.acc_params
+        )
         self.lagModel = LAG_MODEL_MAP[self.lag_model_name](*self.lag_params)
 
         # Calculate model of lag per time
@@ -91,7 +82,8 @@ class Trough:
 
         # Calculate the model of retreat of ice per time
         self.retreat_model_t = self.get_retreat_model_t(
-                                              self.lag_model_t, self.ins_times)
+            self.lag_model_t, self.ins_times
+        )
 
         # Compute splines of models of lag and retreat of ice per time
         self.compute_model_splines()
@@ -127,9 +119,8 @@ class Trough:
 
         # Update submodels
         self.accuModel = ACCUMULATION_MODEL_MAP[self.acc_model_name](
-                                                                self.ins_times,
-                                                                self.insolations,
-                                                               *self.acc_params)
+            self.ins_times, self.insolations, *self.acc_params
+        )
         self.lagModel = LAG_MODEL_MAP[self.lag_model_name](*self.lag_params)
 
         # Update the model of lag at all times
