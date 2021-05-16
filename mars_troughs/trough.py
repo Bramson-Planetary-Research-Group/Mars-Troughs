@@ -8,13 +8,7 @@ import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
 from scipy.interpolate import RectBivariateSpline as RBS
 
-from mars_troughs import (
-    ConstantLag,
-    DATAPATHS,
-    LinearInsolationAccumulation,
-    LinearLag,
-    QuadraticInsolationAccumulation,
-)
+from mars_troughs import ACCUMULATION_MODEL_MAP, DATAPATHS, LAG_MODEL_MAP
 
 
 class Trough:
@@ -22,20 +16,20 @@ class Trough:
         self,
         acc_params,
         lag_params,
-        acc_model_number: int,
-        lag_model_number: int,
+        acc_model_name: str,
+        lag_model_name: str,
         errorbar: float = 1.0,
         angle: float = 2.9,
         insolation_path: Union[str, Path] = DATAPATHS.INSOLATION,
         retreat_path: Union[str, Path] = DATAPATHS.RETREAT,
     ):
         """Constructor for the trough object.
-
         Args:
           acc_params (array like): model parameters for accumulation
-          acc_model_number (int): index of the accumulation model
+          acc_model_name (str): name of the accumulation model
+                                (linear, quadratic, etc)
           lag_params (array like): model parameters for lag(t)
-          lag_model_number (int): index of the lag(t) model
+          lag_model_name (str): name of the lag(t) model (constant, linear, etc)
           errorbar (float, optional): errorbar of the datapoints in pixels; default=1
           angle (float, optional): south-facing slope angle in degrees. Default is 2.9.
           insolation_path (Union[str, Path], optional): path to the file with
@@ -53,8 +47,8 @@ class Trough:
         # Set up the trough model
         self.acc_params = np.array(acc_params)
         self.lag_params = np.array(lag_params)
-        self.acc_model_number = acc_model_number
-        self.lag_model_number = lag_model_number
+        self.acc_model_name = acc_model_name
+        self.lag_model_name = lag_model_name
         self.errorbar = errorbar
         self.meters_per_pixel = np.array([500.0, 20.0])  # meters per pixel
 
@@ -76,30 +70,11 @@ class Trough:
         self.ret_data_spline = RBS(self.lags, self.ins_times, self.retreats)
         self.re2_data_spline = RBS(self.lags, self.ins_times, self.retreats ** 2)
 
-        # Create accumulation model object
-        if self.acc_model_number == 0:
-            intercept, slope = self.acc_params[0:2]
-            self.accuModel = LinearInsolationAccumulation(
-                self.ins_times, self.insolation, intercept, slope
-            )
-        elif self.acc_model_number == 1:
-            intercept, linearCoeff, quadCoeff = self.acc_params[0:3]
-            self.accuModel = QuadraticInsolationAccumulation(
-                self.ins_times, self.insolation, intercept, linearCoeff, quadCoeff
-            
-            )
-        else:
-            print("Error: accumulation model number should be 0 or 1")
-
-        # Create lag model object
-        if self.lag_model_number == 0:
-            constant = self.lag_params[0]
-            self.lagModel = ConstantLag(constant)
-        elif self.lag_model_number == 1:
-            intersect, slope = self.lag_params[0:2]
-            self.lagModel = LinearLag(intersect, slope)
-        else:
-            print("Error: lag model number should be 0 or 1")
+        # Create submodels
+        self.accuModel = ACCUMULATION_MODEL_MAP[self.acc_model_name](
+            self.ins_times, self.insolation, *self.acc_params
+        )
+        self.lagModel = LAG_MODEL_MAP[self.lag_model_name](*self.lag_params)
 
         # Calculate model of lag per time
         self.lag_model_t = self.lagModel.get_lag_at_t(self.ins_times)
@@ -116,7 +91,6 @@ class Trough:
         """
         Updates trough model with new accumulation and lag parameters.
         Model number is kept the same for both acumulation and lag.
-
         Args:
             acc_params (list): Accumulation parameter(s) (same length
                                      as current acumulation parameter(s)).
@@ -125,7 +99,6 @@ class Trough:
             errorbar (float): Errorbar of the datapoints in pixels
         Output:
             None
-
         """
         assert len(acc_params) == len(self.acc_params), (
             "New and original accumulation parameters must have the same shape. %d vs %d"
@@ -141,20 +114,11 @@ class Trough:
         self.acc_params = acc_params
         self.lag_params = lag_params
 
-        # Update accumulation model object
-        ins_times = self.ins_times
-        insolation = self.insolation
-
-        if self.acc_model_number == 0:
-            intercept, slope = self.acc_params[0:2]
-            self.accuModel = LinearInsolationAccumulation(
-                ins_times, insolation, intercept, slope
-            )
-        else:
-            intercept, linearCoeff, quadCoeff = self.acc_params[0:3]
-            self.accuModel = QuadraticInsolationAccumulation(
-                ins_times, insolation, intercept, linearCoeff, quadCoeff
-            )
+        # Update submodels
+        self.accuModel = ACCUMULATION_MODEL_MAP[self.acc_model_name](
+            self.ins_times, self.insolations, *self.acc_params
+        )
+        self.lagModel = LAG_MODEL_MAP[self.lag_model_name](*self.lag_params)
 
         # Update the model of lag at all times
         self.lag_model_t = self.lagModel.get_lag_at_t(self.ins_times)
@@ -169,7 +133,6 @@ class Trough:
         """
         Computes splines of models of 1) lag per time and
         2) retreat of ice per time.
-
         Args:
             None
         Output:
@@ -189,7 +152,6 @@ class Trough:
         Calculates the values of insolation (in W/m^2) per time.
         These values are obtained from splines of the
         times and insolation data in the Insolation.txt file.
-
         Args:
             time (np.ndarray): times at which we want to calculate the Insolation.
         Output:
@@ -202,7 +164,6 @@ class Trough:
         Calculates the values of retreat of ice per time (mm/year).
         These values are obtained by evaluating self.ret_data_spline using
         the lag_model_t and time values.
-
         Args:
             lag_t (np.ndarray): lag at time
             time (np.ndarray): times at which we want to calculate the retreat
@@ -215,7 +176,6 @@ class Trough:
         """
         Obtains the x and y coordinates (in m) of the trough model as a
         function of time.
-
         Args:
             times (Optional[np.ndarray]): if ``None``, default to the
                 times of the observed solar insolation.
@@ -240,7 +200,6 @@ class Trough:
     def _L2_distance(x1, x2, y1, y2) -> Union[float, np.ndarray]:
         """
         The L2 (Eulerean) distance (squared) between two 2D vectors.
-
         Args:
             x1 (Union[float, np.ndarray]): x-coordinate of the first vector
             x2 (Union[float, np.ndarray]): x-coordinate of the second vector
@@ -259,7 +218,6 @@ class Trough:
         """
         Finds the coordinates of the nearest points between the model TMP
         and the data TMP.
-
         Args:
             x_data (np.ndarray): x-coordinates of the data
             y_data (np.ndarray): y-coordinatse of the data
@@ -285,7 +243,6 @@ class Trough:
         """
         Calculates the log-likelihood of the data given the model.
         Note that this is the natural log (ln).
-
         Args:
             x_data (np.ndarray): x-coordinates of the trough path
             y_data (np.ndarray): y-coordinates of the trough path
