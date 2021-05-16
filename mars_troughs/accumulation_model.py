@@ -10,7 +10,6 @@ from scipy.interpolate import InterpolatedUnivariateSpline as IUS
 from mars_troughs.model import Model
 
 
-
 class AccumulationModel(Model):
     """
     Abstract class for computing the amount of ice accumulation.
@@ -214,6 +213,7 @@ class QuadraticInsolationAccumulation(InsolationAccumulationModel):
                 )
             )
         )
+
 
 ACCUMULATION_MODEL_MAP: Dict[str, Model] = {
     "linear": LinearInsolationAccumulation,
