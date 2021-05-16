@@ -8,9 +8,9 @@ from mars_troughs import Trough
 class TroughTest(TestCase):
     def setUp(self):
         self.acc_params = [1e-6, 1e-11, 1e-11]
-        self.acc_model_name = 'quadratic'
+        self.acc_model_name = "quadratic"
         self.lag_params = [1, 1e-7]
-        self.lag_model_name = 'linear'
+        self.lag_model_name = "linear"
         self.errorbar = 100.0
 
     def get_trough_object(self, **kwargs):
