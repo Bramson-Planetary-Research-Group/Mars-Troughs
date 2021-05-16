@@ -5,7 +5,7 @@ from .accumulation_model import (
     QuadraticInsolationAccumulation,
 )
 from .datapaths import DATAPATHS
-from .lag_model import LAG_MODEL_MAP, ConstantLag, LagModel, LinearLag
+from .lag_model import ConstantLag, LAG_MODEL_MAP, LagModel, LinearLag
 from .model import Model
 from .trough import Trough
 
