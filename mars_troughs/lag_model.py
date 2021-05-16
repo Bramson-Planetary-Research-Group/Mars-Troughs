@@ -7,7 +7,7 @@ from typing import Dict
 import numpy as np
 
 from mars_troughs.model import Model
-from mars_troughs.linear_model import LinearModel
+from mars_troughs.linear_model import LinearModel, ConstantModel
 
 
 class LagModel(Model):
@@ -22,7 +22,7 @@ class LagModel(Model):
         raise NotImplementedError
 
 
-class ConstantLag(LagModel):
+class ConstantLag(LagModel, ConstantModel):
     """
     The lag thickness is constant and does not depend on time.
 
@@ -31,8 +31,12 @@ class ConstantLag(LagModel):
             thickness at all times.
     """
 
-    def __init__(self, constant: float = 1.0):
-        self.constant = constant
+    def __init__(
+        self,
+        intercept: float = 1e-6,
+        slope: float = 1e-6,
+    ):
+        ConstantModel.__init__(self, intercept, slope)
 
     @property
     def parameter_names(self) -> Dict[str, float]:
@@ -49,7 +53,7 @@ class ConstantLag(LagModel):
             All elements in the array are the same since the lag is
             constant.
         """
-        return self.constant * np.ones_like(time)
+        return self.eval(time)
 
 
 class LinearLag(LagModel, LinearModel):
@@ -63,12 +67,12 @@ class LinearLag(LagModel, LinearModel):
         slope (float, optional): default is 1e-6 mm per year. The rate
             of change of the lag per time.
     """
-    
-
-
-    def __init__(self, intercept: float = 1.0, slope: float = 1e-6):
-        self.intercept = intercept
-        self.slope = slope
+    def __init__(
+        self,
+        intercept: float = 1e-6,
+        slope: float = 1e-6,
+    ):
+        LinearModel.__init__(self, intercept, slope)
 
     @property
     def parameter_names(self) -> Dict[str, float]:
@@ -86,3 +90,8 @@ class LinearLag(LagModel, LinearModel):
 
         """
         return self.eval(time)
+
+LAG_MODEL_MAP: Dict[str, Model] = {
+    "constant": ConstantLag,
+    "linear": LinearLag,
+}
