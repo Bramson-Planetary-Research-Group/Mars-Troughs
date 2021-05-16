@@ -84,6 +84,7 @@ class LinearInsolationAccumulation(InsolationAccumulationModel, LinearModel):
                                  of solar insolation (m^3/(year*W)).
     """
 
+    
     def __init__(
         self,
         times: np.ndarray,
@@ -92,9 +93,9 @@ class LinearInsolationAccumulation(InsolationAccumulationModel, LinearModel):
         slope: float = 1e-6,
     ):
         super().__init__(times, insolations)
-        self.intercept = intercept
-        self.slope = slope
+        LinearModel.__init__(self, intercept, slope)
 
+    
     @property
     def parameter_names(self) -> Dict[str, float]:
         return ["intercept", "slope"]
@@ -110,8 +111,7 @@ class LinearInsolationAccumulation(InsolationAccumulationModel, LinearModel):
             accumulation rates A, in m/year
 
         """
-        return self.eval(time)
-        #return self.intercept + self.slope * self._ins_data_spline(time)
+        return self.eval(self._ins_data_spline(time))
 
     def get_yt(self, time: np.ndarray):
         """
@@ -127,11 +127,12 @@ class LinearInsolationAccumulation(InsolationAccumulationModel, LinearModel):
             the vertical distance y, in meters.
 
         """
+       
         return -(
             self.intercept * time
             + (
                 self.slope
-                * (self._int_ins_data_spline(time) - self._int_ins_data_spline(0))
+                *(self._int_ins_data_spline(time) - self._int_ins_data_spline(0))
             )
         )
 
@@ -152,7 +153,6 @@ class QuadraticInsolationAccumulation(InsolationAccumulationModel, QuadModel):
         quadCoeff (float, optional): default is 1e-6 m/year per unit
             of solar insolation squared (m^5/(year*W^2)).
     """
-
     def __init__(
         self,
         times,
@@ -161,9 +161,7 @@ class QuadraticInsolationAccumulation(InsolationAccumulationModel, QuadModel):
         linearCoeff: float = 1e-6,
         quadCoeff: float = 1e-6,
     ):
-
         super().__init__(times, insolation)
-
         self.intercept = intercept
         self.linearCoeff = linearCoeff
         self.quadCoeff = quadCoeff
@@ -183,11 +181,6 @@ class QuadraticInsolationAccumulation(InsolationAccumulationModel, QuadModel):
             accumulation rates A, in m/year
 
         """
-        #return (
-        #    self.intercept
-        #    + self.linearCoeff * self._ins_data_spline(time)
-        #    + self.quadCoeff * self._ins2_data_spline(time)
-        #)
         return self.eval(self._ins_data_spline(time))
 
     def get_yt(self, time: np.ndarray):
@@ -216,3 +209,9 @@ class QuadraticInsolationAccumulation(InsolationAccumulationModel, QuadModel):
                 )
             )
         )
+    
+    
+ACCUMULATION_MODEL_MAP: Dict[str, Model] = {
+    "linear": LinearInsolationAccumulation,
+    "quadratic": QuadraticInsolationAccumulation,
+}
