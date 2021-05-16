@@ -84,6 +84,7 @@ class LinearLag(LagModel):
         """
         return self.intercept + self.slope * time
 
+
 LAG_MODEL_MAP: Dict[str, Model] = {
     "constant": ConstantLag,
     "linear": LinearLag,
