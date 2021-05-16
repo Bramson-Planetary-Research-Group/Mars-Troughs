@@ -162,9 +162,7 @@ class QuadraticInsolationAccumulation(InsolationAccumulationModel, QuadModel):
         quadCoeff: float = 1e-6,
     ):
         super().__init__(times, insolation)
-        self.intercept = intercept
-        self.linearCoeff = linearCoeff
-        self.quadCoeff = quadCoeff
+        QuadModel.__init__(self, intercept, linearCoeff, quadCoeff)
 
     @property
     def parameter_names(self) -> Dict[str, float]:
