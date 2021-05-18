@@ -37,10 +37,21 @@ class ConstantModel(Model):
         return self.constant
 
 
-# TODO - write an __init__ method
 class LinearModel(Model):
-    intercept: float = 1.0
-    slope: float = 1.0
+    """
+    A model where the parameter is linearly proportional to the x value.
+
+    Args:
+      intercept (float, optional): default value is 1. 
+      slope (float, optional): default value is 1.
+      
+      y = slope*x + intercept
+         
+    """
+    
+    def __init__(self, intercept: float = 1.0, slope: float = 1.0):
+        self.intercept = intercept
+        self.slope = slope
 
     @property
     def parameter_names(self) -> List[str]:
@@ -50,12 +61,25 @@ class LinearModel(Model):
         return self.intercept + x * self.slope
 
 
-# TODO - write an __init__ method
 class QuadModel(Model):
-    intercept: float = 1.0
-    linearCoeff: float = 1e-6
-    quadCoeff: float = 1e-6
+    """
+    A model where the parameter is a constant value.
+    The :meth:`eval` method returns the :attr:`constant`
+    attribute.
 
+    Args:
+      intercept (float, optional) default is 1.0
+      linearcoeff (float, optional) default is 1e-6
+      quadcoeff (float, optional) default is 1e-6
+      
+      y = intercept + linearcoeff*x + quadcoeff*x^2
+    """
+
+    def __init__(self, intercept: float = 1.0, linearCoeff: float = 1e-6, quadCoeff: float = 1e-6):
+        self.intercept = intercept
+        self.linearCoeff = linearCoeff
+        self.quadCoeff = quadCoeff
+    
     @property
     def parameters_names(self) -> List[str]:
         return ["intercept", "linearCoeff", "quadCoeff"]

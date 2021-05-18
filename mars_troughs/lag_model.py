@@ -70,19 +70,7 @@ class LinearLag(LagModel, LinearModel):
     def parameter_names(self) -> List[str]:
         return ["intercept", "slope"]
 
-    def get_lag_at_t(self, time: np.ndarray) -> np.ndarray:
-        """
-        Compute lag thickness at each value of time using Linear Model
-
-        Args:
-            time (np.ndarray): times at which we want to calculate the lag.
-
-        Output:
-            np.ndarray of the same size as time input containing values of lag
-            thickness.
-        """
-        return self.eval(time)
-
+    
 
 LAG_MODEL_MAP: Dict[str, Model] = {
     "constant": ConstantLag,
