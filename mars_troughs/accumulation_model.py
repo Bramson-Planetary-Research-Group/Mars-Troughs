@@ -2,7 +2,7 @@
 Model for the accumulation rates.
 """
 from abc import abstractmethod
-from typing import Dict
+from typing import Dict, List
 
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
@@ -95,7 +95,7 @@ class LinearInsolationAccumulation(InsolationAccumulationModel, LinearModel):
         LinearModel.__init__(self, intercept, slope)
 
     @property
-    def parameter_names(self) -> Dict[str, float]:
+    def parameter_names(self) -> List[str]:
         return ["intercept", "slope"]
 
     def get_accumulation_at_t(self, time: np.ndarray) -> np.ndarray:
@@ -164,7 +164,7 @@ class QuadraticInsolationAccumulation(InsolationAccumulationModel, QuadModel):
         QuadModel.__init__(self, intercept, linearCoeff, quadCoeff)
 
     @property
-    def parameter_names(self) -> Dict[str, float]:
+    def parameter_names(self) -> List[str]:
         return ["intercept", "linearCoeff", "quadCoeff"]
 
     def get_accumulation_at_t(self, time: np.ndarray):
