@@ -7,8 +7,8 @@ from typing import Dict
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
 
-from mars_troughs.model import Model
 from mars_troughs.linear_model import LinearModel, QuadModel
+from mars_troughs.model import Model
 
 
 class AccumulationModel(Model):
@@ -84,7 +84,6 @@ class LinearInsolationAccumulation(InsolationAccumulationModel, LinearModel):
                                  of solar insolation (m^3/(year*W)).
     """
 
-    
     def __init__(
         self,
         times: np.ndarray,
@@ -95,7 +94,6 @@ class LinearInsolationAccumulation(InsolationAccumulationModel, LinearModel):
         super().__init__(times, insolations)
         LinearModel.__init__(self, intercept, slope)
 
-    
     @property
     def parameter_names(self) -> Dict[str, float]:
         return ["intercept", "slope"]
@@ -127,12 +125,12 @@ class LinearInsolationAccumulation(InsolationAccumulationModel, LinearModel):
             the vertical distance y, in meters.
 
         """
-       
+
         return -(
             self.intercept * time
             + (
                 self.slope
-                *(self._int_ins_data_spline(time) - self._int_ins_data_spline(0))
+                * (self._int_ins_data_spline(time) - self._int_ins_data_spline(0))
             )
         )
 
@@ -153,6 +151,7 @@ class QuadraticInsolationAccumulation(InsolationAccumulationModel, QuadModel):
         quadCoeff (float, optional): default is 1e-6 m/year per unit
             of solar insolation squared (m^5/(year*W^2)).
     """
+
     def __init__(
         self,
         times,
@@ -207,8 +206,8 @@ class QuadraticInsolationAccumulation(InsolationAccumulationModel, QuadModel):
                 )
             )
         )
-    
-    
+
+
 ACCUMULATION_MODEL_MAP: Dict[str, Model] = {
     "linear": LinearInsolationAccumulation,
     "quadratic": QuadraticInsolationAccumulation,
