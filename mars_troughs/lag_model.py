@@ -1,8 +1,7 @@
 """
 Models for the lag as a function of time.
 """
-from abc import abstractmethod
-from typing import Dict
+from typing import Dict, List
 
 import numpy as np
 
@@ -17,9 +16,17 @@ class LagModel(Model):
     as a function of time.
     """
 
-    @abstractmethod
     def get_lag_at_t(self, time: np.ndarray) -> np.ndarray:
-        raise NotImplementedError
+        """
+        Lag as a function of time
+
+        Args:
+            time (np.ndarray): times at which we want to calculate the lag.
+
+        Output:
+            np.ndarray of the same size as time input containing values of lag.
+        """
+        return self.eval(time)
 
 
 class ConstantLag(LagModel, ConstantModel):
@@ -33,27 +40,10 @@ class ConstantLag(LagModel, ConstantModel):
 
     def __init__(
         self,
-        intercept: float = 1e-6,
-        slope: float = 1e-6,
+        constant: float = 1e-6,
     ):
-        ConstantModel.__init__(self, intercept, slope)
-
-    @property
-    def parameter_names(self) -> Dict[str, float]:
-        return ["constant"]
-
-    def get_lag_at_t(self, time: np.ndarray) -> np.ndarray:
-        """
-        Lag as a function of time: returns constant lag values.
-
-        Args:
-            time (np.ndarray): times at which we want to calculate the lag.
-        Output:
-            np.ndarray of the same size as time input containing values of lag.
-            All elements in the array are the same since the lag is
-            constant.
-        """
-        return self.eval(time)
+        super().__init__()  # note: `super` maps to the LagModel parent class
+        ConstantModel.__init__(self, constant=constant)
 
 
 class LinearLag(LagModel, LinearModel):
@@ -73,10 +63,11 @@ class LinearLag(LagModel, LinearModel):
         intercept: float = 1e-6,
         slope: float = 1e-6,
     ):
-        LinearModel.__init__(self, intercept, slope)
+        super().__init__()
+        LinearModel.__init__(self, intercept=intercept, slope=slope)
 
     @property
-    def parameter_names(self) -> Dict[str, float]:
+    def parameter_names(self) -> List[str]:
         return ["intercept", "slope"]
 
     def get_lag_at_t(self, time: np.ndarray) -> np.ndarray:
@@ -85,10 +76,10 @@ class LinearLag(LagModel, LinearModel):
 
         Args:
             time (np.ndarray): times at which we want to calculate the lag.
+
         Output:
             np.ndarray of the same size as time input containing values of lag
             thickness.
-
         """
         return self.eval(time)
 
