@@ -39,7 +39,7 @@ class ConstantModel(Model):
 
 class LinearModel(Model):
     """
-    A model where the parameter is linearly proportional to the x value.
+    A model where the output is linearly proportional to the x value.
 
     Args:
       intercept (float, optional): default value is 1. 
@@ -63,9 +63,7 @@ class LinearModel(Model):
 
 class QuadModel(Model):
     """
-    A model where the parameter is a constant value.
-    The :meth:`eval` method returns the :attr:`constant`
-    attribute.
+    A model for a quadratic function of the input
 
     Args:
       intercept (float, optional) default is 1.0
