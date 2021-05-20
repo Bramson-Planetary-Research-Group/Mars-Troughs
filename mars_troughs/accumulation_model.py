@@ -94,10 +94,6 @@ class LinearInsolationAccumulation(InsolationAccumulationModel, LinearModel):
         super().__init__(times, insolations)
         LinearModel.__init__(self, intercept, slope)
 
-    @property
-    def parameter_names(self) -> List[str]:
-        return ["intercept", "slope"]
-
     def get_accumulation_at_t(self, time: np.ndarray) -> np.ndarray:
         """
         Calculates the accumulation rate at times "time".
