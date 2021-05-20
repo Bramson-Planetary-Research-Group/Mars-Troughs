@@ -42,13 +42,13 @@ class LinearModel(Model):
     A model where the output is linearly proportional to the x value.
 
     Args:
-      intercept (float, optional): default value is 1. 
+      intercept (float, optional): default value is 1.
       slope (float, optional): default value is 1.
-      
+
       y = slope*x + intercept
-         
+
     """
-    
+
     def __init__(self, intercept: float = 1.0, slope: float = 1.0):
         self.intercept = intercept
         self.slope = slope
@@ -69,17 +69,22 @@ class QuadModel(Model):
       intercept (float, optional) default is 1.0
       linearcoeff (float, optional) default is 1e-6
       quadcoeff (float, optional) default is 1e-6
-      
+
       y = intercept + linearcoeff*x + quadcoeff*x^2
     """
 
-    def __init__(self, intercept: float = 1.0, linearCoeff: float = 1e-6, quadCoeff: float = 1e-6):
+    def __init__(
+        self,
+        intercept: float = 1.0,
+        linearCoeff: float = 1e-6,
+        quadCoeff: float = 1e-6,
+    ):
         self.intercept = intercept
         self.linearCoeff = linearCoeff
         self.quadCoeff = quadCoeff
-    
+
     @property
-    def parameters_names(self) -> List[str]:
+    def parameter_names(self) -> List[str]:
         return ["intercept", "linearCoeff", "quadCoeff"]
 
     def eval(self, x) -> float:
