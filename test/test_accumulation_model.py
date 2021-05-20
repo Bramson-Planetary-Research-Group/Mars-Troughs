@@ -1,12 +1,12 @@
 from unittest import TestCase
 
 import numpy as np
+from scipy.interpolate import InterpolatedUnivariateSpline as IUS
 
 from mars_troughs import (
     LinearInsolationAccumulation,
     QuadraticInsolationAccumulation,
 )
-from scipy.interpolate import InterpolatedUnivariateSpline as IUS
 
 
 class LinearAccumulationTest(TestCase):
@@ -68,17 +68,16 @@ class LinearAccumulationTest(TestCase):
         time = np.linspace(0, 1e6, 1000)
         insolation = np.sin(np.radians(np.linspace(0, 360, 1000)))
         spline = np.linspace(0, 100, 1000)
-        spline =  IUS(time, insolation)
+        spline = IUS(time, insolation)
         csc_angle = np.radians(np.linspace(0, 360, 1000))
         cot_angle = np.radians(np.linspace(0, 360, 1000))
         intercept = 1.0
         slope = 1e-6
         model = LinearInsolationAccumulation(time, insolation, intercept, slope)
-        xt = model.get_xt(time, spline, cot_angle, csc_angle)  
+        xt = model.get_xt(time, spline, cot_angle, csc_angle)
         assert (xt != np.nan).all()
         assert (xt != np.inf).all()
-        assert np.size(xt) == np.size(time)            
-            
+        assert np.size(xt) == np.size(time)
 
 
 class QuadraticAccumulationTest(TestCase):
@@ -129,30 +128,50 @@ class QuadraticAccumulationTest(TestCase):
                 + linearCoeff * model._ins_data_spline(time)
                 + quadCoeff * (model._ins_data_spline(time)) ** 2
             ).all()
-            
+
     def test_get_yt(self):
         time = np.linspace(0, 1e6, 1000)
         insolation = np.sin(np.radians(np.linspace(0, 360, 1000)))
-        for intercept, linearCoeff, quadCoeff in zip([1.0, 2.0, 3.0], [1e-6, 2e-6, 3e-6], [1e-8, 2e-8, 3e-8]):
-            model = QuadraticInsolationAccumulation(time, insolation, intercept, linearCoeff, quadCoeff)
+        for intercept, linearCoeff, quadCoeff in zip(
+            [1.0, 2.0, 3.0], [1e-6, 2e-6, 3e-6], [1e-8, 2e-8, 3e-8]
+        ):
+            model = QuadraticInsolationAccumulation(
+                time, insolation, intercept, linearCoeff, quadCoeff
+            )
             yt = model.get_yt(time)
-            assert (yt == -(intercept * time+ (linearCoeff
-                * (model._int_ins_data_spline(time) - model._int_ins_data_spline(0))
-                + quadCoeff * (model._int_ins2_data_spline(time)
-                    - model._int_ins2_data_spline(0) )))).all()
-     
+            assert (
+                yt
+                == -(
+                    intercept * time
+                    + (
+                        linearCoeff
+                        * (
+                            model._int_ins_data_spline(time)
+                            - model._int_ins_data_spline(0)
+                        )
+                        + quadCoeff
+                        * (
+                            model._int_ins2_data_spline(time)
+                            - model._int_ins2_data_spline(0)
+                        )
+                    )
+                )
+            ).all()
+
     def test_get_xt(self):
-            time = np.linspace(0, 1e6, 1000)
-            insolation = np.sin(np.radians(np.linspace(0, 360, 1000)))
-            spline = np.linspace(0, 100, 1000)
-            spline =  IUS(time, insolation)
-            csc_angle = np.radians(np.linspace(0, 360, 1000))
-            cot_angle = np.radians(np.linspace(0, 360, 1000))
-            intercept = 1.0
-            linearCoeff = 1e-6
-            quadCoeff = 1e-8
-            model = QuadraticInsolationAccumulation(time, insolation, intercept, linearCoeff, quadCoeff)
-            xt = model.get_xt(time, spline, cot_angle, csc_angle)  
-            assert (xt != np.nan).all()
-            assert (xt != np.inf).all()
-            assert np.size(xt) == np.size(time)
+        time = np.linspace(0, 1e6, 1000)
+        insolation = np.sin(np.radians(np.linspace(0, 360, 1000)))
+        spline = np.linspace(0, 100, 1000)
+        spline = IUS(time, insolation)
+        csc_angle = np.radians(np.linspace(0, 360, 1000))
+        cot_angle = np.radians(np.linspace(0, 360, 1000))
+        intercept = 1.0
+        linearCoeff = 1e-6
+        quadCoeff = 1e-8
+        model = QuadraticInsolationAccumulation(
+            time, insolation, intercept, linearCoeff, quadCoeff
+        )
+        xt = model.get_xt(time, spline, cot_angle, csc_angle)
+        assert (xt != np.nan).all()
+        assert (xt != np.inf).all()
+        assert np.size(xt) == np.size(time)
