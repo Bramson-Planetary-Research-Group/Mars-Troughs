@@ -7,6 +7,7 @@ from typing import Dict
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
 
+from mars_troughs.generic_model import LinearModel, QuadModel
 from mars_troughs.model import Model
 
 
@@ -67,7 +68,7 @@ class InsolationAccumulationModel(AccumulationModel):
         )
 
 
-class LinearInsolationAccumulation(InsolationAccumulationModel):
+class LinearInsolationAccumulation(InsolationAccumulationModel, LinearModel):
     """
     Accumulation is linear in solar insolation.
     A(ins(t)) = intercept + slope*ins(t).
@@ -91,12 +92,7 @@ class LinearInsolationAccumulation(InsolationAccumulationModel):
         slope: float = 1e-6,
     ):
         super().__init__(times, insolations)
-        self.intercept = intercept
-        self.slope = slope
-
-    @property
-    def parameter_names(self) -> Dict[str, float]:
-        return ["intercept", "slope"]
+        LinearModel.__init__(self, intercept, slope)
 
     def get_accumulation_at_t(self, time: np.ndarray) -> np.ndarray:
         """
@@ -109,7 +105,7 @@ class LinearInsolationAccumulation(InsolationAccumulationModel):
             accumulation rates A, in m/year
 
         """
-        return self.intercept + self.slope * self._ins_data_spline(time)
+        return self.eval(self._ins_data_spline(time))
 
     def get_yt(self, time: np.ndarray):
         """
@@ -125,6 +121,7 @@ class LinearInsolationAccumulation(InsolationAccumulationModel):
             the vertical distance y, in meters.
 
         """
+
         return -(
             self.intercept * time
             + (
@@ -134,7 +131,7 @@ class LinearInsolationAccumulation(InsolationAccumulationModel):
         )
 
 
-class QuadraticInsolationAccumulation(InsolationAccumulationModel):
+class QuadraticInsolationAccumulation(InsolationAccumulationModel, QuadModel):
     """
     Accumulation rate A (in m/year) as a  quadratic polynomial of insolation.
     A(ins(t)) = intercept + linearCoeff*ins(t)+ quadCoeff*ins(t)^2.
@@ -159,16 +156,8 @@ class QuadraticInsolationAccumulation(InsolationAccumulationModel):
         linearCoeff: float = 1e-6,
         quadCoeff: float = 1e-6,
     ):
-
         super().__init__(times, insolation)
-
-        self.intercept = intercept
-        self.linearCoeff = linearCoeff
-        self.quadCoeff = quadCoeff
-
-    @property
-    def parameter_names(self) -> Dict[str, float]:
-        return ["intercept", "linearCoeff", "quadCoeff"]
+        QuadModel.__init__(self, intercept, linearCoeff, quadCoeff)
 
     def get_accumulation_at_t(self, time: np.ndarray):
         """
@@ -181,11 +170,7 @@ class QuadraticInsolationAccumulation(InsolationAccumulationModel):
             accumulation rates A, in m/year
 
         """
-        return (
-            self.intercept
-            + self.linearCoeff * self._ins_data_spline(time)
-            + self.quadCoeff * self._ins2_data_spline(time)
-        )
+        return self.eval(self._ins_data_spline(time))
 
     def get_yt(self, time: np.ndarray):
         """

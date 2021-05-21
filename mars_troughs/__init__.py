@@ -11,7 +11,8 @@ from .trough import Trough
 
 __author__ = [
     "Tom McClintock <thmsmcclintock@gmail.com>",
-    "Kristell Izquierdo <kristell.izquierdo@gmail.com>",
+    "Kristel Izquierdo <kristell.izquierdo@gmail.com>",
+    "Kris Laferriere <klaferri@purdue.edu>",
 ]
 __version__ = "0.0.1"
 __docs__ = "Simulating martian ice troughs."

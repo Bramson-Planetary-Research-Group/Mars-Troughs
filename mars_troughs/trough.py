@@ -24,7 +24,6 @@ class Trough:
         retreat_path: Union[str, Path] = DATAPATHS.RETREAT,
     ):
         """Constructor for the trough object.
-
         Args:
           acc_params (array like): model parameters for accumulation
           acc_model_name (str): name of the accumulation model
@@ -92,7 +91,6 @@ class Trough:
         """
         Updates trough model with new accumulation and lag parameters.
         Model number is kept the same for both acumulation and lag.
-
         Args:
             acc_params (list): Accumulation parameter(s) (same length
                                      as current acumulation parameter(s)).
@@ -101,7 +99,6 @@ class Trough:
             errorbar (float): Errorbar of the datapoints in pixels
         Output:
             None
-
         """
         assert len(acc_params) == len(self.acc_params), (
             "New and original accumulation parameters must have the same shape. %d vs %d"
@@ -136,7 +133,6 @@ class Trough:
         """
         Computes splines of models of 1) lag per time and
         2) retreat of ice per time.
-
         Args:
             None
         Output:
@@ -156,7 +152,6 @@ class Trough:
         Calculates the values of insolation (in W/m^2) per time.
         These values are obtained from splines of the
         times and insolation data in the Insolation.txt file.
-
         Args:
             time (np.ndarray): times at which we want to calculate the Insolation.
         Output:
@@ -169,7 +164,6 @@ class Trough:
         Calculates the values of retreat of ice per time (mm/year).
         These values are obtained by evaluating self.ret_data_spline using
         the lag_model_t and time values.
-
         Args:
             lag_t (np.ndarray): lag at time
             time (np.ndarray): times at which we want to calculate the retreat
@@ -182,7 +176,6 @@ class Trough:
         """
         Obtains the x and y coordinates (in m) of the trough model as a
         function of time.
-
         Args:
             times (Optional[np.ndarray]): if ``None``, default to the
                 times of the observed solar insolation.
@@ -207,7 +200,6 @@ class Trough:
     def _L2_distance(x1, x2, y1, y2) -> Union[float, np.ndarray]:
         """
         The L2 (Eulerean) distance (squared) between two 2D vectors.
-
         Args:
             x1 (Union[float, np.ndarray]): x-coordinate of the first vector
             x2 (Union[float, np.ndarray]): x-coordinate of the second vector
@@ -226,7 +218,6 @@ class Trough:
         """
         Finds the coordinates of the nearest points between the model TMP
         and the data TMP.
-
         Args:
             x_data (np.ndarray): x-coordinates of the data
             y_data (np.ndarray): y-coordinatse of the data
@@ -252,7 +243,6 @@ class Trough:
         """
         Calculates the log-likelihood of the data given the model.
         Note that this is the natural log (ln).
-
         Args:
             x_data (np.ndarray): x-coordinates of the trough path
             y_data (np.ndarray): y-coordinates of the trough path

@@ -15,6 +15,10 @@ class ConstantLagTest(TestCase):
         assert model is not None
         assert isinstance(model.constant, float)
 
+    def test_parameter_names(self):
+        model = ConstantLag()
+        assert model.parameter_names == ["constant"]
+
     def test_constant(self):
         model1 = ConstantLag()
         model2 = ConstantLag(constant=2.0)
@@ -36,6 +40,10 @@ class LinearLagTest(TestCase):
         assert model is not None
         assert isinstance(model.intercept, float)
         assert isinstance(model.slope, float)
+
+    def test_parameter_names(self):
+        model = LinearLag()
+        assert model.parameter_names == ["intercept", "slope"]
 
     def test_constant(self):
         model1 = LinearLag()
