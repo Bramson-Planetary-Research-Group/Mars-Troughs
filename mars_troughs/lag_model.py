@@ -5,7 +5,7 @@ from typing import Dict
 
 import numpy as np
 
-from mars_troughs.linear_model import ConstantModel, LinearModel
+from mars_troughs.generic_model import ConstantModel, LinearModel
 from mars_troughs.model import Model
 
 
