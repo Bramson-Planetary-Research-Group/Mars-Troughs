@@ -7,7 +7,7 @@ from typing import Dict
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
 
-from mars_troughs.linear_model import LinearModel, QuadModel
+from mars_troughs.generic_model import LinearModel, QuadModel
 from mars_troughs.model import Model
 
 
