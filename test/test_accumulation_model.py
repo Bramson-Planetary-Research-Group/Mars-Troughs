@@ -43,7 +43,7 @@ class LinearAccumulationTest(TestCase):
             assert model.intercept == inter
             assert model.slope == slope
             accums = model.get_accumulation_at_t(time)
-            assert (accums == inter + slope * model._ins_data_spline(time)).all()
+            assert (accums == inter + slope * model._var_data_spline(time)).all()
 
     def test_get_yt(self):
         time = np.linspace(0, 1e6, 1000)
@@ -58,8 +58,8 @@ class LinearAccumulationTest(TestCase):
                     + (
                         slope
                         * (
-                            model._int_ins_data_spline(time)
-                            - model._int_ins_data_spline(0)
+                            model._int_var_data_spline(time)
+                            - model._int_var_data_spline(0)
                         )
                     )
                 )
@@ -126,8 +126,8 @@ class QuadraticAccumulationTest(TestCase):
             assert (
                 accums
                 == inter
-                + linearCoeff * model._ins_data_spline(time)
-                + quadCoeff * (model._ins_data_spline(time)) ** 2
+                + linearCoeff * model._var_data_spline(time)
+                + quadCoeff * (model._var_data_spline(time)) ** 2
             ).all()
 
     def test_get_yt(self):
@@ -147,13 +147,13 @@ class QuadraticAccumulationTest(TestCase):
                     + (
                         linearCoeff
                         * (
-                            model._int_ins_data_spline(time)
-                            - model._int_ins_data_spline(0)
+                            model._int_var_data_spline(time)
+                            - model._int_var_data_spline(0)
                         )
                         + quadCoeff
                         * (
-                            model._int_ins2_data_spline(time)
-                            - model._int_ins2_data_spline(0)
+                            model._int_var2_data_spline(time)
+                            - model._int_var2_data_spline(0)
                         )
                     )
                 )
@@ -210,7 +210,7 @@ class ObliquityLinearAccumulationTest(TestCase):
             assert model.intercept == inter
             assert model.slope == slope
             accums = model.get_accumulation_at_t(time)
-            assert (accums == inter + slope * model._ins_data_spline(time)).all()
+            assert (accums == inter + slope * model._var_data_spline(time)).all()
 
     def test_get_yt(self):
         time = np.linspace(0, 1e6, 1000)
@@ -225,8 +225,8 @@ class ObliquityLinearAccumulationTest(TestCase):
                     + (
                         slope
                         * (
-                            model._int_ins_data_spline(time)
-                            - model._int_ins_data_spline(0)
+                            model._int_var_data_spline(time)
+                            - model._int_var_data_spline(0)
                         )
                     )
                 )

@@ -21,7 +21,7 @@ class AccumulationModel(Model):
         raise NotImplementedError
 
 
-class InsolationAccumulationModel(AccumulationModel):
+class TimeDependentAccumulationModel(AccumulationModel):
     """
     An accumulation rate model that depends on solar insolation, A(Ins(t)).
     A is in m/year. Interpolated splines are created for the insolation as
@@ -33,13 +33,13 @@ class InsolationAccumulationModel(AccumulationModel):
         insolation (np.ndarray): values of the solar insolation (in W/m^2)
     """
 
-    def __init__(self, times: np.ndarray, insolations: np.ndarray):
-        self._ins_times = times
-        self._insolations = insolations
-        self._ins_data_spline = IUS(self._ins_times, self._insolations)
-        self._int_ins_data_spline = self._ins_data_spline.antiderivative()
-        self._ins2_data_spline = IUS(self._ins_times, self._insolations ** 2)
-        self._int_ins2_data_spline = self._ins2_data_spline.antiderivative()
+    def __init__(self, times: np.ndarray, variable: np.ndarray):
+        self._times = times
+        self._variable = variable
+        self._var_data_spline = IUS(self._times, self._variable)
+        self._int_var_data_spline = self._var_data_spline.antiderivative()
+        self._var2_data_spline = IUS(self._times, self._variable ** 2)
+        self._int_var2_data_spline = self._var2_data_spline.antiderivative()
 
     def get_xt(
         self,
@@ -68,7 +68,7 @@ class InsolationAccumulationModel(AccumulationModel):
         )
 
 
-class LinearInsolationAccumulation(InsolationAccumulationModel, LinearModel):
+class LinearInsolationAccumulation(TimeDependentAccumulationModel, LinearModel):
     """
     Accumulation is linear in solar insolation.
     A(ins(t)) = intercept + slope*ins(t).
@@ -105,7 +105,7 @@ class LinearInsolationAccumulation(InsolationAccumulationModel, LinearModel):
             accumulation rates A, in m/year
 
         """
-        return self.eval(self._ins_data_spline(time))
+        return self.eval(self._var_data_spline(time))
 
     def get_yt(self, time: np.ndarray):
         """
@@ -126,12 +126,12 @@ class LinearInsolationAccumulation(InsolationAccumulationModel, LinearModel):
             self.intercept * time
             + (
                 self.slope
-                * (self._int_ins_data_spline(time) - self._int_ins_data_spline(0))
+                * (self._int_var_data_spline(time) - self._int_var_data_spline(0))
             )
         )
 
 
-class QuadraticInsolationAccumulation(InsolationAccumulationModel, QuadModel):
+class QuadraticInsolationAccumulation(TimeDependentAccumulationModel, QuadModel):
     """
     Accumulation rate A (in m/year) as a  quadratic polynomial of insolation.
     A(ins(t)) = intercept + linearCoeff*ins(t)+ quadCoeff*ins(t)^2.
@@ -170,7 +170,7 @@ class QuadraticInsolationAccumulation(InsolationAccumulationModel, QuadModel):
             accumulation rates A, in m/year
 
         """
-        return self.eval(self._ins_data_spline(time))
+        return self.eval(self._var_data_spline(time))
 
     def get_yt(self, time: np.ndarray):
         """
@@ -190,18 +190,18 @@ class QuadraticInsolationAccumulation(InsolationAccumulationModel, QuadModel):
             self.intercept * time
             + (
                 self.linearCoeff
-                * (self._int_ins_data_spline(time) - self._int_ins_data_spline(0))
+                * (self._int_var_data_spline(time) - self._int_var_data_spline(0))
                 + self.quadCoeff
                 * (
-                    self._int_ins2_data_spline(time)
-                    - self._int_ins2_data_spline(0)
+                    self._int_var2_data_spline(time)
+                    - self._int_var2_data_spline(0)
                 )
             )
         )
     
     
     
-class ObliquityLinearAccumulation(InsolationAccumulationModel, LinearModel):
+class ObliquityLinearAccumulation(TimeDependentAccumulationModel, LinearModel):
     
     def __init__(self, 
         obl_times: np.ndarray, 
@@ -213,7 +213,7 @@ class ObliquityLinearAccumulation(InsolationAccumulationModel, LinearModel):
         super().__init__(obl_times, obliquity)
         
     def get_accumulation_at_t(self, time: np.ndarray):
-        return self.eval(self._ins_data_spline(time))
+        return self.eval(self._var_data_spline(time))
     
     def get_yt(self, time: np.ndarray):
         """
@@ -234,7 +234,7 @@ class ObliquityLinearAccumulation(InsolationAccumulationModel, LinearModel):
             self.intercept * time
             + (
                 self.slope
-                * (self._int_ins_data_spline(time) - self._int_ins_data_spline(0))
+                * (self._int_var_data_spline(time) - self._int_var_data_spline(0))
             )
         )
 
