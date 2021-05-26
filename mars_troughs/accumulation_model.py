@@ -87,7 +87,7 @@ class LinearInsolationAccumulation(InsolationAccumulationModel, LinearModel):
     def __init__(
         self,
         times: np.ndarray,
-        insolations: np.ndarray,
+        insolations: np.ndarray, 
         intercept: float = 1e-6,
         slope: float = 1e-6,
     ):
@@ -198,9 +198,50 @@ class QuadraticInsolationAccumulation(InsolationAccumulationModel, QuadModel):
                 )
             )
         )
+    
+    
+    
+class ObliquityLinearAccumulation(InsolationAccumulationModel, LinearModel):
+    
+    def __init__(self, 
+        obl_times: np.ndarray, 
+        obliquity: np.ndarray, 
+        intercept: float=1.0, 
+        slope: float=1.0):
+        
+        LinearModel.__init__(self, intercept, slope)
+        super().__init__(obl_times, obliquity)
+        
+    def get_accumulation_at_t(self, time: np.ndarray):
+        return self.eval(self._ins_data_spline(time))
+    
+    def get_yt(self, time: np.ndarray):
+        """
+        Calculates the vertical distance y (in m) traveled by a point
+        in the center of the high side of the trough. This distance  is a
+        function of the accumulation rate A as y(t)=integral(A(ins(t)), dt) or
+        dy/dt=A(ins(t))
 
+        Args:
+            time (np.ndarray): times at which we want to calculate y, in years.
+        Output:
+            np.ndarray of the same size as time input containing values of
+            the vertical distance y, in meters.
+
+        """
+
+        return -(
+            self.intercept * time
+            + (
+                self.slope
+                * (self._int_ins_data_spline(time) - self._int_ins_data_spline(0))
+            )
+        )
+
+    
 
 ACCUMULATION_MODEL_MAP: Dict[str, Model] = {
     "linear": LinearInsolationAccumulation,
     "quadratic": QuadraticInsolationAccumulation,
+    "obliquity": ObliquityLinearAccumulation,
 }
