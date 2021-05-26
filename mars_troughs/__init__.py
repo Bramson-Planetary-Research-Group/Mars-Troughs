@@ -3,6 +3,7 @@ from .accumulation_model import (
     AccumulationModel,
     LinearInsolationAccumulation,
     QuadraticInsolationAccumulation,
+    ObliquityLinearAccumulation, 
 )
 from .datapaths import DATAPATHS
 from .lag_model import ConstantLag, LAG_MODEL_MAP, LagModel, LinearLag

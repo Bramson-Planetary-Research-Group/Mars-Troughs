@@ -22,6 +22,7 @@ class Trough:
         angle: float = 2.9,
         insolation_path: Union[str, Path] = DATAPATHS.INSOLATION,
         retreat_path: Union[str, Path] = DATAPATHS.RETREAT,
+        obliquity_path: Union[str, Path] = DATAPATHS.OBLIQUITY
     ):
         """Constructor for the trough object.
         Args:
@@ -40,6 +41,8 @@ class Trough:
         # Load in all data
         insolation, ins_times = np.loadtxt(insolation_path, skiprows=1).T
         retreats = np.loadtxt(retreat_path).T
+        
+        obliquity, obl_times = np.loadtxt(obliquity_path, skiprows=1).T
 
         # Trough angle
         self.angle = angle
@@ -59,6 +62,12 @@ class Trough:
         self.insolation = insolation
         self.ins_times = ins_times
         self.retreats = retreats
+        
+        # attach obliquity data
+        obl_times = -obl_times
+        self.obliquity = -obliquity
+        self.obl_times = obl_times
+               
 
         # Set range of lag values
         self.lags = np.arange(16) + 1
@@ -71,9 +80,15 @@ class Trough:
         self.re2_data_spline = RBS(self.lags, self.ins_times, self.retreats ** 2)
 
         # Create submodels
-        self.accuModel = ACCUMULATION_MODEL_MAP[self.acc_model_name](
-            self.ins_times, self.insolation, *self.acc_params
-        )
+        if self.acc_model_name == 'obliquity':
+            self.accuModel = ACCUMULATION_MODEL_MAP[self.acc_model_name](
+                self.obl_times, self.obliquity, *self.acc_params
+                )
+        else:
+            self.accuModel = ACCUMULATION_MODEL_MAP[self.acc_model_name](
+                self.ins_times, self.insolation, *self.acc_params
+                )
+        
         self.lagModel = LAG_MODEL_MAP[self.lag_model_name](*self.lag_params)
 
         # Calculate model of lag per time
@@ -115,9 +130,15 @@ class Trough:
         self.lag_params = lag_params
 
         # Update submodels
-        self.accuModel = ACCUMULATION_MODEL_MAP[self.acc_model_name](
-            self.ins_times, self.insolations, *self.acc_params
-        )
+        if self.acc_model_name == 'obliquity':
+            self.accuModel = ACCUMULATION_MODEL_MAP[self.acc_model_name](
+                self.obl_times, self.obliquity, *self.acc_params
+                )
+        else:
+            self.accuModel = ACCUMULATION_MODEL_MAP[self.acc_model_name](
+                self.ins_times, self.insolation, *self.acc_params
+                )
+        
         self.lagModel = LAG_MODEL_MAP[self.lag_model_name](*self.lag_params)
 
         # Update the model of lag at all times
