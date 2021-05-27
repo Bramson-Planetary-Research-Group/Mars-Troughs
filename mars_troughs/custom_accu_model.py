@@ -25,6 +25,7 @@ class CustomAccuModel(Model):
         ):
         
         insolations, times = np.loadtxt(insolation_path, skiprows=1).T
+        times=-times
         
         self._ins_times=times
         self._insolations=insolations

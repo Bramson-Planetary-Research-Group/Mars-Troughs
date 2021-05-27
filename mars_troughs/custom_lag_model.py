@@ -37,7 +37,7 @@ class CustomLagModel(Model):
         Output:
             np.ndarray of the same size as time input containing values of lag.
         """
-        return self.intercept + self.linearCoeff*time + self.quadCoeff*time
+        return self.intercept + self.linearCoeff*time + self.quadCoeff*time**2
 
     @property
     def parameter_names(self) -> List[str]:
