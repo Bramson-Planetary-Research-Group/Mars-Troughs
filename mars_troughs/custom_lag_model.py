@@ -21,8 +21,13 @@ class CustomLagModel(Model):
         linearCoeff: float = 1e-6,
         quadCoeff: float = 1e-6,
         ):
+        
+        self.intercept=intercept
+        self.linearCoeff=linearCoeff
+        self.quadCoeff=quadCoeff
+        
 
-     def get_lag_at_t(self, time: np.ndarray) -> np.ndarray:
+    def get_lag_at_t(self, time: np.ndarray) -> np.ndarray:
         """
         Lag as a function of time
 
@@ -32,8 +37,8 @@ class CustomLagModel(Model):
         Output:
             np.ndarray of the same size as time input containing values of lag.
         """
-        return intercept + linearCoeff*time + quadCoeff*time
+        return self.intercept + self.linearCoeff*time + self.quadCoeff*time
 
-     @property
-     def parameter_names(self) -> List[str]:
+    @property
+    def parameter_names(self) -> List[str]:
         return ["intercept", "linearCoeff","quadCoeff"]
