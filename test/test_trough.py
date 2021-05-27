@@ -15,6 +15,8 @@ class TroughTest(TestCase):
 
     def get_trough_object(self, **kwargs):
         return Trough(
+            None,
+            None,
             self.acc_params,
             self.lag_params,
             self.acc_model_name,
