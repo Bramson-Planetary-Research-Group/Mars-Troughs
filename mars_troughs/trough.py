@@ -14,10 +14,10 @@ from mars_troughs import ACCUMULATION_MODEL_MAP, DATAPATHS, LAG_MODEL_MAP
 class Trough:
     def __init__(
         self,
-        acc_params=None,
-        lag_params=None,
         custom_accu_model=None,
         custom_lag_model=None,
+        acc_params=None,
+        lag_params=None,
         acc_model_name= None,
         lag_model_name=None,
         errorbar: float = 1.0,
