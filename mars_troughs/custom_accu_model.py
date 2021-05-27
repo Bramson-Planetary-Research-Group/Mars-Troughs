@@ -33,7 +33,7 @@ class CustomAccuModel(Model):
         Output:
             np.ndarray of the same size as time input containing values of lag.
         """
-        return intercept + linearCoeff*time + quadCoeff*time
+        return intercept + slope*1/self.insolations+ quadCoeff*time
 
      @property
      def parameter_names(self) -> List[str]:
