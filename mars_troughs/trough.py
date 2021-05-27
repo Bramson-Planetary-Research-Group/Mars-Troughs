@@ -14,10 +14,12 @@ from mars_troughs import ACCUMULATION_MODEL_MAP, DATAPATHS, LAG_MODEL_MAP
 class Trough:
     def __init__(
         self,
-        acc_params,
-        lag_params,
-        acc_model_name: str,
-        lag_model_name: str,
+        acc_params=None,
+        lag_params=None,
+        custom_accu_model=None,
+        custom_lag_model=None,
+        acc_model_name= None,
+        lag_model_name=None,
         errorbar: float = 1.0,
         angle: float = 2.9,
         insolation_path: Union[str, Path] = DATAPATHS.INSOLATION,
@@ -37,6 +39,7 @@ class Trough:
           retreat_path (Union[str, Path], optional): path to the file with
             retreat data
         """
+        
         # Load in all data
         insolation, ins_times = np.loadtxt(insolation_path, skiprows=1).T
         retreats = np.loadtxt(retreat_path).T
@@ -45,10 +48,6 @@ class Trough:
         self.angle = angle
 
         # Set up the trough model
-        self.acc_params = np.array(acc_params)
-        self.lag_params = np.array(lag_params)
-        self.acc_model_name = acc_model_name
-        self.lag_model_name = lag_model_name
         self.errorbar = errorbar
         self.meters_per_pixel = np.array([500.0, 20.0])  # meters per pixel
 
@@ -71,11 +70,42 @@ class Trough:
         self.re2_data_spline = RBS(self.lags, self.ins_times, self.retreats ** 2)
 
         # Create submodels
-        self.accuModel = ACCUMULATION_MODEL_MAP[self.acc_model_name](
-            self.ins_times, self.insolation, *self.acc_params
-        )
-        self.lagModel = LAG_MODEL_MAP[self.lag_model_name](*self.lag_params)
-
+        
+        # Accumulation model
+        if acc_model_name is not None and custom_accu_model is not None:
+            raise ValueError("Should have accumulation model name or custom \
+                             model, not both ")
+        elif acc_model_name and acc_params:
+            self.acc_params = np.array(acc_params)
+            self.acc_model_name = acc_model_name
+            self.accuModel = ACCUMULATION_MODEL_MAP[self.acc_model_name](
+                             self.ins_times, self.insolation, *self.acc_params)
+        elif custom_accu_model:
+            self.accuModel = custom_accu_model
+            
+        elif acc_model_name is None and acc_params is None \
+                                                and custom_accu_model is None:
+            raise ValueError("Need to specify accumulation model name and \
+                             accumulation parameters or custom model")
+            
+        # Lag model
+        if lag_model_name is not None and custom_lag_model is not None:
+            raise ValueError("Should have lag model name or custom \
+                             lag model, not both")
+        elif lag_model_name and lag_params:
+            self.lag_params=np.array(lag_params)
+            self.lag_model_name = lag_model_name 
+            self.lagModel = LAG_MODEL_MAP[self.lag_model_name](*self.lag_params)
+            
+        elif custom_lag_model:
+            self.lagModel = custom_lag_model
+            
+        elif lag_model_name is None and lag_params is None \
+                                                and custom_lag_model is None:
+            raise ValueError("Need to specify lag model name and \
+                             lag parameters or custom model")
+        
+        
         # Calculate model of lag per time
         self.lag_model_t = self.lagModel.get_lag_at_t(self.ins_times)
 
@@ -115,10 +145,8 @@ class Trough:
         self.lag_params = lag_params
 
         # Update submodels
-        self.accuModel = ACCUMULATION_MODEL_MAP[self.acc_model_name](
-            self.ins_times, self.insolations, *self.acc_params
-        )
-        self.lagModel = LAG_MODEL_MAP[self.lag_model_name](*self.lag_params)
+        self.accuModel.parameters = self.acc_params
+        self.lagModel.parameters = self.lag_params
 
         # Update the model of lag at all times
         self.lag_model_t = self.lagModel.get_lag_at_t(self.ins_times)

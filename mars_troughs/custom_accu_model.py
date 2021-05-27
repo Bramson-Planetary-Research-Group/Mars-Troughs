@@ -10,6 +10,9 @@ from typing import List
 import numpy as np
 from mars_troughs.model import Model
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
+from mars_troughs import DATAPATHS
+from typing import Union
+from pathlib import Path
 
 class CustomAccuModel(Model):
     """
@@ -17,10 +20,12 @@ class CustomAccuModel(Model):
     """
     def __init__(
         self,
-        times: np.ndarray,
-        insolations: np.ndarray,
         coeff: float = 1e-6,
+        insolation_path: Union[str, Path] = DATAPATHS.INSOLATION,
         ):
+        
+        insolations, times = np.loadtxt(insolation_path, skiprows=1).T
+        
         self._ins_times=times
         self._insolations=insolations
         self.coeff=coeff
