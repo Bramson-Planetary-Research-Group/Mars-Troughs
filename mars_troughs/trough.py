@@ -2,7 +2,7 @@
 The trough model.
 """
 from pathlib import Path
-from typing import Callable, List, Optional, Tuple, Union
+from typing import Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
@@ -91,19 +91,22 @@ class Trough:
         # Compute splines of models of lag and retreat of ice per time
         self.compute_model_splines()
 
-    def set_model(self, acc_params, lag_params, errorbar):
+    def set_model(
+        self,
+        acc_params: Dict[str, float],
+        lag_params: Dict[str, float],
+        errorbar: float,
+    ) -> None:
         """
         Updates trough model with new accumulation and lag parameters.
         Model number is kept the same for both acumulation and lag.
 
         Args:
-            acc_params (list): Accumulation parameter(s) (same length
-                                     as current acumulation parameter(s)).
-            lag_params (list): Lag parameter(s) (same length
-                                     as current lag parameter(s)).
-            errorbar (float): Errorbar of the datapoints in pixels
-        Output:
-            None
+          acc_params (Dict[str, float]): Accumulation parameter(s) (same
+            length as current acumulation parameter(s)).
+          lag_params (Dict[str, float]): Lag parameter(s) (same length as
+            current lag parameter(s)).
+          errorbar (float): Errorbar of the datapoints in pixels
         """
         # Set the new errorbar
         self.errorbar = errorbar
