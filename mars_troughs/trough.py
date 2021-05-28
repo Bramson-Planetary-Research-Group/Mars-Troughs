@@ -2,7 +2,7 @@
 The trough model.
 """
 from pathlib import Path
-from typing import Callable, Optional, Tuple, Union
+from typing import Callable, List, Optional, Tuple, Union
 
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
@@ -12,10 +12,30 @@ from mars_troughs import ACCUMULATION_MODEL_MAP, DATAPATHS, LAG_MODEL_MAP
 
 
 class Trough:
+    """
+    This object models trough migration patterns (TMPs). It is composed of
+    a model for the accumulation of ice on the surface of the trough, accessible
+    as the :attr:`accuModel` attribute, as well as a model for the lag
+    that builds up over time, accesible as the :attr:`lagModel` attribute.
+
+    Args:
+      acc_params (array like): model parameters for accumulation
+      acc_model_name (str): name of the accumulation model
+        (linear, quadratic, etc)
+      lag_params (array like): model parameters for lag(t)
+      lag_model_name (str): name of the lag(t) model (constant, linear, etc)
+      errorbar (float, optional): errorbar of the datapoints in pixels; default=1
+      angle (float, optional): south-facing slope angle in degrees. Default is 2.9.
+      insolation_path (Union[str, Path], optional): path to the file with
+        insolation data.
+      retreat_path (Union[str, Path], optional): path to the file with
+        retreat data
+    """
+
     def __init__(
         self,
-        acc_params,
-        lag_params,
+        acc_params: List[float],
+        lag_params: List[float],
         acc_model_name: str,
         lag_model_name: str,
         errorbar: float = 1.0,
@@ -23,20 +43,6 @@ class Trough:
         insolation_path: Union[str, Path] = DATAPATHS.INSOLATION,
         retreat_path: Union[str, Path] = DATAPATHS.RETREAT,
     ):
-        """Constructor for the trough object.
-        Args:
-          acc_params (array like): model parameters for accumulation
-          acc_model_name (str): name of the accumulation model
-                                (linear, quadratic, etc)
-          lag_params (array like): model parameters for lag(t)
-          lag_model_name (str): name of the lag(t) model (constant, linear, etc)
-          errorbar (float, optional): errorbar of the datapoints in pixels; default=1
-          angle (float, optional): south-facing slope angle in degrees. Default is 2.9.
-          insolation_path (Union[str, Path], optional): path to the file with
-            insolation data.
-          retreat_path (Union[str, Path], optional): path to the file with
-            retreat data
-        """
         # Load in all data
         insolation, ins_times = np.loadtxt(insolation_path, skiprows=1).T
         retreats = np.loadtxt(retreat_path).T
@@ -45,8 +51,6 @@ class Trough:
         self.angle = angle
 
         # Set up the trough model
-        self.acc_params = np.array(acc_params)
-        self.lag_params = np.array(lag_params)
         self.acc_model_name = acc_model_name
         self.lag_model_name = lag_model_name
         self.errorbar = errorbar
@@ -72,9 +76,9 @@ class Trough:
 
         # Create submodels
         self.accuModel = ACCUMULATION_MODEL_MAP[self.acc_model_name](
-            self.ins_times, self.insolation, *self.acc_params
+            self.ins_times, self.insolation, *acc_params
         )
-        self.lagModel = LAG_MODEL_MAP[self.lag_model_name](*self.lag_params)
+        self.lagModel = LAG_MODEL_MAP[self.lag_model_name](*lag_params)
 
         # Calculate model of lag per time
         self.lag_model_t = self.lagModel.get_lag_at_t(self.ins_times)
@@ -100,25 +104,12 @@ class Trough:
         Output:
             None
         """
-        assert len(acc_params) == len(self.acc_params), (
-            "New and original accumulation parameters must have the same shape. %d vs %d"
-            % (len(acc_params), len(self.acc_params))
-        )
-        assert len(lag_params) == len(self.lag_params), (
-            "New and original lag parameters must have the same shape. %d vs %d"
-            % (len(lag_params), len(self.lag_params))
-        )
         # Set the new errorbar
         self.errorbar = errorbar
-        # Set the new accumulation and lag parameters
-        self.acc_params = acc_params
-        self.lag_params = lag_params
 
         # Update submodels
-        self.accuModel = ACCUMULATION_MODEL_MAP[self.acc_model_name](
-            self.ins_times, self.insolations, *self.acc_params
-        )
-        self.lagModel = LAG_MODEL_MAP[self.lag_model_name](*self.lag_params)
+        self.accuModel.parameters = acc_params
+        self.lagModel.parameters = lag_params
 
         # Update the model of lag at all times
         self.lag_model_t = self.lagModel.get_lag_at_t(self.ins_times)
