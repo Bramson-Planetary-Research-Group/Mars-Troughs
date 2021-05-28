@@ -6,6 +6,8 @@ from .accumulation_model import (
 )
 from .datapaths import DATAPATHS
 from .lag_model import ConstantLag, LAG_MODEL_MAP, LagModel, LinearLag
+from .custom_accu_model import CustomAccuModel
+from .custom_lag_model import CustomLagModel
 from .model import Model
 from .trough import Trough
 
