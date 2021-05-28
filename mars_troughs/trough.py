@@ -19,10 +19,10 @@ class Trough:
     that builds up over time, accesible as the :attr:`lagModel` attribute.
 
     Args:
-      acc_params (array like): model parameters for accumulation
+      acc_params (List[float]): model parameters for accumulation
+      lag_params (List[float]): model parameters for lag(t)
       acc_model_name (str): name of the accumulation model
         (linear, quadratic, etc)
-      lag_params (array like): model parameters for lag(t)
       lag_model_name (str): name of the lag(t) model (constant, linear, etc)
       errorbar (float, optional): errorbar of the datapoints in pixels; default=1
       angle (float, optional): south-facing slope angle in degrees. Default is 2.9.
