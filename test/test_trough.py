@@ -27,6 +27,21 @@ class TroughTest(TestCase):
         tr = self.get_trough_object()
         assert tr is not None
 
+    def test_set_model(self):
+        self.acc_params = [1e-6, 1e-11]
+        self.acc_model_name = "linear"
+        self.lag_params = [1]
+        self.lag_model_name = "constant"
+        tr = self.get_trough_object()
+        # Come up with new parameters
+        acc_params = {"intercept": 1.0, "slope": 2.0}
+        lag_params = {"constant": 33.0}
+        errorbar = 200.0
+        tr.set_model(acc_params, lag_params, errorbar)
+        assert tr.accuModel.parameters == acc_params
+        assert tr.lagModel.parameters == lag_params
+        assert tr.errorbar == errorbar
+
     def test_get_trajectory(self):
         tr = self.get_trough_object()
         x, y = tr.get_trajectory()
