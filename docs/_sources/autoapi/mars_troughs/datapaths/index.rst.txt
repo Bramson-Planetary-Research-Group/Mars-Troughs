@@ -1,0 +1,60 @@
+:mod:`mars_troughs.datapaths`
+=============================
+
+.. py:module:: mars_troughs.datapaths
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   mars_troughs.datapaths._DataPaths
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   mars_troughs.datapaths.DATAPATHS
+
+
+.. class:: _DataPaths
+
+   A class for holding paths to data files.
+   Do not reference directly. Use the global
+   DATAPATHS variable instead.
+
+   .. attribute:: DATA
+      :annotation: :pathlib.Path
+
+      
+
+   .. attribute:: INSOLATION
+      :annotation: :pathlib.Path
+
+      
+
+   .. attribute:: RETREAT
+      :annotation: :pathlib.Path
+
+      
+
+   .. attribute:: TMP
+      :annotation: :pathlib.Path
+
+      
+
+
+.. data:: DATAPATHS
+   
+
+   Global object that holds paths.
+
+
