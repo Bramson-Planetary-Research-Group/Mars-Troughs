@@ -7,7 +7,7 @@ Welcome to Mars-Troughs's documentation!
 ========================================
 
 These docs pages are under construction, but you can find the auto-generated
-API for the project below.
+API for the project below. Stay tuned!
 
 .. toctree::
    :maxdepth: 4
