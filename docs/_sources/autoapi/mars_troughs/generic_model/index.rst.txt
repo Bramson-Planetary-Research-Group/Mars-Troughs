@@ -1,0 +1,140 @@
+:mod:`mars_troughs.generic_model`
+=================================
+
+.. py:module:: mars_troughs.generic_model
+
+.. autoapi-nested-parse::
+
+   Created on Thu May  6 10:37:51 2021
+
+   @author: laferrierek
+
+   Linear model for both accumulation and lag
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   mars_troughs.generic_model.ConstantModel
+   mars_troughs.generic_model.LinearModel
+   mars_troughs.generic_model.QuadModel
+
+
+
+
+.. class:: ConstantModel(constant: float = 1.0)
+
+
+   Bases: :py:obj:`mars_troughs.model.Model`
+
+   A model where the parameter is a constant value.
+   The :meth:`eval` method returns the :attr:`constant`
+   attribute.
+
+   :param constant: default value is 1. The
+                    constant value returned by :meth:`eval`. It is a
+                    parameter.
+   :type constant: float, optional
+
+   .. method:: parameter_names(self) -> List[str]
+      :property:
+
+      Returns ``["constant"]``
+
+
+   .. method:: eval(self, x) -> float
+
+      Returns the value of :attr:`constant`.
+
+
+
+.. class:: LinearModel(intercept: float = 1.0, slope: float = 1.0)
+
+
+   Bases: :py:obj:`mars_troughs.model.Model`
+
+   A model where the output is linearly proportional to the x value.
+
+   :param intercept: default value is 1.
+   :type intercept: float, optional
+   :param slope: default value is 1.
+   :type slope: float, optional
+   :param y = slope*x + intercept:
+
+   .. method:: parameter_names(self) -> List[str]
+      :property:
+
+      Names of the parameters for **this** object sorted alphabetically.
+      This method **must** be implemented for all subclasses, and the names
+      must consist of the names of the attributes that contain the
+      parameters.
+
+      Example:
+
+      .. code-block:: python
+
+         class MyModel(Model):
+             a = 3
+
+             @property
+             def parameter_names(self):
+                 return ["a"]
+
+             ...
+
+      :returns: names of parametes for **this** object
+
+
+   .. method:: eval(self, x) -> float
+
+
+
+.. class:: QuadModel(intercept: float = 1.0, linearCoeff: float = 1e-06, quadCoeff: float = 1e-06)
+
+
+   Bases: :py:obj:`mars_troughs.model.Model`
+
+   A model for a quadratic function of the input
+
+   :param intercept:
+   :type intercept: float, optional
+   :param linearcoeff:
+   :type linearcoeff: float, optional
+   :param quadcoeff:
+   :type quadcoeff: float, optional
+   :param y = intercept + linearcoeff*x + quadcoeff*x^2:
+
+   .. method:: parameter_names(self) -> List[str]
+      :property:
+
+      Names of the parameters for **this** object sorted alphabetically.
+      This method **must** be implemented for all subclasses, and the names
+      must consist of the names of the attributes that contain the
+      parameters.
+
+      Example:
+
+      .. code-block:: python
+
+         class MyModel(Model):
+             a = 3
+
+             @property
+             def parameter_names(self):
+                 return ["a"]
+
+             ...
+
+      :returns: names of parametes for **this** object
+
+
+   .. method:: eval(self, x) -> float
+
+
+
