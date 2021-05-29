@@ -55,7 +55,7 @@ class Model(ABC):
         Returns:
           names of parametes for **this** object
         """
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @property
     def parameters(self) -> Dict[str, Any]:
