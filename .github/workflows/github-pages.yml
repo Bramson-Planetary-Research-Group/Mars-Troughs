@@ -25,7 +25,7 @@ jobs:
     # ===============================
     - name: Commit documentation changes
       run: |
-        git clone https://github.com/Bramson-Planetary-Research-Group/Mars-Troughs.git --branch docs --single-branch gh-pages
+        git clone https://github.com/Bramson-Planetary-Research-Group/Mars-Troughs.git --branch gh-pages --single-branch gh-pages
         cp -r docs/_build/html/* gh-pages/
         cd gh-pages
         touch .nojekyll
@@ -38,6 +38,6 @@ jobs:
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
-        branch: docs
+        branch: gh-pages
         directory: gh-pages
         github_token: ${{ secrets.GITHUB_TOKEN }}
