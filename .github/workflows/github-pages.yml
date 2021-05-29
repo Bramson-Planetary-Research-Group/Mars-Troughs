@@ -5,7 +5,6 @@ on:
     branches:
       - main
       - gh-pages
-  pull_request:
 
 jobs:
   docs:
@@ -26,9 +25,8 @@ jobs:
     - name: Commit documentation changes
       run: |
         git clone https://github.com/Bramson-Planetary-Research-Group/Mars-Troughs.git --branch gh-pages --single-branch gh-pages
-        cp -r docs/_build/html/* gh-pages/
-        cd gh-pages
-        touch .nojekyll
+        cp -r docs/_build/html/* gh-pages/docs/
+        cd gh-pages/docs/
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add .
@@ -39,5 +37,5 @@ jobs:
       uses: ad-m/github-push-action@master
       with:
         branch: gh-pages
-        directory: gh-pages
+        directory: gh-pages/docs/
         github_token: ${{ secrets.GITHUB_TOKEN }}
