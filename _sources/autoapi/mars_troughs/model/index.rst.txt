@@ -1,0 +1,89 @@
+:mod:`mars_troughs.model`
+=========================
+
+.. py:module:: mars_troughs.model
+
+.. autoapi-nested-parse::
+
+   Abstract class for all models.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   mars_troughs.model.Model
+
+
+
+
+.. class:: Model(sub_models: Optional[List[Model]] = None)
+
+
+   Bases: :py:obj:`abc.ABC`
+
+   Abstract class for a model, which has methods to keep track of its
+   parameters and the parameters of sub-models.
+
+   Parameters of the model **must be attributes** that match the name
+   provided in the :meth:`parameter_names` property.
+
+   :param sub_models: models contained within this
+                      model that serve their own purpose
+   :type sub_models: Optional[List["Model"]]
+
+   .. method:: parameter_names(self) -> List[str]
+      :property:
+
+      Names of the parameters for **this** object sorted alphabetically.
+      This method **must** be implemented for all subclasses, and the names
+      must consist of the names of the attributes that contain the
+      parameters.
+
+      Example:
+
+      .. code-block:: python
+
+         class MyModel(Model):
+             a = 3
+
+             @property
+             def parameter_names(self):
+                 return ["a"]
+
+             ...
+
+      :returns: names of parametes for **this** object
+
+
+   .. method:: parameters(self) -> Dict[str, Any]
+      :property:
+
+      The parameters for **this** object, but not any of its sub-models.
+      The parameters **must** be attributes of the object
+
+      :returns: name/value pairs where values can be numbers or arrays of numbers
+
+
+   .. method:: all_parameter_names(self) -> List[str]
+      :property:
+
+      Names of the parameters for this object and all sub-models.
+
+      :returns: names of parametes for this object and all sub-models
+
+
+   .. method:: all_parameters(self) -> Dict[str, Any]
+      :property:
+
+      The parameters for this model and all sub-models.
+
+      :returns: key-value pairs for this model and all sub-models
+
+
+
