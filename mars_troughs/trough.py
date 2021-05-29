@@ -8,7 +8,9 @@ import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
 from scipy.interpolate import RectBivariateSpline as RBS
 
-from mars_troughs import ACCUMULATION_MODEL_MAP, DATAPATHS, LAG_MODEL_MAP
+from mars_troughs.accumulation_model import ACCUMULATION_MODEL_MAP
+from mars_troughs.datapaths import DATAPATHS
+from mars_troughs.lag_model import LAG_MODEL_MAP
 
 
 class Trough:
