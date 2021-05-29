@@ -1,0 +1,9 @@
+numpy
+scipy
+emcee
+corner
+pytest
+coverage
+sphinx
+sphinx_rtd_theme
+sphinx-autoapi
