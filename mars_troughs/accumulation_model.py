@@ -23,14 +23,16 @@ class AccumulationModel(Model):
 
 class TimeDependentAccumulationModel(AccumulationModel):
     """
-    An accumulation rate model that depends on solar insolation, A(Ins(t)).
-    A is in m/year. Interpolated splines are created for the insolation as
+    An accumulation rate model that depends on the time dependent parameter 
+    (likely solar insolation or obliquity), A(Ins(t)).
+    A is in m/year. Interpolated splines are created for the parameter as
     a function of time for faster integration.
 
     Args:
         times (np.ndarray): times at which the solar insolation is known
                             (in years)
-        insolation (np.ndarray): values of the solar insolation (in W/m^2)
+        parameter (np.ndarray): values of the time dependent variable 
+        (solar insolation (in W/m^2), obliquity in degrees)
     """
 
     def __init__(self, times: np.ndarray, variable: np.ndarray):
@@ -68,7 +70,7 @@ class TimeDependentAccumulationModel(AccumulationModel):
         )
 
 
-class LinearInsolationAccumulation(TimeDependentAccumulationModel, LinearModel):
+class Linear_Insolation(TimeDependentAccumulationModel, LinearModel):
     """
     Accumulation is linear in solar insolation.
     A(ins(t)) = intercept + slope*ins(t).
@@ -131,7 +133,7 @@ class LinearInsolationAccumulation(TimeDependentAccumulationModel, LinearModel):
         )
 
 
-class QuadraticInsolationAccumulation(TimeDependentAccumulationModel, QuadModel):
+class Quadratic_Insolation(TimeDependentAccumulationModel, QuadModel):
     """
     Accumulation rate A (in m/year) as a  quadratic polynomial of insolation.
     A(ins(t)) = intercept + linearCoeff*ins(t)+ quadCoeff*ins(t)^2.
@@ -197,11 +199,11 @@ class QuadraticInsolationAccumulation(TimeDependentAccumulationModel, QuadModel)
                     - self._int_var2_data_spline(0)
                 )
             )
-        )
+            )
     
     
     
-class ObliquityLinearAccumulation(TimeDependentAccumulationModel, LinearModel):
+class Linear_Obliquity(TimeDependentAccumulationModel, LinearModel):
     
     def __init__(self, 
         obl_times: np.ndarray, 
@@ -241,7 +243,7 @@ class ObliquityLinearAccumulation(TimeDependentAccumulationModel, LinearModel):
     
 
 ACCUMULATION_MODEL_MAP: Dict[str, Model] = {
-    "linear": LinearInsolationAccumulation,
-    "quadratic": QuadraticInsolationAccumulation,
-    "obliquity": ObliquityLinearAccumulation,
+    "linear": Linear_Insolation,
+    "quadratic": Quadratic_Insolation,
+    "obliquity": Linear_Obliquity,
 }

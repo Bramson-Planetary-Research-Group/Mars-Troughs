@@ -2,7 +2,7 @@
 The trough model.
 """
 from pathlib import Path
-from typing import Callable, Optional, Tuple, Union
+from typing import Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
@@ -14,16 +14,17 @@ from mars_troughs import ACCUMULATION_MODEL_MAP, DATAPATHS, LAG_MODEL_MAP
 class Trough:
     def __init__(
         self,
-        acc_params,
-        lag_params,
+        acc_params: List[float],
+        lag_params: List[float],
         acc_model_name: str,
         lag_model_name: str,
         errorbar: float = 1.0,
         angle: float = 2.9,
-        insolation_path: Union[str, Path] = DATAPATHS.INSOLATION,
-        retreat_path: Union[str, Path] = DATAPATHS.RETREAT,
-        obliquity_path: Union[str, Path] = DATAPATHS.OBLIQUITY
+        insolation_path: Optional[Union[str, Path]] = DATAPATHS.INSOLATION,
+        retreat_path: Optional[Union[str, Path]] = DATAPATHS.RETREAT,
+        obliquity_path: Optional[Union[str, Path]] = DATAPATHS.OBLIQUITY
     ):
+        
         """Constructor for the trough object.
         Args:
           acc_params (array like): model parameters for accumulation
@@ -42,8 +43,6 @@ class Trough:
         insolation, ins_times = np.loadtxt(insolation_path, skiprows=1).T
         retreats = np.loadtxt(retreat_path).T
         
-        obliquity, obl_times = np.loadtxt(obliquity_path, skiprows=1).T
-
         # Trough angle
         self.angle = angle
 
@@ -62,12 +61,12 @@ class Trough:
         self.insolation = insolation
         self.ins_times = ins_times
         self.retreats = retreats
-        
-        # attach obliquity data
+
+        # attach data
+        obliquity, obl_times = np.loadtxt(obliquity_path, skiprows=1).T
         obl_times = -obl_times
         self.obliquity = -obliquity
         self.obl_times = obl_times
-               
 
         # Set range of lag values
         self.lags = np.arange(16) + 1
@@ -80,7 +79,7 @@ class Trough:
         self.re2_data_spline = RBS(self.lags, self.ins_times, self.retreats ** 2)
 
         # Create submodels
-        if self.acc_model_name == 'obliquity':
+        if 'obliquity' in self.acc_model_name:
             self.accuModel = ACCUMULATION_MODEL_MAP[self.acc_model_name](
                 self.obl_times, self.obliquity, *self.acc_params
                 )
@@ -102,44 +101,28 @@ class Trough:
         # Compute splines of models of lag and retreat of ice per time
         self.compute_model_splines()
 
-    def set_model(self, acc_params, lag_params, errorbar):
+    def set_model(
+        self,
+        acc_params: Dict[str, float],
+        lag_params: Dict[str, float],
+        errorbar: float,
+        ) -> None:
         """
         Updates trough model with new accumulation and lag parameters.
         Model number is kept the same for both acumulation and lag.
         Args:
-            acc_params (list): Accumulation parameter(s) (same length
-                                     as current acumulation parameter(s)).
-            lag_params (list): Lag parameter(s) (same length
-                                     as current lag parameter(s)).
-            errorbar (float): Errorbar of the datapoints in pixels
-        Output:
-            None
+          acc_params (Dict[str, float]): Accumulation parameter(s) (same
+            length as current acumulation parameter(s)).
+          lag_params (Dict[str, float]): Lag parameter(s) (same length as
+            current lag parameter(s)).
+          errorbar (float): Errorbar of the datapoints in pixels
         """
-        assert len(acc_params) == len(self.acc_params), (
-            "New and original accumulation parameters must have the same shape. %d vs %d"
-            % (len(acc_params), len(self.acc_params))
-        )
-        assert len(lag_params) == len(self.lag_params), (
-            "New and original lag parameters must have the same shape. %d vs %d"
-            % (len(lag_params), len(self.lag_params))
-        )
         # Set the new errorbar
         self.errorbar = errorbar
-        # Set the new accumulation and lag parameters
-        self.acc_params = acc_params
-        self.lag_params = lag_params
 
         # Update submodels
-        if self.acc_model_name == 'obliquity':
-            self.accuModel = ACCUMULATION_MODEL_MAP[self.acc_model_name](
-                self.obl_times, self.obliquity, *self.acc_params
-                )
-        else:
-            self.accuModel = ACCUMULATION_MODEL_MAP[self.acc_model_name](
-                self.ins_times, self.insolation, *self.acc_params
-                )
-        
-        self.lagModel = LAG_MODEL_MAP[self.lag_model_name](*self.lag_params)
+        self.accuModel.parameters = acc_params
+        self.lagModel.parameters = lag_params
 
         # Update the model of lag at all times
         self.lag_model_t = self.lagModel.get_lag_at_t(self.ins_times)
