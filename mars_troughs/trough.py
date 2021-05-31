@@ -8,7 +8,7 @@ import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
 from scipy.interpolate import RectBivariateSpline as RBS
 
-from mars_troughs import ACCUMULATION_MODEL_MAP, DATAPATHS, LAG_MODEL_MAP
+from mars_troughs import Model, ACCUMULATION_MODEL_MAP, DATAPATHS, LAG_MODEL_MAP
 
 
 class Trough:
@@ -34,12 +34,10 @@ class Trough:
 
     def __init__(
         self,
-        custom_accu_model=None,
-        custom_lag_model=None,
-        acc_params=None,
-        lag_params=None,
-        acc_model_name= None,
-        lag_model_name=None,
+        acc_model: Union[str,Model],
+        lag_model: Union[str,Model],
+        acc_params: Optional[List[float]] = None,
+        lag_params: Optional[List[float]] = None,        
         errorbar: float = 1.0,
         angle: float = 2.9,
         insolation_path: Union[str, Path] = DATAPATHS.INSOLATION,
@@ -77,40 +75,23 @@ class Trough:
 
         # Create submodels
         
-        # Accumulation model
-        if acc_model_name is not None and custom_accu_model is not None:
-            raise ValueError("Should have accumulation model name or custom \
-                             model, not both ")
-        elif acc_model_name and acc_params:
-            acc_params = np.array(acc_params)
-            self.acc_model_name = acc_model_name
-            self.accuModel = ACCUMULATION_MODEL_MAP[self.acc_model_name](
+        # Accumulation submodel
+        assert isinstance(acc_model, (str, Model)), \
+                     "acc_model must be string or Model"
+        if isinstance(acc_model,str): #name of existing model is given
+            self.accuModel = ACCUMULATION_MODEL_MAP[acc_model](   
                              self.ins_times, self.insolation, *acc_params)
-        elif custom_accu_model:
-            self.accuModel = custom_accu_model
+        else: #custom model is given
+            self.accuModel = acc_model
             
-        elif acc_model_name is None and acc_params is None \
-                                                and custom_accu_model is None:
-            raise ValueError("Need to specify accumulation model name and \
-                             accumulation parameters or custom model")
-            
-        # Lag model
-        if lag_model_name is not None and custom_lag_model is not None:
-            raise ValueError("Should have lag model name or custom \
-                             lag model, not both")
-        elif lag_model_name and lag_params:
-            lag_params=np.array(lag_params)
-            self.lag_model_name = lag_model_name 
+        # Lag submodel
+        assert isinstance(lag_model,(str,Model)), \
+                     "lag_model must be a string or Model"
+        if isinstance(lag_model,str): #name of existing model is given
             self.lagModel = LAG_MODEL_MAP[self.lag_model_name](*lag_params)
-            
-        elif custom_lag_model:
-            self.lagModel = custom_lag_model
-            
-        elif lag_model_name is None and lag_params is None \
-                                                and custom_lag_model is None:
-            raise ValueError("Need to specify lag model name and \
-                             lag parameters or custom model")
-        
+        else: #custom model was given
+            self.lagModel = lag_model
+       
     
         # Calculate model of lag per time
         self.lag_model_t = self.lagModel.get_lag_at_t(self.ins_times)
