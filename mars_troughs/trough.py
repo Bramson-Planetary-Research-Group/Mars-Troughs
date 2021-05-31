@@ -88,7 +88,7 @@ class Trough:
         assert isinstance(lag_model,(str,Model)), \
                      "lag_model must be a string or Model"
         if isinstance(lag_model,str): #name of existing model is given
-            self.lagModel = LAG_MODEL_MAP[self.lag_model_name](*lag_params)
+            self.lagModel = LAG_MODEL_MAP[lag_model](*lag_params)
         else: #custom model was given
             self.lagModel = lag_model
        
