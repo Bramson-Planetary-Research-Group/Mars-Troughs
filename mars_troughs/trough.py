@@ -8,6 +8,7 @@ import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
 from scipy.interpolate import RectBivariateSpline as RBS
 
+from mars_troughs.model import Model
 from mars_troughs.accumulation_model import ACCUMULATION_MODEL_MAP
 from mars_troughs.datapaths import DATAPATHS
 from mars_troughs.lag_model import LAG_MODEL_MAP
@@ -21,11 +22,12 @@ class Trough:
     that builds up over time, accesible as the :attr:`lagModel` attribute.
 
     Args:
+      acc_model (Union[str, Model]): name of the accumulation model
+        (linear, quadratic, etc) or a custom model
+      lag_model_name (Union[str, Model]): name of the lag(t) model (constant,
+        linear, etc) or a custom model
       acc_params (List[float]): model parameters for accumulation
       lag_params (List[float]): model parameters for lag(t)
-      acc_model_name (str): name of the accumulation model
-        (linear, quadratic, etc)
-      lag_model_name (str): name of the lag(t) model (constant, linear, etc)
       errorbar (float, optional): errorbar of the datapoints in pixels; default=1
       angle (float, optional): south-facing slope angle in degrees. Default is 2.9.
       insolation_path (Union[str, Path], optional): path to the file with
@@ -36,15 +38,16 @@ class Trough:
 
     def __init__(
         self,
-        acc_params: List[float],
-        lag_params: List[float],
-        acc_model_name: str,
-        lag_model_name: str,
+        acc_model: Union[str,Model],
+        lag_model: Union[str,Model],
+        acc_params: Optional[List[float]] = None,
+        lag_params: Optional[List[float]] = None,        
         errorbar: float = 1.0,
         angle: float = 2.9,
         insolation_path: Union[str, Path] = DATAPATHS.INSOLATION,
         retreat_path: Union[str, Path] = DATAPATHS.RETREAT,
     ):
+
         # Load in all data
         insolation, ins_times = np.loadtxt(insolation_path, skiprows=1).T
         retreats = np.loadtxt(retreat_path).T
@@ -53,8 +56,6 @@ class Trough:
         self.angle = angle
 
         # Set up the trough model
-        self.acc_model_name = acc_model_name
-        self.lag_model_name = lag_model_name
         self.errorbar = errorbar
         self.meters_per_pixel = np.array([500.0, 20.0])  # meters per pixel
 
@@ -77,11 +78,25 @@ class Trough:
         self.re2_data_spline = RBS(self.lags, self.ins_times, self.retreats ** 2)
 
         # Create submodels
-        self.accuModel = ACCUMULATION_MODEL_MAP[self.acc_model_name](
-            self.ins_times, self.insolation, *acc_params
-        )
-        self.lagModel = LAG_MODEL_MAP[self.lag_model_name](*lag_params)
-
+        
+        # Accumulation submodel
+        assert isinstance(acc_model, (str, Model)), \
+                     "acc_model must be string or Model"
+        if isinstance(acc_model,str): #name of existing model is given
+            self.accuModel = ACCUMULATION_MODEL_MAP[acc_model](   
+                             self.ins_times, self.insolation, *acc_params)
+        else: #custom model is given
+            self.accuModel = acc_model
+            
+        # Lag submodel
+        assert isinstance(lag_model,(str,Model)), \
+                     "lag_model must be a string or Model"
+        if isinstance(lag_model,str): #name of existing model is given
+            self.lagModel = LAG_MODEL_MAP[lag_model](*lag_params)
+        else: #custom model was given
+            self.lagModel = lag_model
+       
+    
         # Calculate model of lag per time
         self.lag_model_t = self.lagModel.get_lag_at_t(self.ins_times)
 
