@@ -8,7 +8,10 @@ import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
 from scipy.interpolate import RectBivariateSpline as RBS
 
-from mars_troughs import Model, ACCUMULATION_MODEL_MAP, DATAPATHS, LAG_MODEL_MAP
+from mars_troughs.model import Model
+from mars_troughs.accumulation_model import ACCUMULATION_MODEL_MAP
+from mars_troughs.datapaths import DATAPATHS
+from mars_troughs.lag_model import LAG_MODEL_MAP
 
 
 class Trough:
@@ -19,11 +22,12 @@ class Trough:
     that builds up over time, accesible as the :attr:`lagModel` attribute.
 
     Args:
+      acc_model (Union[str, Model]): name of the accumulation model
+        (linear, quadratic, etc) or a custom model
+      lag_model_name (Union[str, Model]): name of the lag(t) model (constant,
+        linear, etc) or a custom model
       acc_params (List[float]): model parameters for accumulation
       lag_params (List[float]): model parameters for lag(t)
-      acc_model_name (str): name of the accumulation model
-        (linear, quadratic, etc)
-      lag_model_name (str): name of the lag(t) model (constant, linear, etc)
       errorbar (float, optional): errorbar of the datapoints in pixels; default=1
       angle (float, optional): south-facing slope angle in degrees. Default is 2.9.
       insolation_path (Union[str, Path], optional): path to the file with
