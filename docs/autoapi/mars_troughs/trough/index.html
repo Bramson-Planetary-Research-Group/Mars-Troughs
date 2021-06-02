@@ -1,0 +1,417 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>mars_troughs.trough &mdash; Mars-Troughs  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Mars-Troughs
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../accumulation_model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.accumulation_model</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../datapaths/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.datapaths</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generic_model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.generic_model</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../lag_model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.lag_model</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.model</span></code></a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.trough</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#package-contents">Package Contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../index.html#classes">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../index.html#attributes">Attributes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Mars-Troughs</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.trough</span></code></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../_sources/autoapi/mars_troughs/trough/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-mars_troughs.trough">
+<span id="mars-troughs-trough"></span><h1><a class="reference internal" href="#module-mars_troughs.trough" title="mars_troughs.trough"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.trough</span></code></a><a class="headerlink" href="#module-mars_troughs.trough" title="Permalink to this headline">¶</a></h1>
+<p>The trough model.</p>
+<div class="section" id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mars_troughs.trough.Trough" title="mars_troughs.trough.Trough"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Trough</span></code></a></p></td>
+<td><p>This object models trough migration patterns (TMPs). It is composed of</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt id="mars_troughs.trough.Trough">
+<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.trough.</code><code class="sig-name descname">Trough</code><span class="sig-paren">(</span><em class="sig-param">acc_model: Union[str, mars_troughs.model.Model], lag_model: Union[str, mars_troughs.model.Model], acc_params: Optional[List[float]] = None, lag_params: Optional[List[float]] = None, errorbar: float = 1.0, angle: float = 2.9, insolation_path: Union[str, pathlib.Path] = DATAPATHS.INSOLATION, retreat_path: Union[str, pathlib.Path] = DATAPATHS.RETREAT</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.trough.Trough" title="Permalink to this definition">¶</a></dt>
+<dd><p>This object models trough migration patterns (TMPs). It is composed of
+a model for the accumulation of ice on the surface of the trough, accessible
+as the <code class="xref py py-attr docutils literal notranslate"><span class="pre">accuModel</span></code> attribute, as well as a model for the lag
+that builds up over time, accesible as the <code class="xref py py-attr docutils literal notranslate"><span class="pre">lagModel</span></code> attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>acc_model</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="../index.html#mars_troughs.Model" title="mars_troughs.Model"><em>Model</em></a><em>]</em>) – name of the accumulation model
+(linear, quadratic, etc) or a custom model</p></li>
+<li><p><strong>lag_model_name</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="../index.html#mars_troughs.Model" title="mars_troughs.Model"><em>Model</em></a><em>]</em>) – name of the lag(t) model (constant,
+linear, etc) or a custom model</p></li>
+<li><p><strong>acc_params</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>) – model parameters for accumulation</p></li>
+<li><p><strong>lag_params</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>) – model parameters for lag(t)</p></li>
+<li><p><strong>errorbar</strong> (<em>float</em><em>, </em><em>optional</em>) – errorbar of the datapoints in pixels; default=1</p></li>
+<li><p><strong>angle</strong> (<em>float</em><em>, </em><em>optional</em>) – south-facing slope angle in degrees. Default is 2.9.</p></li>
+<li><p><strong>insolation_path</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em><em>, </em><em>optional</em>) – path to the file with
+insolation data.</p></li>
+<li><p><strong>retreat_path</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em><em>, </em><em>optional</em>) – path to the file with
+retreat data</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="mars_troughs.trough.Trough.set_model">
+<code class="sig-name descname">set_model</code><span class="sig-paren">(</span><em class="sig-param">self, acc_params: Dict[str, float], lag_params: Dict[str, float], errorbar: float</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#mars_troughs.trough.Trough.set_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates trough model with new accumulation and lag parameters.
+Model number is kept the same for both acumulation and lag.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>acc_params</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>float</em><em>]</em>) – Accumulation parameter(s) (same
+length as current acumulation parameter(s)).</p></li>
+<li><p><strong>lag_params</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>float</em><em>]</em>) – Lag parameter(s) (same length as
+current lag parameter(s)).</p></li>
+<li><p><strong>errorbar</strong> (<em>float</em>) – Errorbar of the datapoints in pixels</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="mars_troughs.trough.Trough.compute_model_splines">
+<code class="sig-name descname">compute_model_splines</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.trough.Trough.compute_model_splines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes splines of models of 1) lag per time and
+2) retreat of ice per time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>None</strong> – </p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Output:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="mars_troughs.trough.Trough.get_retreat_model_t">
+<code class="sig-name descname">get_retreat_model_t</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">lag_t</em>, <em class="sig-param">time</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.trough.Trough.get_retreat_model_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the values of retreat of ice per time (mm/year).
+These values are obtained by evaluating self.ret_data_spline using
+the lag_model_t and time values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lag_t</strong> (<em>np.ndarray</em>) – lag at time</p></li>
+<li><p><strong>time</strong> (<em>np.ndarray</em>) – times at which we want to calculate the retreat</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Output:</dt><dd><p>retreat values (np.ndarray) of the same size as time input</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="mars_troughs.trough.Trough.get_trajectory">
+<code class="sig-name descname">get_trajectory</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">times: Optional[numpy.ndarray] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.trough.Trough.get_trajectory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains the x and y coordinates (in m) of the trough model as a
+function of time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>times</strong> (<em>Optional</em><em>[</em><em>np.ndarray</em><em>]</em>) – if <code class="docutils literal notranslate"><span class="pre">None</span></code>, default to the
+times of the observed solar insolation.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Output:</dt><dd><p>x and y coordinates (tuple) of size 2 x len(times) (in m).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="mars_troughs.trough.Trough._L2_distance">
+<em class="property">static </em><code class="sig-name descname">_L2_distance</code><span class="sig-paren">(</span><em class="sig-param">x1</em>, <em class="sig-param">x2</em>, <em class="sig-param">y1</em>, <em class="sig-param">y2</em><span class="sig-paren">)</span> &#x2192; Union[float, numpy.ndarray]<a class="headerlink" href="#mars_troughs.trough.Trough._L2_distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>The L2 (Eulerean) distance (squared) between two 2D vectors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x1</strong> (<em>Union</em><em>[</em><em>float</em><em>, </em><em>np.ndarray</em><em>]</em>) – x-coordinate of the first vector</p></li>
+<li><p><strong>x2</strong> (<em>Union</em><em>[</em><em>float</em><em>, </em><em>np.ndarray</em><em>]</em>) – x-coordinate of the second vector</p></li>
+<li><p><strong>y1</strong> (<em>Union</em><em>[</em><em>float</em><em>, </em><em>np.ndarray</em><em>]</em>) – y-coordinate of the first vector</p></li>
+<li><p><strong>y2</strong> (<em>Union</em><em>[</em><em>float</em><em>, </em><em>np.ndarray</em><em>]</em>) – y-coordinate of the second vector</p></li>
+</ul>
+</dd>
+</dl>
+<p>Output: L2 distance (int or float)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mars_troughs.trough.Trough.get_nearest_points">
+<code class="sig-name descname">get_nearest_points</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x_data: numpy.ndarray</em>, <em class="sig-param">y_data: numpy.ndarray</em>, <em class="sig-param">dist_func: Optional[Callable] = None</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="headerlink" href="#mars_troughs.trough.Trough.get_nearest_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the coordinates of the nearest points between the model TMP
+and the data TMP.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_data</strong> (<em>np.ndarray</em>) – x-coordinates of the data</p></li>
+<li><p><strong>y_data</strong> (<em>np.ndarray</em>) – y-coordinatse of the data</p></li>
+<li><p><strong>dist_func</strong> (<em>Optional</em><em>[</em><em>Callable</em><em>]</em>) – function to compute distances,
+defaults to the L2 distance
+<a class="reference internal" href="#mars_troughs.trough.Trough._L2_distance" title="mars_troughs.trough.Trough._L2_distance"><code class="xref py py-meth docutils literal notranslate"><span class="pre">mars_troughs.trough.Trough._L2_distance()</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Output:</dt><dd><p>x and y coordinates of the model TMP that are closer to the data TMP.
+(Tuple), size 2 x len(x_data)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="mars_troughs.trough.Trough.lnlikelihood">
+<code class="sig-name descname">lnlikelihood</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x_data: numpy.ndarray</em>, <em class="sig-param">y_data: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#mars_troughs.trough.Trough.lnlikelihood" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the log-likelihood of the data given the model.
+Note that this is the natural log (ln).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_data</strong> (<em>np.ndarray</em>) – x-coordinates of the trough path</p></li>
+<li><p><strong>y_data</strong> (<em>np.ndarray</em>) – y-coordinates of the trough path</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Output:</dt><dd><p>log-likelihood value (float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="mars_troughs.trough.Trough.angle">
+<em class="property">property </em><code class="sig-name descname">angle</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#mars_troughs.trough.Trough.angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Slope angle in degrees.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mars_troughs.trough.Trough.csc_angle">
+<em class="property">property </em><code class="sig-name descname">csc_angle</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#mars_troughs.trough.Trough.csc_angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cosecant of the slope angle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mars_troughs.trough.Trough.cot_angle">
+<em class="property">property </em><code class="sig-name descname">cot_angle</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#mars_troughs.trough.Trough.cot_angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cotangent of the slope angle.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Tom McClintock, Kristel Izquierdo, Kris Laferriere, Ali Bramson.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

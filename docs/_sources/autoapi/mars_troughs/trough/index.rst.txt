@@ -1,0 +1,176 @@
+:mod:`mars_troughs.trough`
+==========================
+
+.. py:module:: mars_troughs.trough
+
+.. autoapi-nested-parse::
+
+   The trough model.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   mars_troughs.trough.Trough
+
+
+
+
+.. class:: Trough(acc_model: Union[str, mars_troughs.model.Model], lag_model: Union[str, mars_troughs.model.Model], acc_params: Optional[List[float]] = None, lag_params: Optional[List[float]] = None, errorbar: float = 1.0, angle: float = 2.9, insolation_path: Union[str, pathlib.Path] = DATAPATHS.INSOLATION, retreat_path: Union[str, pathlib.Path] = DATAPATHS.RETREAT)
+
+
+   This object models trough migration patterns (TMPs). It is composed of
+   a model for the accumulation of ice on the surface of the trough, accessible
+   as the :attr:`accuModel` attribute, as well as a model for the lag
+   that builds up over time, accesible as the :attr:`lagModel` attribute.
+
+   :param acc_model: name of the accumulation model
+                     (linear, quadratic, etc) or a custom model
+   :type acc_model: Union[str, Model]
+   :param lag_model_name: name of the lag(t) model (constant,
+                          linear, etc) or a custom model
+   :type lag_model_name: Union[str, Model]
+   :param acc_params: model parameters for accumulation
+   :type acc_params: List[float]
+   :param lag_params: model parameters for lag(t)
+   :type lag_params: List[float]
+   :param errorbar: errorbar of the datapoints in pixels; default=1
+   :type errorbar: float, optional
+   :param angle: south-facing slope angle in degrees. Default is 2.9.
+   :type angle: float, optional
+   :param insolation_path: path to the file with
+                           insolation data.
+   :type insolation_path: Union[str, Path], optional
+   :param retreat_path: path to the file with
+                        retreat data
+   :type retreat_path: Union[str, Path], optional
+
+   .. method:: set_model(self, acc_params: Dict[str, float], lag_params: Dict[str, float], errorbar: float) -> None
+
+      Updates trough model with new accumulation and lag parameters.
+      Model number is kept the same for both acumulation and lag.
+
+      :param acc_params: Accumulation parameter(s) (same
+                         length as current acumulation parameter(s)).
+      :type acc_params: Dict[str, float]
+      :param lag_params: Lag parameter(s) (same length as
+                         current lag parameter(s)).
+      :type lag_params: Dict[str, float]
+      :param errorbar: Errorbar of the datapoints in pixels
+      :type errorbar: float
+
+
+   .. method:: compute_model_splines(self)
+
+      Computes splines of models of 1) lag per time and
+      2) retreat of ice per time.
+
+      :param None:
+
+      Output:
+          None
+
+
+   .. method:: get_retreat_model_t(self, lag_t, time)
+
+      Calculates the values of retreat of ice per time (mm/year).
+      These values are obtained by evaluating self.ret_data_spline using
+      the lag_model_t and time values.
+
+      :param lag_t: lag at time
+      :type lag_t: np.ndarray
+      :param time: times at which we want to calculate the retreat
+      :type time: np.ndarray
+
+      Output:
+          retreat values (np.ndarray) of the same size as time input
+
+
+   .. method:: get_trajectory(self, times: Optional[numpy.ndarray] = None)
+
+      Obtains the x and y coordinates (in m) of the trough model as a
+      function of time.
+
+      :param times: if ``None``, default to the
+                    times of the observed solar insolation.
+      :type times: Optional[np.ndarray]
+
+      Output:
+          x and y coordinates (tuple) of size 2 x len(times) (in m).
+
+
+   .. method:: _L2_distance(x1, x2, y1, y2) -> Union[float, numpy.ndarray]
+      :staticmethod:
+
+      The L2 (Eulerean) distance (squared) between two 2D vectors.
+
+      :param x1: x-coordinate of the first vector
+      :type x1: Union[float, np.ndarray]
+      :param x2: x-coordinate of the second vector
+      :type x2: Union[float, np.ndarray]
+      :param y1: y-coordinate of the first vector
+      :type y1: Union[float, np.ndarray]
+      :param y2: y-coordinate of the second vector
+      :type y2: Union[float, np.ndarray]
+
+      Output: L2 distance (int or float)
+
+
+   .. method:: get_nearest_points(self, x_data: numpy.ndarray, y_data: numpy.ndarray, dist_func: Optional[Callable] = None) -> Tuple[numpy.ndarray, numpy.ndarray]
+
+      Finds the coordinates of the nearest points between the model TMP
+      and the data TMP.
+
+      :param x_data: x-coordinates of the data
+      :type x_data: np.ndarray
+      :param y_data: y-coordinatse of the data
+      :type y_data: np.ndarray
+      :param dist_func: function to compute distances,
+                        defaults to the L2 distance
+                        :meth:`mars_troughs.trough.Trough._L2_distance`
+      :type dist_func: Optional[Callable]
+
+      Output:
+          x and y coordinates of the model TMP that are closer to the data TMP.
+          (Tuple), size 2 x len(x_data)
+
+
+   .. method:: lnlikelihood(self, x_data: numpy.ndarray, y_data: numpy.ndarray) -> float
+
+      Calculates the log-likelihood of the data given the model.
+      Note that this is the natural log (ln).
+
+      :param x_data: x-coordinates of the trough path
+      :type x_data: np.ndarray
+      :param y_data: y-coordinates of the trough path
+      :type y_data: np.ndarray
+
+      Output:
+          log-likelihood value (float)
+
+
+   .. method:: angle(self) -> float
+      :property:
+
+      Slope angle in degrees.
+
+
+   .. method:: csc_angle(self) -> float
+      :property:
+
+      Cosecant of the slope angle.
+
+
+   .. method:: cot_angle(self) -> float
+      :property:
+
+      Cotangent of the slope angle.
+
+
+
