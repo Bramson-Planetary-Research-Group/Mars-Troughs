@@ -160,13 +160,9 @@ class Trough:
         if np.all(times) is None:
             times = self.times
 
-        int_retreat_model_t_spline = self.int_retreat_model_t_spline
-        cot_angle = self.cot_angle
-        csc_angle = self.csc_angle
-
         y = self.accuModel.get_yt(times)
         x = self.accuModel.get_xt(
-            times, int_retreat_model_t_spline, cot_angle, csc_angle
+            times, self.int_retreat_model_t_spline, self.cot_angle, self.csc_angle
         )
 
         return x, y
