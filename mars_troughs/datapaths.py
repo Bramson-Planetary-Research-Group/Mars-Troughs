@@ -17,8 +17,7 @@ class _DataPaths:
 
     DATA: Path = (Path(__file__) / ".." / "data").resolve()
     INSOLATION: Path = DATA / "Insolation.txt"
-    RETREAT: Path = DATA / "R_lookuptable.txt"
-    NEWRETREAT: Path = DATA / "Retreat_data.txt"
+    RETREAT: Path = DATA / "Retreat_data.txt"
     TMP: Path = DATA / "TMP_xz.txt"
 
 
@@ -39,7 +38,7 @@ def load_retreat_data() -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
       lags (np.ndarray): lag values the retreats have been calculated for
         by default these are [1,2,...15,20] in millimeters
     """
-    df = pd.read_csv(DATAPATHS.NEWRETREAT)
+    df = pd.read_csv(DATAPATHS.RETREAT)
     times: np.ndarray = df["times"].values
     lag_cols: List[str] = [col for col in df.columns if col.startswith("lag")]
     lags: np.ndarray = np.array([int(col[3:]) for col in lag_cols])
