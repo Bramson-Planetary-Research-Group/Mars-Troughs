@@ -144,9 +144,6 @@ class Trough:
         """
         # spline of retreat model of ice per time
         self.retreat_model_t_spline = IUS(self.times, self.retreat_model_t)
-        self.int_retreat_model_t_spline = (
-            self.retreat_model_t_spline.antiderivative()
-        )
         return
 
     def get_trajectory(self, times: Optional[np.ndarray] = None):
@@ -165,7 +162,10 @@ class Trough:
 
         y = self.accuModel.get_yt(times)
         x = self.accuModel.get_xt(
-            times, self.int_retreat_model_t_spline, self.cot_angle, self.csc_angle
+            times,
+            self.retreat_model_t_spline.antiderivative(),
+            self.cot_angle,
+            self.csc_angle,
         )
 
         return x, y
