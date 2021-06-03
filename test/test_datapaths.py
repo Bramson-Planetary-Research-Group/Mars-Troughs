@@ -19,6 +19,8 @@ class DatapathsTest(TestCase):
         assert isinstance(retreats, np.ndarray)
         assert isinstance(lags, np.ndarray)
         assert retreats.shape == (len(lags), len(times))
+        assert lags[0] == 1
+        assert lags[-1] == 20
 
     def test_load_TMP_data(self):
         x, y = load_TMP_data()
