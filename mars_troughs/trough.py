@@ -97,8 +97,8 @@ class Trough:
             self.lagModel.get_lag_at_t(times), times
         )
 
-        # Compute splines of models of lag and retreat of ice per time
-        self.compute_model_splines()
+        # Compute the Retreat(time) spline
+        self.retreat_model_t_spline = IUS(self.times, self.retreat_model_t)
 
     def set_model(
         self,
@@ -128,21 +128,7 @@ class Trough:
             self.lagModel.get_lag_at_t(self.times), self.times
         )
 
-        # Update splines
-        self.compute_model_splines()
-        return
-
-    def compute_model_splines(self):  # To be called after set_model
-        """
-        Computes splines of models of 1) lag per time and
-        2) retreat of ice per time.
-
-        Args:
-            None
-        Output:
-            None
-        """
-        # spline of retreat model of ice per time
+        # Update the Retreat(time) spline
         self.retreat_model_t_spline = IUS(self.times, self.retreat_model_t)
         return
 
