@@ -92,11 +92,10 @@ class Trough:
         else:  # custom model was given
             self.lagModel = lag_model
 
-        # Calculate model of lag per time
-        self.lag_model_t = self.lagModel.get_lag_at_t(times)
-
         # Calculate the model of retreat of ice per time
-        self.retreat_model_t = self.get_retreat_model_t(self.lag_model_t, times)
+        self.retreat_model_t = self.get_retreat_model_t(
+            self.lagModel.get_lag_at_t(times), times
+        )
 
         # Compute splines of models of lag and retreat of ice per time
         self.compute_model_splines()
@@ -109,7 +108,6 @@ class Trough:
     ) -> None:
         """
         Updates trough model with new accumulation and lag parameters.
-        Model number is kept the same for both acumulation and lag.
 
         Args:
           acc_params (Dict[str, float]): Accumulation parameter(s) (same
@@ -125,12 +123,9 @@ class Trough:
         self.accuModel.parameters = acc_params
         self.lagModel.parameters = lag_params
 
-        # Update the model of lag at all times
-        self.lag_model_t = self.lagModel.get_lag_at_t(self.times)
-
         # Update the model of retreat of ice per time
         self.retreat_model_t = self.get_retreat_model_t(
-            self.lag_model_t, self.times
+            self.lagModel.get_lag_at_t(self.times), self.times
         )
         return
 
