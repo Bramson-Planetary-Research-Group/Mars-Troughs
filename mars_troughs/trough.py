@@ -93,7 +93,7 @@ class Trough:
             self.lagModel = lag_model
 
         # Calculate the model of retreat of ice per time
-        self.retreat_model_t = self.get_retreat_model_t(
+        self.retreat_model_t = self.ret_data_spline.ev(
             self.lagModel.get_lag_at_t(times), times
         )
 
@@ -124,7 +124,7 @@ class Trough:
         self.lagModel.parameters = lag_params
 
         # Update the model of retreat of ice per time
-        self.retreat_model_t = self.get_retreat_model_t(
+        self.retreat_model_t = self.ret_data_spline.ev(
             self.lagModel.get_lag_at_t(self.times), self.times
         )
         return
@@ -145,20 +145,6 @@ class Trough:
             self.retreat_model_t_spline.antiderivative()
         )
         return
-
-    def get_retreat_model_t(self, lag_t, time):
-        """
-        Calculates the values of retreat of ice per time (mm/year).
-        These values are obtained by evaluating self.ret_data_spline using
-        the lag_model_t and time values.
-
-        Args:
-            lag_t (np.ndarray): lag at time
-            time (np.ndarray): times at which we want to calculate the retreat
-        Output:
-            retreat values (np.ndarray) of the same size as time input
-        """
-        return self.ret_data_spline.ev(lag_t, time)
 
     def get_trajectory(self, times: Optional[np.ndarray] = None):
         """
