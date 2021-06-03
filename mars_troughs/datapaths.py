@@ -1,4 +1,11 @@
+"""
+Paths to data files and helper methods to load some of them.
+"""
 from pathlib import Path
+from typing import List, Tuple
+
+import numpy as np
+import pandas as pd
 
 
 class _DataPaths:
@@ -11,8 +18,41 @@ class _DataPaths:
     DATA: Path = (Path(__file__) / ".." / "data").resolve()
     INSOLATION: Path = DATA / "Insolation.txt"
     RETREAT: Path = DATA / "R_lookuptable.txt"
+    NEWRETREAT: Path = DATA / "Retreat_data.txt"
     TMP: Path = DATA / "TMP_xz.txt"
 
 
 DATAPATHS = _DataPaths()
 """Global object that holds paths."""
+
+
+def load_retreat_data() -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """
+    Unpack the retreat data from the Bramson et al. thermal model used
+    to create a bivariate spline. This data is 'static' and so can be
+    loaded in here without respect to the model under consideration.
+
+    Returns:
+      times (np.ndarray): times the lags are measured at
+      retreats (np.ndarray): retreat values in a 2D array of shape
+        `(n_times, n_lags)`
+      lags (np.ndarray): lag values the retreats have been calculated for
+        by default these are [1,2,...15,20] in millimeters
+    """
+    df = pd.read_csv(DATAPATHS.NEWRETREAT)
+    times: np.ndarray = df["times"].values
+    lag_cols: List[str] = [col for col in df.columns if col.startswith("lag")]
+    lags: np.ndarray = np.array([int(col[3:]) for col in lag_cols])
+    retreats: np.ndarray = df[lag_cols].values.T
+    return times, retreats, lags
+
+
+def load_TMP_data() -> Tuple[np.ndarray, np.ndarray]:
+    """
+    Loads the TMP data for the trough being investigated now.
+
+    Returns:
+      x (np.ndarray): x position in kilometers
+      y (np.ndarray): y position in meters
+    """
+    return np.loadtxt(DATAPATHS.TMP, skiprows=1).T
