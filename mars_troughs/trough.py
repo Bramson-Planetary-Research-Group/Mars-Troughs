@@ -132,7 +132,9 @@ class Trough:
         self.retreat_model_t_spline = IUS(self.times, self.retreat_model_t)
         return
 
-    def get_trajectory(self, times: Optional[np.ndarray] = None):
+    def get_trajectory(
+        self, times: Optional[np.ndarray] = None
+    ) -> Tuple[np.ndarray, np.ndarray]:
         """
         Obtains the x and y coordinates (in m) of the trough model as a
         function of time.
@@ -140,6 +142,7 @@ class Trough:
         Args:
             times (Optional[np.ndarray]): if ``None``, default to the
                 times of the observed solar insolation.
+
         Output:
             x and y coordinates (tuple) of size 2 x len(times) (in m).
         """
@@ -166,6 +169,7 @@ class Trough:
             x2 (Union[float, np.ndarray]): x-coordinate of the second vector
             y1 (Union[float, np.ndarray]): y-coordinate of the first vector
             y2 (Union[float, np.ndarray]): y-coordinate of the second vector
+
         Output: L2 distance (int or float)
         """
         return (x1 - x2) ** 2 + (y1 - y2) ** 2
@@ -186,6 +190,7 @@ class Trough:
             dist_func (Optional[Callable]): function to compute distances,
                 defaults to the L2 distance
                 :meth:`mars_troughs.trough.Trough._L2_distance`
+
         Output:
             x and y coordinates of the model TMP that are closer to the data TMP.
             (Tuple), size 2 x len(x_data)
@@ -209,6 +214,7 @@ class Trough:
         Args:
             x_data (np.ndarray): x-coordinates of the trough path
             y_data (np.ndarray): y-coordinates of the trough path
+
         Output:
             log-likelihood value (float)
         """
