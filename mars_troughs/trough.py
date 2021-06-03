@@ -8,10 +8,10 @@ import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
 from scipy.interpolate import RectBivariateSpline as RBS
 
-from mars_troughs.model import Model
 from mars_troughs.accumulation_model import ACCUMULATION_MODEL_MAP
-from mars_troughs.datapaths import DATAPATHS
+from mars_troughs.datapaths import DATAPATHS, load_retreat_data
 from mars_troughs.lag_model import LAG_MODEL_MAP
+from mars_troughs.model import Model
 
 
 class Trough:
@@ -38,10 +38,10 @@ class Trough:
 
     def __init__(
         self,
-        acc_model: Union[str,Model],
-        lag_model: Union[str,Model],
+        acc_model: Union[str, Model],
+        lag_model: Union[str, Model],
         acc_params: Optional[List[float]] = None,
-        lag_params: Optional[List[float]] = None,        
+        lag_params: Optional[List[float]] = None,
         errorbar: float = 1.0,
         angle: float = 2.9,
         insolation_path: Union[str, Path] = DATAPATHS.INSOLATION,
@@ -50,7 +50,7 @@ class Trough:
 
         # Load in all data
         insolation, ins_times = np.loadtxt(insolation_path, skiprows=1).T
-        retreats = np.loadtxt(retreat_path).T
+        times, retreats, lags = load_retreat_data()
 
         # Trough angle
         self.angle = angle
@@ -60,50 +60,43 @@ class Trough:
         self.meters_per_pixel = np.array([500.0, 20.0])  # meters per pixel
 
         # Positive times are now in the past
+        # TODO: reverse this in the data files
         ins_times = -ins_times
-
-        # Attach data to this object
-        self.insolation = insolation
-        self.ins_times = ins_times
-        self.retreats = retreats
-
-        # Set range of lag values
-        self.lags = np.arange(16) + 1
-        self.lags[0] -= 1
-        self.lags[-1] = 20
+        times = -times
 
         # Create data splines of retreat of ice (no dependency
         # on model parameters)
-        self.ret_data_spline = RBS(self.lags, self.ins_times, self.retreats)
-        self.re2_data_spline = RBS(self.lags, self.ins_times, self.retreats ** 2)
+        self.times = times
+        self.ret_data_spline = RBS(lags, times, retreats)
+        self.re2_data_spline = RBS(lags, times, retreats ** 2)
 
         # Create submodels
-        
+
         # Accumulation submodel
-        assert isinstance(acc_model, (str, Model)), \
-                     "acc_model must be string or Model"
-        if isinstance(acc_model,str): #name of existing model is given
-            self.accuModel = ACCUMULATION_MODEL_MAP[acc_model](   
-                             self.ins_times, self.insolation, *acc_params)
-        else: #custom model is given
+        assert isinstance(
+            acc_model, (str, Model)
+        ), "acc_model must be string or Model"
+        if isinstance(acc_model, str):  # name of existing model is given
+            self.accuModel = ACCUMULATION_MODEL_MAP[acc_model](
+                ins_times, insolation, *acc_params
+            )
+        else:  # custom model is given
             self.accuModel = acc_model
-            
+
         # Lag submodel
-        assert isinstance(lag_model,(str,Model)), \
-                     "lag_model must be a string or Model"
-        if isinstance(lag_model,str): #name of existing model is given
+        assert isinstance(
+            lag_model, (str, Model)
+        ), "lag_model must be a string or Model"
+        if isinstance(lag_model, str):  # name of existing model is given
             self.lagModel = LAG_MODEL_MAP[lag_model](*lag_params)
-        else: #custom model was given
+        else:  # custom model was given
             self.lagModel = lag_model
-       
-    
+
         # Calculate model of lag per time
-        self.lag_model_t = self.lagModel.get_lag_at_t(self.ins_times)
+        self.lag_model_t = self.lagModel.get_lag_at_t(times)
 
         # Calculate the model of retreat of ice per time
-        self.retreat_model_t = self.get_retreat_model_t(
-            self.lag_model_t, self.ins_times
-        )
+        self.retreat_model_t = self.get_retreat_model_t(self.lag_model_t, times)
 
         # Compute splines of models of lag and retreat of ice per time
         self.compute_model_splines()
@@ -133,11 +126,11 @@ class Trough:
         self.lagModel.parameters = lag_params
 
         # Update the model of lag at all times
-        self.lag_model_t = self.lagModel.get_lag_at_t(self.ins_times)
+        self.lag_model_t = self.lagModel.get_lag_at_t(self.times)
 
         # Update the model of retreat of ice per time
         self.retreat_model_t = self.get_retreat_model_t(
-            self.lag_model_t, self.ins_times
+            self.lag_model_t, self.times
         )
         return
 
@@ -151,10 +144,8 @@ class Trough:
         Output:
             None
         """
-        # spline of lag model per time
-        self.lag_model_t_spline = IUS(self.ins_times, self.lag_model_t)
         # spline of retreat model of ice per time
-        self.retreat_model_t_spline = IUS(self.ins_times, self.retreat_model_t)
+        self.retreat_model_t_spline = IUS(self.times, self.retreat_model_t)
         self.int_retreat_model_t_spline = (
             self.retreat_model_t_spline.antiderivative()
         )
@@ -186,7 +177,7 @@ class Trough:
             x and y coordinates (tuple) of size 2 x len(times) (in m).
         """
         if np.all(times) is None:
-            times = self.ins_times
+            times = self.times
 
         int_retreat_model_t_spline = self.int_retreat_model_t_spline
         cot_angle = self.cot_angle
