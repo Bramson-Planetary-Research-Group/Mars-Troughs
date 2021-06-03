@@ -127,6 +127,9 @@ class Trough:
         self.retreat_model_t = self.ret_data_spline.ev(
             self.lagModel.get_lag_at_t(self.times), self.times
         )
+
+        # Update splines
+        self.compute_model_splines()
         return
 
     def compute_model_splines(self):  # To be called after set_model
