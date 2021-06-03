@@ -32,8 +32,6 @@ class Trough:
       angle (float, optional): south-facing slope angle in degrees. Default is 2.9.
       insolation_path (Union[str, Path], optional): path to the file with
         insolation data.
-      retreat_path (Union[str, Path], optional): path to the file with
-        retreat data
     """
 
     def __init__(
@@ -45,7 +43,6 @@ class Trough:
         errorbar: float = 1.0,
         angle: float = 2.9,
         insolation_path: Union[str, Path] = DATAPATHS.INSOLATION,
-        retreat_path: Union[str, Path] = DATAPATHS.RETREAT,
     ):
 
         # Load in all data
