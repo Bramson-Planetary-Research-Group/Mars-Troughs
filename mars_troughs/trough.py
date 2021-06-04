@@ -44,14 +44,29 @@ class Trough:
         lag_params: Optional[List[float]] = None,        
         errorbar: float = 1.0,
         angle: float = 2.9,
-        insolation_path: Union[str, Path] = DATAPATHS.INSOLATION,
-        retreat_path: Union[str, Path] = DATAPATHS.RETREAT,
+        insolation_path: Optional[Union[str, Path]] = DATAPATHS.INSOLATION,
+        retreat_path: Optional[Union[str, Path]] = DATAPATHS.RETREAT,
+        obliquity_path: Optional[Union[str, Path]] = DATAPATHS.OBLIQUITY
     ):
+        """Constructor for the trough object.
+        Args:
+          acc_params (array like): model parameters for accumulation
+          acc_model_name (str): name of the accumulation model
+                                (linear, quadratic, etc)
+          lag_params (array like): model parameters for lag(t)
+          lag_model_name (str): name of the lag(t) model (constant, linear, etc)
+          errorbar (float, optional): errorbar of the datapoints in pixels; default=1
+          angle (float, optional): south-facing slope angle in degrees. Default is 2.9.
+          insolation_path (Union[str, Path], optional): path to the file with
+            insolation data.
+          retreat_path (Union[str, Path], optional): path to the file with
+            retreat data
+        """
 
         # Load in all data
         insolation, ins_times = np.loadtxt(insolation_path, skiprows=1).T
         retreats = np.loadtxt(retreat_path).T
-
+        
         # Trough angle
         self.angle = angle
 
@@ -67,6 +82,12 @@ class Trough:
         self.ins_times = ins_times
         self.retreats = retreats
 
+        # attach data
+        obliquity, obl_times = np.loadtxt(obliquity_path, skiprows=1).T
+        obl_times = -obl_times
+        self.obliquity = -obliquity
+        self.obl_times = obl_times
+
         # Set range of lag values
         self.lags = np.arange(16) + 1
         self.lags[0] -= 1
@@ -79,12 +100,20 @@ class Trough:
 
         # Create submodels
         
+        
         # Accumulation submodel
         assert isinstance(acc_model, (str, Model)), \
                      "acc_model must be string or Model"
         if isinstance(acc_model,str): #name of existing model is given
-            self.accuModel = ACCUMULATION_MODEL_MAP[acc_model](   
-                             self.ins_times, self.insolation, *acc_params)
+            if 'obliquity' in acc_model:
+                self.accuModel = ACCUMULATION_MODEL_MAP[acc_model](
+                self.obl_times, self.obliquity, *acc_params
+                )
+            else:
+                self.accuModel = ACCUMULATION_MODEL_MAP[acc_model](
+                self.ins_times, self.insolation, *acc_params
+                )
+            
         else: #custom model is given
             self.accuModel = acc_model
             
@@ -96,7 +125,7 @@ class Trough:
         else: #custom model was given
             self.lagModel = lag_model
        
-    
+   
         # Calculate model of lag per time
         self.lag_model_t = self.lagModel.get_lag_at_t(self.ins_times)
 
@@ -113,7 +142,8 @@ class Trough:
         acc_params: Dict[str, float],
         lag_params: Dict[str, float],
         errorbar: float,
-    ) -> None:
+        ) -> None:
+
         """
         Updates trough model with new accumulation and lag parameters.
         Model number is kept the same for both acumulation and lag.

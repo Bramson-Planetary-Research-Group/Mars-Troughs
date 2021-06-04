@@ -1,8 +1,9 @@
 from .accumulation_model import (
     ACCUMULATION_MODEL_MAP,
     AccumulationModel,
-    LinearInsolationAccumulation,
-    QuadraticInsolationAccumulation,
+    Linear_Insolation,
+    Quadratic_Insolation,
+    Linear_Obliquity, 
 )
 from .datapaths import DATAPATHS
 from .lag_model import ConstantLag, LAG_MODEL_MAP, LagModel, LinearLag
