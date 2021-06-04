@@ -51,6 +51,11 @@ Attributes
 
       
 
+   .. attribute:: OBLIQUITY
+      :annotation: :pathlib.Path
+
+      
+
 
 .. data:: DATAPATHS
    

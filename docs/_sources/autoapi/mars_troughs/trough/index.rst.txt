@@ -22,7 +22,7 @@ Classes
 
 
 
-.. class:: Trough(acc_model: Union[str, mars_troughs.model.Model], lag_model: Union[str, mars_troughs.model.Model], acc_params: Optional[List[float]] = None, lag_params: Optional[List[float]] = None, errorbar: float = 1.0, angle: float = 2.9, insolation_path: Union[str, pathlib.Path] = DATAPATHS.INSOLATION, retreat_path: Union[str, pathlib.Path] = DATAPATHS.RETREAT)
+.. class:: Trough(acc_model: Union[str, mars_troughs.model.Model], lag_model: Union[str, mars_troughs.model.Model], acc_params: Optional[List[float]] = None, lag_params: Optional[List[float]] = None, errorbar: float = 1.0, angle: float = 2.9, insolation_path: Optional[Union[str, pathlib.Path]] = DATAPATHS.INSOLATION, retreat_path: Optional[Union[str, pathlib.Path]] = DATAPATHS.RETREAT, obliquity_path: Optional[Union[str, pathlib.Path]] = DATAPATHS.OBLIQUITY)
 
 
    This object models trough migration patterns (TMPs). It is composed of
