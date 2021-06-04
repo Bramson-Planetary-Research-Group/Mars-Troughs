@@ -105,13 +105,13 @@ class Trough:
         assert isinstance(acc_model, (str, Model)), \
                      "acc_model must be string or Model"
         if isinstance(acc_model,str): #name of existing model is given
-          if 'obliquity' in self.acc_model_name:
-            self.accuModel = ACCUMULATION_MODEL_MAP[self.acc_model_name](
-                self.obl_times, self.obliquity, *self.acc_params
+            if 'obliquity' in acc_model:
+                self.accuModel = ACCUMULATION_MODEL_MAP[acc_model](
+                self.obl_times, self.obliquity, *acc_params
                 )
-          else:
-            self.accuModel = ACCUMULATION_MODEL_MAP[self.acc_model_name](
-                self.ins_times, self.insolation, *self.acc_params
+            else:
+                self.accuModel = ACCUMULATION_MODEL_MAP[acc_model](
+                self.ins_times, self.insolation, *acc_params
                 )
             
         else: #custom model is given
