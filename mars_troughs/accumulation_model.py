@@ -18,7 +18,7 @@ class AccumulationModel(Model):
 
     @abstractmethod
     def get_accumulation_at_t(self, time: np.ndarray) -> np.ndarray:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
 
 class TimeDependentAccumulationModel(AccumulationModel):
