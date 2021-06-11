@@ -64,7 +64,6 @@ class Trough:
         # Load in all data
         insolation, ins_times = np.loadtxt(insolation_path, skiprows=1).T
         times, retreats, lags = load_retreat_data()
-
         obliquity, obl_times = np.loadtxt(obliquity_path, skiprows=1).T
 
         # Trough angle
@@ -122,7 +121,6 @@ class Trough:
         lag_params: Dict[str, float],
         errorbar: float,
     ) -> None:
-
         """
         Updates trough model with new accumulation and lag parameters.
 
