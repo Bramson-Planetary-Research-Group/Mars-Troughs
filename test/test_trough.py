@@ -95,3 +95,18 @@ class TroughTest(TestCase):
             dist = Trough._L2_distance(x1, x2, y1, y2)
             assert (dist == ((x1 - x2) ** 2 + (y1 - y2) ** 2)).all()
             assert np.argmin(dist) in [N // 2, N // 2 + 1]
+
+    def test_obliquity(self):
+        self.acc_params = [1e-6, 1e-11]
+        self.acc_model_name = "obliquity"
+        self.lag_params = [1]
+        self.lag_model_name = "constant"
+        tr = self.get_trough_object()
+        # Come up with new parameters
+        acc_params = {"intercept": 1.0, "slope": 2.0}
+        lag_params = {"constant": 33.0}
+        errorbar = 200.0
+        tr.set_model(acc_params, lag_params, errorbar)
+        assert tr.accuModel.parameters == acc_params
+        assert tr.lagModel.parameters == lag_params
+        assert tr.errorbar == errorbar
