@@ -61,7 +61,7 @@ class Trough:
         (
             insolation,
             ins_times,
-        ) = load_insolation_data()  # np.loadtxt(insolation_path, skiprows=1).T
+        ) = load_insolation_data()
         times, retreats, lags = load_retreat_data()
         obliquity, obl_times = load_obliquity_data()
 
