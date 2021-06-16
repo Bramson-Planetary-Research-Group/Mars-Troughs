@@ -87,7 +87,7 @@ class TroughTest(TestCase):
             dist = Trough._L2_distance(x1, x2, y1, y2)
             assert (dist == ((x1 - x2) ** 2 + (y1 - y2) ** 2)).all()
             assert np.argmin(dist) in [N // 2, N // 2 + 1]
-            
+
     def test_obliquity(self):
         self.acc_params = [1e-6, 1e-11]
         self.acc_model_name = "obliquity"

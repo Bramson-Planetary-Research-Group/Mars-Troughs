@@ -12,7 +12,7 @@ class _DataPaths:
     INSOLATION: Path = DATA / "Insolation.txt"
     RETREAT: Path = DATA / "R_lookuptable.txt"
     TMP: Path = DATA / "TMP_xz.txt"
-    OBLIQUITY: Path = DATA/ "Obliquity_new.txt"
+    OBLIQUITY: Path = DATA / "Obliquity_new.txt"
 
 
 DATAPATHS = _DataPaths()
