@@ -23,7 +23,7 @@ class AccumulationModel(Model):
 
 class TimeDependentAccumulationModel(AccumulationModel):
     """
-    An accumulation rate model that depends on the time dependent parameter 
+    An accumulation rate model that depends on the time dependent parameter
     (likely solar insolation or obliquity), A(Var(t)).
     A is in m/year. Interpolated splines are created for the parameter as
     a function of time for faster integration.
@@ -31,7 +31,7 @@ class TimeDependentAccumulationModel(AccumulationModel):
     Args:
         times (np.ndarray): times at which the variable (solar insolation, obliquity) is known
                             (in years)
-        parameter (np.ndarray): values of the time dependent variable 
+        parameter (np.ndarray): values of the time dependent variable
         (solar insolation (in W/m^2), obliquity (in degrees) )
     """
 
@@ -102,7 +102,7 @@ class Linear_Insolation(TimeDependentAccumulationModel, LinearModel):
     def __init__(
         self,
         times: np.ndarray,
-        insolations: np.ndarray, 
+        insolations: np.ndarray,
         intercept: float = 1e-6,
         slope: float = 1e-6,
     ):
@@ -186,21 +186,21 @@ class Quadratic_Insolation(TimeDependentAccumulationModel, QuadModel):
                     - self._int_var2_data_spline(0)
                 )
             )
-            )
-    
-    
-    
+        )
+
+
 class Linear_Obliquity(TimeDependentAccumulationModel, LinearModel):
-    
-    def __init__(self, 
-        obl_times: np.ndarray, 
-        obliquity: np.ndarray, 
-        intercept: float=1.0, 
-        slope: float=1.0):
-        
+    def __init__(
+        self,
+        obl_times: np.ndarray,
+        obliquity: np.ndarray,
+        intercept: float = 1.0,
+        slope: float = 1.0,
+    ):
+
         LinearModel.__init__(self, intercept, slope)
         super().__init__(obl_times, obliquity)
-    
+
     def get_yt(self, time: np.ndarray):
         """
         Calculates the vertical distance y (in m) traveled by a point
@@ -224,7 +224,6 @@ class Linear_Obliquity(TimeDependentAccumulationModel, LinearModel):
             )
         )
 
-    
 
 ACCUMULATION_MODEL_MAP: Dict[str, Model] = {
     "linear": Linear_Insolation,

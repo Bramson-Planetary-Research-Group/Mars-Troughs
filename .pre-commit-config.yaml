@@ -1,16 +1,26 @@
+exclude: ^(ode_nn/Legacy/)
 repos:
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.7.0
+  - repo: local
     hooks:
       - id: isort
-        args: [--settings-path, ./pyproject.toml]
-
-  -   repo: https://github.com/ambv/black
-      rev: 20.8b1
-      hooks:
-        - id: black
-
-  -   repo: https://gitlab.com/pycqa/flake8
-      rev: 3.8.4
-      hooks:
-        - id: flake8
+        name: isort
+        language: system
+        entry: isort
+        require_serial: true
+        types: [python]
+  - repo: local
+    hooks:
+      - id: black
+        name: black
+        language: system
+        entry: black
+        require_serial: true
+        types: [python]
+  - repo: local
+    hooks:
+      - id: flake8
+        name: flake8
+        language: system
+        entry: flake8
+        require_serial: true
+        types: [python]

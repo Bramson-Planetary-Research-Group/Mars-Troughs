@@ -5,8 +5,8 @@ from scipy.interpolate import InterpolatedUnivariateSpline as IUS
 
 from mars_troughs import (
     LinearInsolationAccumulation,
-    QuadraticInsolationAccumulation,
     ObliquityLinearAccumulation,
+    QuadraticInsolationAccumulation,
 )
 
 
@@ -176,6 +176,7 @@ class QuadraticAccumulationTest(TestCase):
         assert (xt != np.nan).all()
         assert (xt != np.inf).all()
         assert np.size(xt) == np.size(time)
+
 
 class ObliquityLinearAccumulationTest(TestCase):
     def test_smoke(self):

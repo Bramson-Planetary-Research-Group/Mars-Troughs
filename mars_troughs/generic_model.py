@@ -8,7 +8,9 @@ Created on Thu May  6 10:37:51 2021
 Linear model for both accumulation and lag
 """
 from typing import List
+
 import numpy as np
+
 from mars_troughs.model import Model
 
 
@@ -34,7 +36,7 @@ class ConstantModel(Model):
 
     def eval(self, x) -> float:
         """Returns the value of :attr:`constant`."""
-        return self.constant*np.ones(np.size(x))
+        return self.constant * np.ones(np.size(x))
 
 
 class LinearModel(Model):

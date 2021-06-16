@@ -1,42 +1,44 @@
-from unittest import TestCase
-import numpy as np
-from mars_troughs import Trough, Model, DATAPATHS
-from typing import List
-from scipy.interpolate import InterpolatedUnivariateSpline as IUS
-from typing import Union
 from pathlib import Path
+from typing import List, Union
+from unittest import TestCase
 
-    
+import numpy as np
+from scipy.interpolate import InterpolatedUnivariateSpline as IUS
+
+from mars_troughs import DATAPATHS, Model, Trough
+
+
 class CustomAccuModel(Model):
     """
     Custom accumulation model
     """
+
     def __init__(
         self,
         coeff: float = 1e-6,
         insolation_path: Union[str, Path] = DATAPATHS.INSOLATION,
-        ):
-        
+    ):
+
         insolations, times = np.loadtxt(insolation_path, skiprows=1).T
-        times=-times
-        
-        self._ins_times=times
-        self._insolations=insolations
-        self.coeff=coeff
-        self._inv_ins=1/self._insolations
+        times = -times
+
+        self._ins_times = times
+        self._insolations = insolations
+        self.coeff = coeff
+        self._inv_ins = 1 / self._insolations
         self._inv_ins_data_spline = IUS(self._ins_times, self._inv_ins)
         self._int_inv_ins_data_spline = self._inv_ins_data_spline.antiderivative()
-
 
     def get_accumulation_at_t(self, time: np.ndarray) -> np.ndarray:
 
         return self.coeff * self._inv_ins
-    
+
     def get_yt(self, time: np.ndarray):
 
-        return -self.coeff * ( self._int_inv_ins_data_spline(time) - 
-                               self._int_inv_ins_data_spline(0) )
-    
+        return -self.coeff * (
+            self._int_inv_ins_data_spline(time) - self._int_inv_ins_data_spline(0)
+        )
+
     def get_xt(
         self,
         time: np.ndarray,
@@ -50,41 +52,45 @@ class CustomAccuModel(Model):
         return -cot_angle * yt + csc_angle * (
             int_retreat_model_t_spline(time) - int_retreat_model_t_spline(0)
         )
-                              
+
     @property
     def parameter_names(self) -> List[str]:
         return ["coeff"]
+
 
 class CustomLagModel(Model):
     """
     Custom lag model
     """
+
     def __init__(
         self,
-        intercept: float=1e-6,
+        intercept: float = 1e-6,
         linearCoeff: float = 1e-6,
         quadCoeff: float = 1e-6,
-        ):
-        
-        self.intercept=intercept
-        self.linearCoeff=linearCoeff
-        self.quadCoeff=quadCoeff
-        
+    ):
+
+        self.intercept = intercept
+        self.linearCoeff = linearCoeff
+        self.quadCoeff = quadCoeff
 
     def get_lag_at_t(self, time: np.ndarray) -> np.ndarray:
 
-        return self.intercept + self.linearCoeff*time + self.quadCoeff*time**2
+        return (
+            self.intercept + self.linearCoeff * time + self.quadCoeff * time ** 2
+        )
 
     @property
     def parameter_names(self) -> List[str]:
-        return ["intercept", "linearCoeff","quadCoeff"]
+        return ["intercept", "linearCoeff", "quadCoeff"]
+
 
 class TroughTestCustom(TestCase):
     def setUp(self):
         self.acc_params = None
         self.acc_model = CustomAccuModel(1e-6)
         self.lag_params = None
-        self.lag_model = CustomLagModel(1e-6,1e-6,1e-6)
+        self.lag_model = CustomLagModel(1e-6, 1e-6, 1e-6)
         self.errorbar = 100.0
 
     def get_trough_object(self, **kwargs):
@@ -105,7 +111,7 @@ class TroughTestCustom(TestCase):
         tr = self.get_trough_object()
         # Come up with new parameters
         acc_params = {"coeff": 1e-6}
-        lag_params = {"intercept":1e-7,"linearCoeff": 2e-6, "quadCoeff":2e-6}
+        lag_params = {"intercept": 1e-7, "linearCoeff": 2e-6, "quadCoeff": 2e-6}
         errorbar = 200.0
         tr.set_model(acc_params, lag_params, errorbar)
         assert tr.accuModel.parameters == acc_params
@@ -157,6 +163,3 @@ class TroughTestCustom(TestCase):
             dist = Trough._L2_distance(x1, x2, y1, y2)
             assert (dist == ((x1 - x2) ** 2 + (y1 - y2) ** 2)).all()
             assert np.argmin(dist) in [N // 2, N // 2 + 1]
-            
-    
-                
