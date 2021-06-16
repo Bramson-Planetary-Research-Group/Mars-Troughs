@@ -47,6 +47,38 @@ def load_retreat_data() -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     return times, retreats, lags
 
 
+def load_obliquity_data() -> Tuple[np.ndarray, np.ndarray]:
+    """
+    Unpack the obliquity data.
+
+    Returns:
+      obliquity (np.ndarray): the obliquity values
+      times (np.ndarray): times the obliquity is measured at
+    """
+    df = pd.read_csv(
+        DATAPATHS.OBLIQUITY, names=["obliquity", "times"], skiprows=1, sep=" "
+    )
+    times: np.ndarray = df["times"].values
+    obl: np.ndarray = df["obliquity"].values
+    return obl, times
+
+
+def load_insolation_data() -> Tuple[np.ndarray, np.ndarray]:
+    """
+    Unpack the insolation data.
+
+    Returns:
+      insolation (np.ndarray): the insolation values
+      times (np.ndarray): times the insolation is measured at
+    """
+    df = pd.read_csv(
+        DATAPATHS.INSOLATION, names=["insolation", "times"], skiprows=1, sep="\t"
+    )
+    times: np.ndarray = df["times"].values
+    ins: np.ndarray = df["insolation"].values
+    return ins, times
+
+
 def load_TMP_data() -> Tuple[np.ndarray, np.ndarray]:
     """
     Loads the TMP data for the trough being investigated now.

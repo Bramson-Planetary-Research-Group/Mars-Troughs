@@ -1,7 +1,6 @@
 """
 The trough model.
 """
-from pathlib import Path
 from typing import Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np
@@ -9,7 +8,11 @@ from scipy.interpolate import InterpolatedUnivariateSpline as IUS
 from scipy.interpolate import RectBivariateSpline as RBS
 
 from mars_troughs.accumulation_model import ACCUMULATION_MODEL_MAP
-from mars_troughs.datapaths import DATAPATHS, load_retreat_data
+from mars_troughs.datapaths import (
+    load_insolation_data,
+    load_obliquity_data,
+    load_retreat_data,
+)
 from mars_troughs.lag_model import LAG_MODEL_MAP
 from mars_troughs.model import Model
 
@@ -42,9 +45,6 @@ class Trough:
         lag_params: Optional[List[float]] = None,
         errorbar: float = 1.0,
         angle: float = 2.9,
-        insolation_path: Optional[Union[str, Path]] = DATAPATHS.INSOLATION,
-        retreat_path: Optional[Union[str, Path]] = DATAPATHS.RETREAT,
-        obliquity_path: Optional[Union[str, Path]] = DATAPATHS.OBLIQUITY,
     ):
         """Constructor for the trough object.
         Args:
@@ -55,16 +55,15 @@ class Trough:
           lag_model_name (str): name of the lag(t) model (constant, linear, etc)
           errorbar (float, optional): errorbar of the datapoints in pixels; default=1
           angle (float, optional): south-facing slope angle in degrees. Default is 2.9.
-          insolation_path (Union[str, Path], optional): path to the file with
-            insolation data.
-          retreat_path (Union[str, Path], optional): path to the file with
-            retreat data
         """
 
         # Load in all data
-        insolation, ins_times = np.loadtxt(insolation_path, skiprows=1).T
+        (
+            insolation,
+            ins_times,
+        ) = load_insolation_data()  # np.loadtxt(insolation_path, skiprows=1).T
         times, retreats, lags = load_retreat_data()
-        obliquity, obl_times = np.loadtxt(obliquity_path, skiprows=1).T
+        obliquity, obl_times = load_obliquity_data()
 
         # Trough angle
         self.angle = angle
