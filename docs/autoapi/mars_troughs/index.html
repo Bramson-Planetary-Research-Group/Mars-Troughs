@@ -204,11 +204,11 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#mars_troughs.Linear_Insolation" title="mars_troughs.Linear_Insolation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Linear_Insolation</span></code></a></p></td>
 <td><p>Accumulation is linear in solar insolation.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mars_troughs.Quadratic_Insolation" title="mars_troughs.Quadratic_Insolation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Quadratic_Insolation</span></code></a></p></td>
-<td><p>Accumulation rate A (in m/year) as a  quadratic polynomial of insolation.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mars_troughs.Linear_Obliquity" title="mars_troughs.Linear_Obliquity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Linear_Obliquity</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mars_troughs.Linear_Obliquity" title="mars_troughs.Linear_Obliquity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Linear_Obliquity</span></code></a></p></td>
 <td><p>An accumulation rate model that depends on the time dependent parameter</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mars_troughs.Quadratic_Insolation" title="mars_troughs.Quadratic_Insolation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Quadratic_Insolation</span></code></a></p></td>
+<td><p>Accumulation rate A (in m/year) as a  quadratic polynomial of insolation.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#mars_troughs.ConstantLag" title="mars_troughs.ConstantLag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConstantLag</span></code></a></p></td>
 <td><p>The lag thickness is constant and does not depend on time.</p></td>
@@ -315,6 +315,45 @@ the vertical distance y, in meters.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="mars_troughs.Linear_Obliquity">
+<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.</code><code class="sig-name descname">Linear_Obliquity</code><span class="sig-paren">(</span><em class="sig-param">obl_times: numpy.ndarray</em>, <em class="sig-param">obliquity: numpy.ndarray</em>, <em class="sig-param">intercept: float = 1.0</em>, <em class="sig-param">slope: float = 1.0</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.Linear_Obliquity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">TimeDependentAccumulationModel</span></code>, <a class="reference internal" href="generic_model/index.html#mars_troughs.generic_model.LinearModel" title="mars_troughs.generic_model.LinearModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mars_troughs.generic_model.LinearModel</span></code></a></p>
+<p>An accumulation rate model that depends on the time dependent parameter
+(likely solar insolation or obliquity), A(Var(t)).
+A is in m/year. Interpolated splines are created for the parameter as
+a function of time for faster integration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>times</strong> (<em>np.ndarray</em>) – times at which the variable (solar insolation, obliquity) is known
+(in years)</p></li>
+<li><p><strong>parameter</strong> (<em>np.ndarray</em>) – values of the time dependent variable</p></li>
+<li><p><strong>insolation</strong> (<em>(</em><em>solar</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="mars_troughs.Linear_Obliquity.get_yt">
+<code class="sig-name descname">get_yt</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.Linear_Obliquity.get_yt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the vertical distance y (in m) traveled by a point
+in the center of the high side of the trough. This distance  is a
+function of the accumulation rate A as y(t)=integral(A(obl(t)), dt) or
+dy/dt=A(obl(t))</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>time</strong> (<em>np.ndarray</em>) – times at which we want to calculate y, in years.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Output:</dt><dd><p>np.ndarray of the same size as time input containing values of
+the vertical distance y, in meters.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="mars_troughs.Quadratic_Insolation">
 <em class="property">class </em><code class="sig-prename descclassname">mars_troughs.</code><code class="sig-name descname">Quadratic_Insolation</code><span class="sig-paren">(</span><em class="sig-param">times</em>, <em class="sig-param">insolation</em>, <em class="sig-param">intercept: float = 1.0</em>, <em class="sig-param">linearCoeff: float = 1e-06</em>, <em class="sig-param">quadCoeff: float = 1e-06</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.Quadratic_Insolation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">TimeDependentAccumulationModel</span></code>, <a class="reference internal" href="generic_model/index.html#mars_troughs.generic_model.QuadModel" title="mars_troughs.generic_model.QuadModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mars_troughs.generic_model.QuadModel</span></code></a></p>
@@ -356,50 +395,16 @@ the vertical distance y, in meters.</p>
 
 </dd></dl>
 
-<dl class="class">
-<dt id="mars_troughs.Linear_Obliquity">
-<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.</code><code class="sig-name descname">Linear_Obliquity</code><span class="sig-paren">(</span><em class="sig-param">obl_times: numpy.ndarray</em>, <em class="sig-param">obliquity: numpy.ndarray</em>, <em class="sig-param">intercept: float = 1.0</em>, <em class="sig-param">slope: float = 1.0</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.Linear_Obliquity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">TimeDependentAccumulationModel</span></code>, <a class="reference internal" href="generic_model/index.html#mars_troughs.generic_model.LinearModel" title="mars_troughs.generic_model.LinearModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mars_troughs.generic_model.LinearModel</span></code></a></p>
-<p>An accumulation rate model that depends on the time dependent parameter
-(likely solar insolation or obliquity), A(Var(t)).
-A is in m/year. Interpolated splines are created for the parameter as
-a function of time for faster integration.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>times</strong> (<em>np.ndarray</em>) – times at which the variable (solar insolation, obliquity) is known
-(in years)</p></li>
-<li><p><strong>parameter</strong> (<em>np.ndarray</em>) – values of the time dependent variable</p></li>
-<li><p><strong>insolation</strong> (<em>(</em><em>solar</em>) – </p></li>
-</ul>
-</dd>
-</dl>
-<dl class="method">
-<dt id="mars_troughs.Linear_Obliquity.get_yt">
-<code class="sig-name descname">get_yt</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.Linear_Obliquity.get_yt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates the vertical distance y (in m) traveled by a point
-in the center of the high side of the trough. This distance  is a
-function of the accumulation rate A as y(t)=integral(A(obl(t)), dt) or
-dy/dt=A(obl(t))</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>time</strong> (<em>np.ndarray</em>) – times at which we want to calculate y, in years.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>Output:</dt><dd><p>np.ndarray of the same size as time input containing values of
-the vertical distance y, in meters.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 <dl class="data">
 <dt id="mars_troughs.DATAPATHS">
 <code class="sig-prename descclassname">mars_troughs.</code><code class="sig-name descname">DATAPATHS</code><a class="headerlink" href="#mars_troughs.DATAPATHS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Global object that holds paths.</p>
 </dd></dl>
+
+<dl class="data">
+<dt id="mars_troughs.LAG_MODEL_MAP">
+<code class="sig-prename descclassname">mars_troughs.</code><code class="sig-name descname">LAG_MODEL_MAP</code><em class="property"> :Dict[str, mars_troughs.model.Model]</em><a class="headerlink" href="#mars_troughs.LAG_MODEL_MAP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="class">
 <dt id="mars_troughs.ConstantLag">
@@ -413,11 +418,6 @@ thickness at all times.</p>
 </dd>
 </dl>
 </dd></dl>
-
-<dl class="data">
-<dt id="mars_troughs.LAG_MODEL_MAP">
-<code class="sig-prename descclassname">mars_troughs.</code><code class="sig-name descname">LAG_MODEL_MAP</code><em class="property"> :Dict[str, mars_troughs.model.Model]</em><a class="headerlink" href="#mars_troughs.LAG_MODEL_MAP" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="class">
 <dt id="mars_troughs.LagModel">
