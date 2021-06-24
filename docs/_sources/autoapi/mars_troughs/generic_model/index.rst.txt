@@ -70,26 +70,6 @@ Classes
    .. method:: parameter_names(self) -> List[str]
       :property:
 
-      Names of the parameters for **this** object sorted alphabetically.
-      This method **must** be implemented for all subclasses, and the names
-      must consist of the names of the attributes that contain the
-      parameters.
-
-      Example:
-
-      .. code-block:: python
-
-         class MyModel(Model):
-             a = 3
-
-             @property
-             def parameter_names(self):
-                 return ["a"]
-
-             ...
-
-      :returns: names of parametes for **this** object
-
 
    .. method:: eval(self, x) -> float
 
@@ -112,26 +92,6 @@ Classes
 
    .. method:: parameter_names(self) -> List[str]
       :property:
-
-      Names of the parameters for **this** object sorted alphabetically.
-      This method **must** be implemented for all subclasses, and the names
-      must consist of the names of the attributes that contain the
-      parameters.
-
-      Example:
-
-      .. code-block:: python
-
-         class MyModel(Model):
-             a = 3
-
-             @property
-             def parameter_names(self):
-                 return ["a"]
-
-             ...
-
-      :returns: names of parametes for **this** object
 
 
    .. method:: eval(self, x) -> float

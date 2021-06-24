@@ -263,7 +263,7 @@
 
 <dl class="class">
 <dt id="mars_troughs.AccumulationModel">
-<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.</code><code class="sig-name descname">AccumulationModel</code><span class="sig-paren">(</span><em class="sig-param">sub_models: Optional[List[Model]] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.AccumulationModel" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.</code><code class="sig-name descname">AccumulationModel</code><a class="headerlink" href="#mars_troughs.AccumulationModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="model/index.html#mars_troughs.model.Model" title="mars_troughs.model.Model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mars_troughs.model.Model</span></code></a></p>
 <p>Abstract class for computing the amount of ice accumulation.</p>
 <dl class="method">
@@ -538,7 +538,7 @@ The parameters <strong>must</strong> be attributes of the object</p>
 
 <dl class="class">
 <dt id="mars_troughs.Trough">
-<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.</code><code class="sig-name descname">Trough</code><span class="sig-paren">(</span><em class="sig-param">acc_model: Union[str, mars_troughs.model.Model], lag_model: Union[str, mars_troughs.model.Model], acc_params: Optional[List[float]] = None, lag_params: Optional[List[float]] = None, errorbar: float = 1.0, angle: float = 2.9, insolation_path: Optional[Union[str, pathlib.Path]] = DATAPATHS.INSOLATION, retreat_path: Optional[Union[str, pathlib.Path]] = DATAPATHS.RETREAT, obliquity_path: Optional[Union[str, pathlib.Path]] = DATAPATHS.OBLIQUITY</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.Trough" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.</code><code class="sig-name descname">Trough</code><span class="sig-paren">(</span><em class="sig-param">acc_model: Union[str, mars_troughs.model.Model], lag_model: Union[str, mars_troughs.model.Model], acc_params: Optional[List[float]] = None, lag_params: Optional[List[float]] = None, errorbar: float = 1.0, angle: float = 2.9</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.Trough" title="Permalink to this definition">¶</a></dt>
 <dd><p>This object models trough migration patterns (TMPs). It is composed of
 a model for the accumulation of ice on the surface of the trough, accessible
 as the <code class="xref py py-attr docutils literal notranslate"><span class="pre">accuModel</span></code> attribute, as well as a model for the lag
@@ -556,16 +556,13 @@ linear, etc) or a custom model</p></li>
 <li><p><strong>angle</strong> (<em>float</em><em>, </em><em>optional</em>) – south-facing slope angle in degrees. Default is 2.9.</p></li>
 <li><p><strong>insolation_path</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em><em>, </em><em>optional</em>) – path to the file with
 insolation data.</p></li>
-<li><p><strong>retreat_path</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em><em>, </em><em>optional</em>) – path to the file with
-retreat data</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="method">
 <dt id="mars_troughs.Trough.set_model">
 <code class="sig-name descname">set_model</code><span class="sig-paren">(</span><em class="sig-param">self, acc_params: Dict[str, float], lag_params: Dict[str, float], errorbar: float</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#mars_troughs.Trough.set_model" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates trough model with new accumulation and lag parameters.
-Model number is kept the same for both acumulation and lag.</p>
+<dd><p>Updates trough model with new accumulation and lag parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -580,44 +577,8 @@ current lag parameter(s)).</p></li>
 </dd></dl>
 
 <dl class="method">
-<dt id="mars_troughs.Trough.compute_model_splines">
-<code class="sig-name descname">compute_model_splines</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.Trough.compute_model_splines" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes splines of models of 1) lag per time and
-2) retreat of ice per time.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>None</strong> – </p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>Output:</dt><dd><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="mars_troughs.Trough.get_retreat_model_t">
-<code class="sig-name descname">get_retreat_model_t</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">lag_t</em>, <em class="sig-param">time</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.Trough.get_retreat_model_t" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates the values of retreat of ice per time (mm/year).
-These values are obtained by evaluating self.ret_data_spline using
-the lag_model_t and time values.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>lag_t</strong> (<em>np.ndarray</em>) – lag at time</p></li>
-<li><p><strong>time</strong> (<em>np.ndarray</em>) – times at which we want to calculate the retreat</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="simple">
-<dt>Output:</dt><dd><p>retreat values (np.ndarray) of the same size as time input</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
 <dt id="mars_troughs.Trough.get_trajectory">
-<code class="sig-name descname">get_trajectory</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">times: Optional[numpy.ndarray] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.Trough.get_trajectory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_trajectory</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">times: Optional[numpy.ndarray] = None</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="headerlink" href="#mars_troughs.Trough.get_trajectory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Obtains the x and y coordinates (in m) of the trough model as a
 function of time.</p>
 <dl class="field-list simple">

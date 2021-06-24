@@ -3,6 +3,11 @@
 
 .. py:module:: mars_troughs.datapaths
 
+.. autoapi-nested-parse::
+
+   Paths to data files and helper methods to load some of them.
+
+
 
 Module Contents
 ---------------
@@ -14,6 +19,17 @@ Classes
 
    mars_troughs.datapaths._DataPaths
 
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   mars_troughs.datapaths.load_retreat_data
+   mars_troughs.datapaths.load_obliquity_data
+   mars_troughs.datapaths.load_insolation_data
+   mars_troughs.datapaths.load_TMP_data
 
 
 
@@ -61,5 +77,46 @@ Attributes
    
 
    Global object that holds paths.
+
+
+.. function:: load_retreat_data() -> Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]
+
+   Unpack the retreat data from the Bramson et al. thermal model used
+   to create a bivariate spline. This data is 'static' and so can be
+   loaded in here without respect to the model under consideration.
+
+   :returns: times the lags are measured at
+             retreats (np.ndarray): retreat values in a 2D array of shape
+               `(n_times, n_lags)`
+             lags (np.ndarray): lag values the retreats have been calculated for
+               by default these are [1,2,...15,20] in millimeters
+   :rtype: times (np.ndarray)
+
+
+.. function:: load_obliquity_data() -> Tuple[numpy.ndarray, numpy.ndarray]
+
+   Unpack the obliquity data.
+
+   :returns: the obliquity values
+             times (np.ndarray): times the obliquity is measured at
+   :rtype: obliquity (np.ndarray)
+
+
+.. function:: load_insolation_data() -> Tuple[numpy.ndarray, numpy.ndarray]
+
+   Unpack the insolation data.
+
+   :returns: the insolation values
+             times (np.ndarray): times the insolation is measured at
+   :rtype: insolation (np.ndarray)
+
+
+.. function:: load_TMP_data() -> Tuple[numpy.ndarray, numpy.ndarray]
+
+   Loads the TMP data for the trough being investigated now.
+
+   :returns: x position in kilometers
+             y (np.ndarray): y position in meters
+   :rtype: x (np.ndarray)
 
 

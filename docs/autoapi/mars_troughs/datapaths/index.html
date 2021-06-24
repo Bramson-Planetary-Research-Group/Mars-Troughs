@@ -175,6 +175,7 @@
             
   <div class="section" id="module-mars_troughs.datapaths">
 <span id="mars-troughs-datapaths"></span><h1><a class="reference internal" href="#module-mars_troughs.datapaths" title="mars_troughs.datapaths"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.datapaths</span></code></a><a class="headerlink" href="#module-mars_troughs.datapaths" title="Permalink to this headline">¶</a></h1>
+<p>Paths to data files and helper methods to load some of them.</p>
 <div class="section" id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="classes">
@@ -187,6 +188,29 @@
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#mars_troughs.datapaths._DataPaths" title="mars_troughs.datapaths._DataPaths"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_DataPaths</span></code></a></p></td>
 <td><p>A class for holding paths to data files.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mars_troughs.datapaths.load_retreat_data" title="mars_troughs.datapaths.load_retreat_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_retreat_data</span></code></a>() → Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]</p></td>
+<td><p>Unpack the retreat data from the Bramson et al. thermal model used</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mars_troughs.datapaths.load_obliquity_data" title="mars_troughs.datapaths.load_obliquity_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_obliquity_data</span></code></a>() → Tuple[numpy.ndarray, numpy.ndarray]</p></td>
+<td><p>Unpack the obliquity data.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mars_troughs.datapaths.load_insolation_data" title="mars_troughs.datapaths.load_insolation_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_insolation_data</span></code></a>() → Tuple[numpy.ndarray, numpy.ndarray]</p></td>
+<td><p>Unpack the insolation data.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mars_troughs.datapaths.load_TMP_data" title="mars_troughs.datapaths.load_TMP_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_TMP_data</span></code></a>() → Tuple[numpy.ndarray, numpy.ndarray]</p></td>
+<td><p>Loads the TMP data for the trough being investigated now.</p></td>
 </tr>
 </tbody>
 </table>
@@ -241,6 +265,76 @@ DATAPATHS variable instead.</p>
 <dt id="mars_troughs.datapaths.DATAPATHS">
 <code class="sig-prename descclassname">mars_troughs.datapaths.</code><code class="sig-name descname">DATAPATHS</code><a class="headerlink" href="#mars_troughs.datapaths.DATAPATHS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Global object that holds paths.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mars_troughs.datapaths.load_retreat_data">
+<code class="sig-prename descclassname">mars_troughs.datapaths.</code><code class="sig-name descname">load_retreat_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]<a class="headerlink" href="#mars_troughs.datapaths.load_retreat_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unpack the retreat data from the Bramson et al. thermal model used
+to create a bivariate spline. This data is ‘static’ and so can be
+loaded in here without respect to the model under consideration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p>times the lags are measured at
+retreats (np.ndarray): retreat values in a 2D array of shape</p>
+<blockquote>
+<div><p><cite>(n_times, n_lags)</cite></p>
+</div></blockquote>
+<dl class="simple">
+<dt>lags (np.ndarray): lag values the retreats have been calculated for</dt><dd><p>by default these are [1,2,…15,20] in millimeters</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>times (np.ndarray)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="mars_troughs.datapaths.load_obliquity_data">
+<code class="sig-prename descclassname">mars_troughs.datapaths.</code><code class="sig-name descname">load_obliquity_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="headerlink" href="#mars_troughs.datapaths.load_obliquity_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unpack the obliquity data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the obliquity values
+times (np.ndarray): times the obliquity is measured at</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>obliquity (np.ndarray)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="mars_troughs.datapaths.load_insolation_data">
+<code class="sig-prename descclassname">mars_troughs.datapaths.</code><code class="sig-name descname">load_insolation_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="headerlink" href="#mars_troughs.datapaths.load_insolation_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unpack the insolation data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the insolation values
+times (np.ndarray): times the insolation is measured at</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>insolation (np.ndarray)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="mars_troughs.datapaths.load_TMP_data">
+<code class="sig-prename descclassname">mars_troughs.datapaths.</code><code class="sig-name descname">load_TMP_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="headerlink" href="#mars_troughs.datapaths.load_TMP_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the TMP data for the trough being investigated now.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>x position in kilometers
+y (np.ndarray): y position in meters</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>x (np.ndarray)</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>

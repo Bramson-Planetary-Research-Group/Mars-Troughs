@@ -34,8 +34,7 @@ Attributes
    mars_troughs.accumulation_model.ACCUMULATION_MODEL_MAP
 
 
-.. class:: AccumulationModel(sub_models: Optional[List[Model]] = None)
-
+.. class:: AccumulationModel
 
    Bases: :py:obj:`mars_troughs.model.Model`
 
