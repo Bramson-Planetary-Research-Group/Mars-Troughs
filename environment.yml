@@ -4,6 +4,7 @@ dependencies:
   - twine
   - numpy
   - scipy
+  - pandas
   - matplotlib
   - emcee
   - corner
