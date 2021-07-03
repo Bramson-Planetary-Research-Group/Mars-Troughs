@@ -57,7 +57,8 @@ Attributes
 
    
 
-.. class:: AccumulationModel
+.. class:: AccumulationModel(sub_models: Optional[List[Model]] = None)
+
 
    Bases: :py:obj:`mars_troughs.model.Model`
 
@@ -201,7 +202,8 @@ Attributes
    :type constant: float, optional
 
 
-.. class:: LagModel
+.. class:: LagModel(sub_models: Optional[List[Model]] = None)
+
 
    Bases: :py:obj:`mars_troughs.model.Model`
 

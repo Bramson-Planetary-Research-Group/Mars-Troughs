@@ -32,7 +32,8 @@ Attributes
    mars_troughs.lag_model.LAG_MODEL_MAP
 
 
-.. class:: LagModel
+.. class:: LagModel(sub_models: Optional[List[Model]] = None)
+
 
    Bases: :py:obj:`mars_troughs.model.Model`
 
