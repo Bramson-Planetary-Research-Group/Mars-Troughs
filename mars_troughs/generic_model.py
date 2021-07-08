@@ -7,8 +7,6 @@ Created on Thu May  6 10:37:51 2021
 
 Linear model for both accumulation and lag
 """
-from typing import List
-
 import numpy as np
 
 from mars_troughs.model import Model
@@ -28,11 +26,6 @@ class ConstantModel(Model):
 
     def __init__(self, constant: float = 1.0):
         self.constant = constant
-
-    @property
-    def parameter_names(self) -> List[str]:
-        """Returns ``["constant"]``"""
-        return ["constant"]
 
     def eval(self, x) -> float:
         """Returns the value of :attr:`constant`."""
@@ -54,10 +47,6 @@ class LinearModel(Model):
     def __init__(self, intercept: float = 1.0, slope: float = 1.0):
         self.intercept = intercept
         self.slope = slope
-
-    @property
-    def parameter_names(self) -> List[str]:
-        return ["intercept", "slope"]
 
     def eval(self, x) -> float:
         return self.intercept + x * self.slope
@@ -84,10 +73,6 @@ class QuadModel(Model):
         self.intercept = intercept
         self.linearCoeff = linearCoeff
         self.quadCoeff = quadCoeff
-
-    @property
-    def parameter_names(self) -> List[str]:
-        return ["intercept", "linearCoeff", "quadCoeff"]
 
     def eval(self, x) -> float:
         p = [self.intercept, self.linearCoeff, self.quadCoeff]

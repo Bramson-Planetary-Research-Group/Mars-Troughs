@@ -1,7 +1,7 @@
 """
 Models for the lag as a function of time.
 """
-from typing import Dict
+from typing import Dict, List
 
 import numpy as np
 
@@ -42,8 +42,15 @@ class ConstantLag(LagModel, ConstantModel):
         self,
         constant: float = 1e-6,
     ):
+        self.lag_constant=constant
+        
         super().__init__()  # note: `super` maps to the LagModel parent class
-        ConstantModel.__init__(self, constant=constant)
+        ConstantModel.__init__(self, constant=self.lag_constant)
+        
+    @property
+    def parameter_names(self) -> List[str]:
+        """Returns ``["constant"]``"""
+        return ["lag_constant"]
 
 
 class LinearLag(LagModel, LinearModel):
@@ -63,8 +70,15 @@ class LinearLag(LagModel, LinearModel):
         intercept: float = 1e-6,
         slope: float = 1e-6,
     ):
+        self.lag_intercept=intercept
+        self.lag_slope=slope
+        
         super().__init__()
-        LinearModel.__init__(self, intercept=intercept, slope=slope)
+        LinearModel.__init__(self, intercept=self.lag_intercept, slope=self.lag_slope)
+        
+    @property
+    def parameter_names(self) -> List[str]:
+        return ["lag_intercept", "lag_slope"]
 
 
 LAG_MODEL_MAP: Dict[str, Model] = {
