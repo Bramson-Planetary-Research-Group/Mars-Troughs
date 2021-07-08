@@ -17,7 +17,7 @@ class ConstantLagTest(TestCase):
 
     def test_parameter_names(self):
         model = ConstantLag()
-        assert model.parameter_names == ["constant"]
+        assert model.parameter_names == ["lag_constant"]
 
     def test_constant(self):
         model1 = ConstantLag()
@@ -43,7 +43,7 @@ class LinearLagTest(TestCase):
 
     def test_parameter_names(self):
         model = LinearLag()
-        assert model.parameter_names == ["intercept", "slope"]
+        assert model.parameter_names == ["lag_intercept", "lag_slope"]
 
     def test_constant(self):
         model1 = LinearLag()

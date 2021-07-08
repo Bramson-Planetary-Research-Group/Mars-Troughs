@@ -23,7 +23,7 @@ class LinearAccumulationTest(TestCase):
         insolation = np.sin(np.radians(np.linspace(0, 360, 100)))
         times = np.linspace(0, 100, 100)
         model = Linear_Insolation(times, insolation)
-        assert model.parameter_names == ["intercept", "slope"]
+        assert model.parameter_names == ["acc_intercept", "acc_slope"]
 
     def test_constant(self):
         insolation = np.sin(np.radians(np.linspace(0, 360, 100)))
@@ -95,7 +95,7 @@ class QuadraticAccumulationTest(TestCase):
         insolation = np.sin(np.radians(np.linspace(0, 360, 100)))
         times = np.linspace(0, 100, 100)
         model = Quadratic_Insolation(times, insolation)
-        assert model.parameter_names == ["intercept", "linearCoeff", "quadCoeff"]
+        assert model.parameter_names == ["acc_intercept", "acc_linearCoeff", "acc_quadCoeff"]
 
     def test_constant(self):
         insolation = np.sin(np.radians(np.linspace(0, 360, 100)))
@@ -189,7 +189,7 @@ class ObliquityLinearAccumulationTest(TestCase):
         obliquity = np.sin(np.radians(np.linspace(0, 360, 100)))
         times = np.linspace(0, 100, 100)
         model = Linear_Obliquity(times, obliquity)
-        assert model.parameter_names == ["intercept", "slope"]
+        assert model.parameter_names == ["acc_intercept", "acc_slope"]
 
     def test_constant(self):
         obliquity = np.sin(np.radians(np.linspace(0, 360, 100)))
