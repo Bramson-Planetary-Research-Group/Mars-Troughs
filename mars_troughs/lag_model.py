@@ -15,7 +15,8 @@ class LagModel(Model):
     called :meth:`get_lag_at_t` that returns the lag
     as a function of time.
     """
-
+    prefix_params='lag_'
+    
     def get_lag_at_t(self, time: np.ndarray) -> np.ndarray:
         """
         Lag as a function of time
