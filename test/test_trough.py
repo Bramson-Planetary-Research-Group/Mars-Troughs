@@ -36,8 +36,8 @@ class TroughTest(TestCase):
         # Trajectory predictions
         x1, y1 = tr.get_trajectory()
         # Come up with new parameters
-        acc_params = {"intercept": 1.0, "slope": 2.0}
-        lag_params = {"constant": 33.0}
+        acc_params = {"acc_intercept": 1.0, "acc_slope": 2.0}
+        lag_params = {"lag_constant": 33.0}
         errorbar = 200.0
         tr.set_model(acc_params, lag_params, errorbar)
         assert tr.accuModel.parameters == acc_params
@@ -103,8 +103,8 @@ class TroughTest(TestCase):
         self.lag_model_name = "constant"
         tr = self.get_trough_object()
         # Come up with new parameters
-        acc_params = {"intercept": 1.0, "slope": 2.0}
-        lag_params = {"constant": 33.0}
+        acc_params = {"acc_intercept": 1.0, "acc_slope": 2.0}
+        lag_params = {"lag_constant": 33.0}
         errorbar = 200.0
         tr.set_model(acc_params, lag_params, errorbar)
         assert tr.accuModel.parameters == acc_params
