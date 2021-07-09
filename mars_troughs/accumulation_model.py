@@ -109,7 +109,6 @@ class Linear_Insolation(TimeDependentAccumulationModel, LinearModel):
         self.acc_intercept=intercept
         self.acc_slope=slope
         super().__init__(times, insolations)
-        LinearModel.__init__(self, self.acc_intercept, self.acc_slope)
 
     def get_yt(self, time: np.ndarray):
         """
@@ -165,7 +164,6 @@ class Quadratic_Insolation(TimeDependentAccumulationModel, QuadModel):
         self.acc_quadCoeff=quadCoeff
         
         super().__init__(times, insolation)
-        QuadModel.__init__(self, self.acc_intercept, self.acc_linearCoeff, self.acc_quadCoeff)
 
     def get_yt(self, time: np.ndarray):
         """
@@ -206,7 +204,6 @@ class Linear_Obliquity(TimeDependentAccumulationModel, LinearModel):
         self.acc_intercept=intercept
         self.acc_slope=slope
 
-        LinearModel.__init__(self, self.acc_intercept, self.acc_slope)
         super().__init__(obl_times, obliquity)
 
     def get_yt(self, time: np.ndarray):
