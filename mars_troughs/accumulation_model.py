@@ -19,7 +19,7 @@ class AccumulationModel(Model):
     def get_accumulation_at_t(self, time: np.ndarray) -> np.ndarray:
         raise NotImplementedError  # pragma: no cover
         
-    prefix='acc_'
+    prefix_params='acc_'
 
 class TimeDependentAccumulationModel(AccumulationModel):
     """
