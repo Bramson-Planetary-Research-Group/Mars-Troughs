@@ -106,8 +106,10 @@ class Linear_Insolation(TimeDependentAccumulationModel, LinearModel):
         intercept: float = 1e-6,
         slope: float = 1e-6,
     ):
+        self.acc_intercept=intercept
+        self.acc_slope=slope
         super().__init__(times, insolations)
-        LinearModel.__init__(self, intercept, slope)
+        LinearModel.__init__(self, self.acc_intercept, self.acc_slope)
 
     def get_yt(self, time: np.ndarray):
         """
@@ -125,9 +127,9 @@ class Linear_Insolation(TimeDependentAccumulationModel, LinearModel):
         """
 
         return -(
-            self.intercept * time
+            self.acc_intercept * time
             + (
-                self.slope
+                self.acc_slope
                 * (self._int_var_data_spline(time) - self._int_var_data_spline(0))
             )
         )
@@ -158,8 +160,12 @@ class Quadratic_Insolation(TimeDependentAccumulationModel, QuadModel):
         linearCoeff: float = 1e-6,
         quadCoeff: float = 1e-6,
     ):
+        self.acc_intercept=intercept
+        self.acc_linearCoeff=linearCoeff
+        self.acc_quadCoeff=quadCoeff
+        
         super().__init__(times, insolation)
-        QuadModel.__init__(self, intercept, linearCoeff, quadCoeff)
+        QuadModel.__init__(self, self.acc_intercept, self.acc_linearCoeff, self.acc_quadCoeff)
 
     def get_yt(self, time: np.ndarray):
         """
@@ -176,11 +182,11 @@ class Quadratic_Insolation(TimeDependentAccumulationModel, QuadModel):
 
         """
         return -(
-            self.intercept * time
+            self.acc_intercept * time
             + (
-                self.linearCoeff
+                self.acc_linearCoeff
                 * (self._int_var_data_spline(time) - self._int_var_data_spline(0))
-                + self.quadCoeff
+                + self.acc_quadCoeff
                 * (
                     self._int_var2_data_spline(time)
                     - self._int_var2_data_spline(0)
@@ -197,8 +203,10 @@ class Linear_Obliquity(TimeDependentAccumulationModel, LinearModel):
         intercept: float = 1.0,
         slope: float = 1.0,
     ):
+        self.acc_intercept=intercept
+        self.acc_slope=slope
 
-        LinearModel.__init__(self, intercept, slope)
+        LinearModel.__init__(self, self.acc_intercept, self.acc_slope)
         super().__init__(obl_times, obliquity)
 
     def get_yt(self, time: np.ndarray):
@@ -217,9 +225,9 @@ class Linear_Obliquity(TimeDependentAccumulationModel, LinearModel):
         """
 
         return -(
-            self.intercept * time
+            self.acc_intercept * time
             + (
-                self.slope
+                self.acc_slope
                 * (self._int_var_data_spline(time) - self._int_var_data_spline(0))
             )
         )
