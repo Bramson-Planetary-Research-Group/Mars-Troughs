@@ -32,7 +32,7 @@ class ConstantModel(Model):
     @property
     def parameter_names(self) -> List[str]:
         """Returns ``["constant"]``"""
-        return ["constant"]
+        return [self.prefix_params+"constant"]
 
     def eval(self, x) -> float:
         """Returns the value of :attr:`constant`."""
@@ -57,7 +57,7 @@ class LinearModel(Model):
 
     @property
     def parameter_names(self) -> List[str]:
-        return ["intercept", "slope"]
+        return [self.prefix_params+"intercept", self.prefix_params+"slope"]
 
     def eval(self, x) -> float:
         return self.intercept + x * self.slope
@@ -87,7 +87,8 @@ class QuadModel(Model):
 
     @property
     def parameter_names(self) -> List[str]:
-        return ["intercept", "linearCoeff", "quadCoeff"]
+        return [self.prefix_params+"intercept", self.prefix_params+ 
+                "linearCoeff", self.prefix_params+"quadCoeff"]
 
     def eval(self, x) -> float:
         p = [self.intercept, self.linearCoeff, self.quadCoeff]
