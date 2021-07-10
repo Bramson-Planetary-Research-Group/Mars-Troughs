@@ -16,22 +16,22 @@ class LinearAccumulationTest(TestCase):
         times = np.linspace(0, 100, 100)
         model = Linear_Insolation(times, insolation)
         assert model is not None
-        assert isinstance(model.acc_intercept, float)
-        assert isinstance(model.acc_slope, float)
+        assert isinstance(model.intercept, float)
+        assert isinstance(model.slope, float)
 
     def test_parameter_names(self):
         insolation = np.sin(np.radians(np.linspace(0, 360, 100)))
         times = np.linspace(0, 100, 100)
         model = Linear_Insolation(times, insolation)
-        assert model.parameter_names == ["acc_intercept", "acc_slope"]
+        assert model.parameter_names == ["intercept", "slope"]
 
     def test_constant(self):
         insolation = np.sin(np.radians(np.linspace(0, 360, 100)))
         times = np.linspace(0, 100, 100)
         model1 = Linear_Insolation(times, insolation)
         model2 = Linear_Insolation(times, insolation, 2.0, 1e-7)
-        assert model1.acc_intercept != model2.acc_intercept
-        assert model1.acc_slope != model2.acc_slope
+        assert model1.intercept != model2.intercept
+        assert model1.slope != model2.slope
         assert set(model1.parameters.keys()) == set(model2.parameters.keys())
         assert model1.parameters != model2.parameters
 
@@ -40,8 +40,8 @@ class LinearAccumulationTest(TestCase):
         insolation = np.sin(np.radians(np.linspace(0, 360, 1000)))
         for inter, slope in zip([1.0, 2.0, 3.0], [1e-6, 2e-6, 3e-5]):
             model = Linear_Insolation(time, insolation, inter, slope)
-            assert model.acc_intercept == inter
-            assert model.acc_slope == slope
+            assert model.intercept == inter
+            assert model.slope == slope
             accums = model.get_accumulation_at_t(time)
             assert (accums == inter + slope * model._var_data_spline(time)).all()
 
@@ -87,18 +87,18 @@ class QuadraticAccumulationTest(TestCase):
         times = np.linspace(0, 100, 100)
         model = Quadratic_Insolation(times, insolation)
         assert model is not None
-        assert isinstance(model.acc_intercept, float)
-        assert isinstance(model.acc_linearCoeff, float)
-        assert isinstance(model.acc_quadCoeff, float)
+        assert isinstance(model.intercept, float)
+        assert isinstance(model.linearCoeff, float)
+        assert isinstance(model.quadCoeff, float)
 
     def test_parameter_names(self):
         insolation = np.sin(np.radians(np.linspace(0, 360, 100)))
         times = np.linspace(0, 100, 100)
         model = Quadratic_Insolation(times, insolation)
         assert model.parameter_names == [
-            "acc_intercept",
-            "acc_linearCoeff",
-            "acc_quadCoeff",
+            "intercept",
+            "linearCoeff",
+            "quadCoeff",
         ]
 
     def test_constant(self):
@@ -106,9 +106,9 @@ class QuadraticAccumulationTest(TestCase):
         times = np.linspace(0, 100, 100)
         model1 = Quadratic_Insolation(times, insolation)
         model2 = Quadratic_Insolation(times, insolation, 2.0, 1e-7, 1e-9)
-        assert model1.acc_intercept != model2.acc_intercept
-        assert model1.acc_linearCoeff != model2.acc_linearCoeff
-        assert model1.acc_quadCoeff != model2.acc_quadCoeff
+        assert model1.intercept != model2.intercept
+        assert model1.linearCoeff != model2.linearCoeff
+        assert model1.quadCoeff != model2.quadCoeff
         assert set(model1.parameters.keys()) == set(model2.parameters.keys())
         assert model1.parameters != model2.parameters
 
@@ -121,9 +121,9 @@ class QuadraticAccumulationTest(TestCase):
             model = Quadratic_Insolation(
                 time, insolation, inter, linearCoeff, quadCoeff
             )
-            assert model.acc_intercept == inter
-            assert model.acc_linearCoeff == linearCoeff
-            assert model.acc_quadCoeff == quadCoeff
+            assert model.intercept == inter
+            assert model.linearCoeff == linearCoeff
+            assert model.quadCoeff == quadCoeff
             accums = model.get_accumulation_at_t(time)
             assert (
                 accums
@@ -186,22 +186,22 @@ class ObliquityLinearAccumulationTest(TestCase):
         times = np.linspace(0, 100, 100)
         model = Linear_Obliquity(times, obliquity)
         assert model is not None
-        assert isinstance(model.acc_intercept, float)
-        assert isinstance(model.acc_slope, float)
+        assert isinstance(model.intercept, float)
+        assert isinstance(model.slope, float)
 
     def test_parameter_names(self):
         obliquity = np.sin(np.radians(np.linspace(0, 360, 100)))
         times = np.linspace(0, 100, 100)
         model = Linear_Obliquity(times, obliquity)
-        assert model.parameter_names == ["acc_intercept", "acc_slope"]
+        assert model.parameter_names == ["intercept", "slope"]
 
     def test_constant(self):
         obliquity = np.sin(np.radians(np.linspace(0, 360, 100)))
         times = np.linspace(0, 100, 100)
         model1 = Linear_Obliquity(times, obliquity)
         model2 = Linear_Obliquity(times, obliquity, 2.0, 1e-7)
-        assert model1.acc_intercept != model2.acc_intercept
-        assert model1.acc_slope != model2.acc_slope
+        assert model1.intercept != model2.intercept
+        assert model1.slope != model2.slope
         assert set(model1.parameters.keys()) == set(model2.parameters.keys())
         assert model1.parameters != model2.parameters
 
@@ -210,8 +210,8 @@ class ObliquityLinearAccumulationTest(TestCase):
         obliquity = np.sin(np.radians(np.linspace(0, 360, 1000)))
         for inter, slope in zip([1.0, 2.0, 3.0], [1e-6, 2e-6, 3e-5]):
             model = Linear_Obliquity(time, obliquity, inter, slope)
-            assert model.acc_intercept == inter
-            assert model.acc_slope == slope
+            assert model.intercept == inter
+            assert model.slope == slope
             accums = model.get_accumulation_at_t(time)
             assert (accums == inter + slope * model._var_data_spline(time)).all()
 
