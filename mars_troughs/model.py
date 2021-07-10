@@ -19,6 +19,9 @@ class Model(ABC):
         model that serve their own purpose
     """
 
+    prefix: str = ""
+    """A prefix to prepend to parameter naems when supplying them."""
+
     def __init__(self, sub_models: Optional[List["Model"]] = None) -> None:
         # Add sub_models as an attribute
         self.sub_models = sub_models or []
@@ -29,6 +32,11 @@ class Model(ABC):
             their_names = set(sub_model.all_parameter_names)
             duplicates = our_names.intersection(their_names)
             assert not duplicates, f"duplicate parameter names {duplicates}"
+
+    @property
+    def prefix_length(self) -> int:
+        """Length of the prefix for parameter names of this model."""
+        return len(self.prefix)
 
     @property
     @abstractmethod
@@ -53,7 +61,7 @@ class Model(ABC):
                ...
 
         Returns:
-          names of parametes for **this** object
+          names of parametes for **this** object, possibly with a prefix
         """
         raise NotImplementedError  # pragma: no cover
 
@@ -61,23 +69,35 @@ class Model(ABC):
     def parameters(self) -> Dict[str, Any]:
         """
         The parameters for **this** object, but not any of its sub-models.
-        The parameters **must** be attributes of the object
+        The parameters **must** be attributes of the object.
+
+        .. note:: The ``prefix`` attribute will be prepended to keys.
 
         Returns:
           name/value pairs where values can be numbers or arrays of numbers
         """
-        return {name: getattr(self, name) for name in self.parameter_names}
+        # Strip off the prefix from the attributes
+        prefix = "" if self.prefix_length == 0 else f"{self.prefix}_"
+        return {
+            prefix + name: getattr(self, name[self.prefix_length :])
+            for name in self.parameter_names
+        }
 
     @parameters.setter
     def parameters(self, params: Dict[str, Any]) -> None:
         """
         Set the parameters for this object and all sub-models.
+        This setter accepts keys that do or don't start with
+        the prefix.
 
         Args:
           params (Dict[str, Any]): new parameters
         """
         assert set(params.keys()) == set(self.parameter_names)
         for key, value in params.items():
+            key = (
+                key[self.prefix_length :] if key.startswith(self.prefix) else key
+            )
             setattr(self, key, value)
         return
 
