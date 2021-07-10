@@ -200,8 +200,8 @@ class Linear_Obliquity(TimeDependentAccumulationModel, LinearModel):
         intercept: float = 1.0,
         slope: float = 1.0,
     ):
-        super().__init__(obl_times, obliquity)
         LinearModel.__init__(self, intercept, slope)
+        super().__init__(obl_times, obliquity)
 
     def get_yt(self, time: np.ndarray):
         """
