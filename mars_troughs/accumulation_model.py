@@ -128,7 +128,7 @@ class Linear_Insolation(TimeDependentAccumulationModel, LinearModel):
         """
 
         return -(
-            self.ntercept * time
+            self.intercept * time
             + (
                 self.slope
                 * (self._int_var_data_spline(time) - self._int_var_data_spline(0))
