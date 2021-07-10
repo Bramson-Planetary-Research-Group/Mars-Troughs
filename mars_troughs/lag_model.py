@@ -16,7 +16,8 @@ class LagModel(Model):
     as a function of time.
     """
 
-    prefix_params = "lag_"
+    prefix: str = "lag"
+    """All parameters of lag models start with 'lag'."""
 
     def get_lag_at_t(self, time: np.ndarray) -> np.ndarray:
         """
@@ -44,8 +45,8 @@ class ConstantLag(LagModel, ConstantModel):
         self,
         constant: float = 1e-6,
     ):
-        self.lag_constant = constant
         super().__init__()  # note: `super` maps to the LagModel parent class
+        ConstantModel.__init__(self, constant=constant)
 
 
 class LinearLag(LagModel, LinearModel):
@@ -65,9 +66,8 @@ class LinearLag(LagModel, LinearModel):
         intercept: float = 1e-6,
         slope: float = 1e-6,
     ):
-        self.lag_intercept = intercept
-        self.lag_slope = slope
         super().__init__()
+        LinearModel.__init__(self, intercept=intercept, slope=slope)
 
 
 LAG_MODEL_MAP: Dict[str, Model] = {
