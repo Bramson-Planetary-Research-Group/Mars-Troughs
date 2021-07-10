@@ -79,8 +79,7 @@ class Model(ABC):
         # Strip off the prefix from the attributes
         prefix = "" if self.prefix_length == 0 else f"{self.prefix}_"
         return {
-            prefix + name: getattr(self, name[self.prefix_length :])
-            for name in self.parameter_names
+            prefix + name: getattr(self, name) for name in self.parameter_names
         }
 
     @parameters.setter
