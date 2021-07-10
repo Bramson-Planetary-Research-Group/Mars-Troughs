@@ -76,10 +76,9 @@ class Model(ABC):
         Returns:
           name/value pairs where values can be numbers or arrays of numbers
         """
-        # Strip off the prefix from the attributes
-        prefix = "" if self.prefix_length == 0 else f"{self.prefix}_"
         return {
-            prefix + name: getattr(self, name) for name in self.parameter_names
+            self.prefix + name: getattr(self, name)
+            for name in self.parameter_names
         }
 
     @parameters.setter
@@ -92,7 +91,6 @@ class Model(ABC):
         Args:
           params (Dict[str, Any]): new parameters
         """
-        assert set(params.keys()) == set(self.parameter_names)
         for key, value in params.items():
             key = (
                 key[self.prefix_length :] if key.startswith(self.prefix) else key

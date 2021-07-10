@@ -16,7 +16,7 @@ class AccumulationModel(Model):
     Abstract class for computing the amount of ice accumulation.
     """
 
-    prefix: str = "acc"
+    prefix: str = "acc_"
     """All parameters of accumulations models start with 'acc'."""
 
     @abstractmethod
