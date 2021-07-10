@@ -47,6 +47,11 @@ class Model(ABC):
         must consist of the names of the attributes that contain the
         parameters.
 
+        .. note::
+
+            Model prefixes should not be included in these names. The names
+            must match attributes exactly.
+
         Example:
 
         .. code-block:: python
@@ -61,7 +66,7 @@ class Model(ABC):
                ...
 
         Returns:
-          names of parametes for **this** object, possibly with a prefix
+          names of parametes for **this** object
         """
         raise NotImplementedError  # pragma: no cover
 
