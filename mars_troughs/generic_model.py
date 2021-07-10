@@ -29,11 +29,13 @@ class ConstantModel(Model):
     @property
     def parameter_names(self) -> List[str]:
         """Returns ``["constant"]``"""
-        return [self.prefix_params+"constant"]
+        return [self.prefix_params + "constant"]
 
     def eval(self, x) -> float:
         """Returns the value of :attr:`constant`."""
-        constant = [val for key, val in self.parameters.items() if 'constant' in key]
+        constant = [
+            val for key, val in self.parameters.items() if "constant" in key
+        ]
         return constant * np.ones(np.size(x))
 
 
@@ -51,11 +53,13 @@ class LinearModel(Model):
 
     @property
     def parameter_names(self) -> List[str]:
-        return [self.prefix_params+"intercept", self.prefix_params+"slope"]
+        return [self.prefix_params + "intercept", self.prefix_params + "slope"]
 
     def eval(self, x) -> float:
-        intercept = [val for key, val in self.parameters.items() if 'intercept' in key]
-        slope = [val for key, val in self.parameters.items() if 'slope' in key]
+        intercept = [
+            val for key, val in self.parameters.items() if "intercept" in key
+        ]
+        slope = [val for key, val in self.parameters.items() if "slope" in key]
         return intercept + x * slope
 
 
@@ -73,13 +77,22 @@ class QuadModel(Model):
 
     @property
     def parameter_names(self) -> List[str]:
-        return [self.prefix_params+"intercept", self.prefix_params+ 
-                "linearCoeff", self.prefix_params+"quadCoeff"]
+        return [
+            self.prefix_params + "intercept",
+            self.prefix_params + "linearCoeff",
+            self.prefix_params + "quadCoeff",
+        ]
 
     def eval(self, x) -> float:
-        intercept = [val for key, val in self.parameters.items() if 'intercept' in key]
-        linearCoeff = [val for key, val in self.parameters.items() if 'linearCoeff' in key]
-        quadCoeff = [val for key, val in self.parameters.items() if 'quadCoeff' in key]
-        
+        intercept = [
+            val for key, val in self.parameters.items() if "intercept" in key
+        ]
+        linearCoeff = [
+            val for key, val in self.parameters.items() if "linearCoeff" in key
+        ]
+        quadCoeff = [
+            val for key, val in self.parameters.items() if "quadCoeff" in key
+        ]
+
         p = [intercept, linearCoeff, quadCoeff]
         return sum((a * x ** i for i, a in enumerate(p)))

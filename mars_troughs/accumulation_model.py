@@ -15,11 +15,13 @@ class AccumulationModel(Model):
     """
     Abstract class for computing the amount of ice accumulation.
     """
+
     @abstractmethod
     def get_accumulation_at_t(self, time: np.ndarray) -> np.ndarray:
         raise NotImplementedError  # pragma: no cover
-        
-    prefix_params='acc_'
+
+    prefix_params = "acc_"
+
 
 class TimeDependentAccumulationModel(AccumulationModel):
     """
@@ -106,8 +108,8 @@ class Linear_Insolation(TimeDependentAccumulationModel, LinearModel):
         intercept: float = 1e-6,
         slope: float = 1e-6,
     ):
-        self.acc_intercept=intercept
-        self.acc_slope=slope
+        self.acc_intercept = intercept
+        self.acc_slope = slope
         super().__init__(times, insolations)
 
     def get_yt(self, time: np.ndarray):
@@ -159,10 +161,10 @@ class Quadratic_Insolation(TimeDependentAccumulationModel, QuadModel):
         linearCoeff: float = 1e-6,
         quadCoeff: float = 1e-6,
     ):
-        self.acc_intercept=intercept
-        self.acc_linearCoeff=linearCoeff
-        self.acc_quadCoeff=quadCoeff
-        
+        self.acc_intercept = intercept
+        self.acc_linearCoeff = linearCoeff
+        self.acc_quadCoeff = quadCoeff
+
         super().__init__(times, insolation)
 
     def get_yt(self, time: np.ndarray):
@@ -201,8 +203,8 @@ class Linear_Obliquity(TimeDependentAccumulationModel, LinearModel):
         intercept: float = 1.0,
         slope: float = 1.0,
     ):
-        self.acc_intercept=intercept
-        self.acc_slope=slope
+        self.acc_intercept = intercept
+        self.acc_slope = slope
 
         super().__init__(obl_times, obliquity)
 
