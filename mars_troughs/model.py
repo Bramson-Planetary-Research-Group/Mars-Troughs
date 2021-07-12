@@ -24,7 +24,7 @@ class Model(ABC):
 
     def __init__(self, sub_models: Optional[List["Model"]] = None) -> None:
         # Add sub_models as an attribute
-        self.sub_models = sub_models or []
+        self.sub_models: List[Model] = sub_models or []
 
         # Check for duplicate names between here and the sub-models
         our_names = set(self.parameter_names)
@@ -34,11 +34,6 @@ class Model(ABC):
             assert not duplicates, f"duplicate parameter names {duplicates}"
 
     @property
-    def prefix_length(self) -> int:
-        """Length of the prefix for parameter names of this model."""
-        return len(self.prefix)
-
-    @property
     @abstractmethod
     def parameter_names(self) -> List[str]:
         """
@@ -46,11 +41,6 @@ class Model(ABC):
         This method **must** be implemented for all subclasses, and the names
         must consist of the names of the attributes that contain the
         parameters.
-
-        .. note::
-
-            Model prefixes should not be included in these names. The names
-            must match attributes exactly.
 
         Example:
 
@@ -76,30 +66,20 @@ class Model(ABC):
         The parameters for **this** object, but not any of its sub-models.
         The parameters **must** be attributes of the object.
 
-        .. note:: The ``prefix`` attribute will be prepended to keys.
-
         Returns:
           name/value pairs where values can be numbers or arrays of numbers
         """
-        return {
-            self.prefix + name: getattr(self, name)
-            for name in self.parameter_names
-        }
+        return {name: getattr(self, name) for name in self.parameter_names}
 
     @parameters.setter
     def parameters(self, params: Dict[str, Any]) -> None:
         """
         Set the parameters for this object and all sub-models.
-        This setter accepts keys that do or don't start with
-        the prefix.
 
         Args:
           params (Dict[str, Any]): new parameters
         """
         for key, value in params.items():
-            key = (
-                key[self.prefix_length :] if key.startswith(self.prefix) else key
-            )
             setattr(self, key, value)
         return
 
@@ -123,8 +103,12 @@ class Model(ABC):
         """
         # Find parameters of sub_models
         sub_pars = {}
-        for sub_model in self.sub_models:
-            sub_pars = {**sub_pars, **sub_model.all_parameters}
+        for i, sub_model in enumerate(self.sub_models):
+            # If the sub model doesn't have a prefix then prepend a number
+            sub_prefix = sub_model.prefix or str(i) + "_"
+            # Attach the prefix of submodels to their keys
+            for key, value in sub_model.all_parameters.items():
+                sub_pars[sub_prefix + key] = value
 
         # Bundle up our parameters and all sub model's parameters
         return {**self.parameters, **sub_pars}
@@ -141,8 +125,15 @@ class Model(ABC):
         self.parameters = {key: params[key] for key in self.parameter_names}
 
         # Update sub model's parameters
-        for sub_model in self.sub_models:
-            sub_model.all_parameters = {
-                key: params[key] for key in sub_model.all_parameter_names
+        for i, sub_model in enumerate(self.sub_models):
+            # Pull out only the parameters associated with the sub model,
+            # based on its prefix (or the default assigned prefix)
+            # Set the sub model's `all_parameters` to be this parameter subset
+            sub_prefix = sub_model.prefix or str(i) + "_"
+            sub_params = {
+                k[len(sub_prefix) :]: v
+                for k, v in params.items()
+                if k.startswith(sub_prefix)
             }
+            sub_model.all_parameters = sub_params
         return

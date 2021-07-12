@@ -51,30 +51,30 @@ class TestModel(TestCase):
             "a": 1.0,
             "b": 10.0,
             "c": 20.0,
-            "x": 3.0,
-            "y": 4.0,
+            "0_x": 3.0,
+            "0_y": 4.0,
         }
         model.parameters = {"a": -1.0, "b": -10.0, "c": -20.0}
         assert model.all_parameters == {
             "a": -1.0,
             "b": -10.0,
             "c": -20.0,
-            "x": 3.0,
-            "y": 4.0,
+            "0_x": 3.0,
+            "0_y": 4.0,
         }
         model.all_parameters = {
             "a": -2.0,
             "b": -20.0,
             "c": -40.0,
-            "x": 33.0,
-            "y": 44.0,
+            "0_x": 33.0,
+            "0_y": 44.0,
         }
         assert model.all_parameters == {
             "a": -2.0,
             "b": -20.0,
             "c": -40.0,
-            "x": 33.0,
-            "y": 44.0,
+            "0_x": 33.0,
+            "0_y": 44.0,
         }
         assert model.parameters == {"a": -2.0, "b": -20.0, "c": -40.0}
         assert sub.parameters == {"x": 33.0, "y": 44.0}
