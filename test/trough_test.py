@@ -27,28 +27,37 @@ class TroughTest(TestCase):
         tr = self.get_trough_object()
         assert tr is not None
 
+    def test_all_parameter_names(self):
+        tr = self.get_trough_object()
+        assert "errorbar" in tr.all_parameter_names
+        # 6 params based on setUp() -- 3 from acc
+        # 2 from lag, 1 errorbar
+        assert len(tr.all_parameter_names) == 6
+
     def test_set_model(self):
+        # Test that we can update the trough object
         self.acc_params = [1e-6, 1e-11]
         self.acc_model_name = "linear"
-        self.lag_params = [1]
-        self.lag_model_name = "constant"
         tr = self.get_trough_object()
-        # Trajectory predictions
-        x1, y1 = tr.get_trajectory()
-        # Come up with new parameters
-        acc_params = {"intercept": 1.0, "slope": 2.0}
-        lag_params = {"constant": 33.0}
-        errorbar = 200.0
-        tr.set_model(acc_params, lag_params, errorbar)
-        assert tr.accuModel.parameters == acc_params
-        assert tr.lagModel.parameters == lag_params
-        assert tr.errorbar == errorbar
-        # Make sure the trajectory predictions changed
-        # meaning the splines changed
-        # Note - first point is 0 so it doesn't change
-        x2, y2 = tr.get_trajectory()
-        assert (x1 != x2)[1:].all()
-        assert (y1 != y2)[1:].all()
+        # Save a pointer to the old spline so we can compare
+        old_spline = tr.retreat_model_t_spline
+        # Also save the integrated retreat table
+        old_model_retreat = tr.retreat_model_t
+        # Update the model, mimicing how
+        # we would pass new parameters in from our sampler
+        new_params = {
+            "acc_intercept": 1,
+            "acc_slope": 2,
+            "lag_intercept": 3,
+            "lag_slope": 4,
+            "errorbar": 5,
+        }
+        tr.set_model(new_params)
+        assert tr.accuModel.parameters == {"intercept": 1, "slope": 2}
+        assert tr.lagModel.parameters == {"intercept": 3, "slope": 4}
+        assert tr.errorbar == 5
+        assert tr.retreat_model_t_spline is not old_spline
+        assert np.any(old_model_retreat != tr.retreat_model_t)
 
     def test_get_trajectory(self):
         tr = self.get_trough_object()
@@ -102,11 +111,20 @@ class TroughTest(TestCase):
         self.lag_params = [1]
         self.lag_model_name = "constant"
         tr = self.get_trough_object()
+        # Save a pointer to the old spline so we can compare
+        old_spline = tr.retreat_model_t_spline
+        # Also save the integrated retreat table
+        old_model_retreat = tr.retreat_model_t
         # Come up with new parameters
-        acc_params = {"intercept": 1.0, "slope": 2.0}
-        lag_params = {"constant": 33.0}
-        errorbar = 200.0
-        tr.set_model(acc_params, lag_params, errorbar)
-        assert tr.accuModel.parameters == acc_params
-        assert tr.lagModel.parameters == lag_params
-        assert tr.errorbar == errorbar
+        new_params = {
+            "acc_intercept": 1,
+            "acc_slope": 2,
+            "lag_constant": 3,
+            "errorbar": 5,
+        }
+        tr.set_model(new_params)
+        assert tr.accuModel.parameters == {"intercept": 1, "slope": 2}
+        assert tr.lagModel.parameters == {"constant": 3}
+        assert tr.errorbar == 5
+        assert tr.retreat_model_t_spline is not old_spline
+        assert np.any(old_model_retreat != tr.retreat_model_t)
