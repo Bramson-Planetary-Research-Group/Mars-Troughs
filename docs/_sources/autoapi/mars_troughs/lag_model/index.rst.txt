@@ -41,6 +41,12 @@ Attributes
    called :meth:`get_lag_at_t` that returns the lag
    as a function of time.
 
+   .. attribute:: prefix
+      :annotation: :str = lag_
+
+      All parameters of lag models start with 'lag'.
+
+
    .. method:: get_lag_at_t(self, time: numpy.ndarray) -> numpy.ndarray
 
       Lag as a function of time

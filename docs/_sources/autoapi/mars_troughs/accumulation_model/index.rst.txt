@@ -41,6 +41,12 @@ Attributes
 
    Abstract class for computing the amount of ice accumulation.
 
+   .. attribute:: prefix
+      :annotation: :str = acc_
+
+      All parameters of accumulations models start with 'acc'.
+
+
    .. method:: get_accumulation_at_t(self, time: numpy.ndarray) -> numpy.ndarray
       :abstractmethod:
 

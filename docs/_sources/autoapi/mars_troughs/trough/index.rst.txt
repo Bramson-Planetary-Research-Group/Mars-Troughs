@@ -25,6 +25,8 @@ Classes
 .. class:: Trough(acc_model: Union[str, mars_troughs.model.Model], lag_model: Union[str, mars_troughs.model.Model], acc_params: Optional[List[float]] = None, lag_params: Optional[List[float]] = None, errorbar: float = 1.0, angle: float = 2.9)
 
 
+   Bases: :py:obj:`mars_troughs.model.Model`
+
    This object models trough migration patterns (TMPs). It is composed of
    a model for the accumulation of ice on the surface of the trough, accessible
    as the :attr:`accuModel` attribute, as well as a model for the lag
@@ -48,18 +50,19 @@ Classes
                            insolation data.
    :type insolation_path: Union[str, Path], optional
 
-   .. method:: set_model(self, acc_params: Dict[str, float], lag_params: Dict[str, float], errorbar: float) -> None
+   .. method:: parameter_names(self) -> List[str]
+      :property:
+
+      Just the errorbar
+
+
+   .. method:: set_model(self, all_parameters: Dict[str, float]) -> None
 
       Updates trough model with new accumulation and lag parameters.
+      Then updates all splines.
 
-      :param acc_params: Accumulation parameter(s) (same
-                         length as current acumulation parameter(s)).
-      :type acc_params: Dict[str, float]
-      :param lag_params: Lag parameter(s) (same length as
-                         current lag parameter(s)).
-      :type lag_params: Dict[str, float]
-      :param errorbar: Errorbar of the datapoints in pixels
-      :type errorbar: float
+      :param all_parameter: new parameters to the models
+      :type all_parameter: Dict[str, float]
 
 
    .. method:: get_trajectory(self, times: Optional[numpy.ndarray] = None) -> Tuple[numpy.ndarray, numpy.ndarray]

@@ -222,6 +222,12 @@
 <em class="property">class </em><code class="sig-prename descclassname">mars_troughs.accumulation_model.</code><code class="sig-name descname">AccumulationModel</code><span class="sig-paren">(</span><em class="sig-param">sub_models: Optional[List[Model]] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.accumulation_model.AccumulationModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../model/index.html#mars_troughs.model.Model" title="mars_troughs.model.Model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mars_troughs.model.Model</span></code></a></p>
 <p>Abstract class for computing the amount of ice accumulation.</p>
+<dl class="attribute">
+<dt id="mars_troughs.accumulation_model.AccumulationModel.prefix">
+<code class="sig-name descname">prefix</code><em class="property"> :str = acc_</em><a class="headerlink" href="#mars_troughs.accumulation_model.AccumulationModel.prefix" title="Permalink to this definition">¶</a></dt>
+<dd><p>All parameters of accumulations models start with ‘acc’.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="mars_troughs.accumulation_model.AccumulationModel.get_accumulation_at_t">
 <em class="property">abstract </em><code class="sig-name descname">get_accumulation_at_t</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#mars_troughs.accumulation_model.AccumulationModel.get_accumulation_at_t" title="Permalink to this definition">¶</a></dt>

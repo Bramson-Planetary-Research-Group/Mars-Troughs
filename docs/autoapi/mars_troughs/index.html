@@ -266,6 +266,12 @@
 <em class="property">class </em><code class="sig-prename descclassname">mars_troughs.</code><code class="sig-name descname">AccumulationModel</code><span class="sig-paren">(</span><em class="sig-param">sub_models: Optional[List[Model]] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.AccumulationModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="model/index.html#mars_troughs.model.Model" title="mars_troughs.model.Model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mars_troughs.model.Model</span></code></a></p>
 <p>Abstract class for computing the amount of ice accumulation.</p>
+<dl class="attribute">
+<dt id="mars_troughs.AccumulationModel.prefix">
+<code class="sig-name descname">prefix</code><em class="property"> :str = acc_</em><a class="headerlink" href="#mars_troughs.AccumulationModel.prefix" title="Permalink to this definition">¶</a></dt>
+<dd><p>All parameters of accumulations models start with ‘acc’.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="mars_troughs.AccumulationModel.get_accumulation_at_t">
 <em class="property">abstract </em><code class="sig-name descname">get_accumulation_at_t</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#mars_troughs.AccumulationModel.get_accumulation_at_t" title="Permalink to this definition">¶</a></dt>
@@ -426,6 +432,12 @@ thickness at all times.</p>
 <p>Abstract class for lag models, that have a method
 called <a class="reference internal" href="#mars_troughs.LagModel.get_lag_at_t" title="mars_troughs.LagModel.get_lag_at_t"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_lag_at_t()</span></code></a> that returns the lag
 as a function of time.</p>
+<dl class="attribute">
+<dt id="mars_troughs.LagModel.prefix">
+<code class="sig-name descname">prefix</code><em class="property"> :str = lag_</em><a class="headerlink" href="#mars_troughs.LagModel.prefix" title="Permalink to this definition">¶</a></dt>
+<dd><p>All parameters of lag models start with ‘lag’.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="mars_troughs.LagModel.get_lag_at_t">
 <code class="sig-name descname">get_lag_at_t</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#mars_troughs.LagModel.get_lag_at_t" title="Permalink to this definition">¶</a></dt>
@@ -475,6 +487,12 @@ provided in the <a class="reference internal" href="#mars_troughs.Model.paramete
 model that serve their own purpose</p>
 </dd>
 </dl>
+<dl class="attribute">
+<dt id="mars_troughs.Model.prefix">
+<code class="sig-name descname">prefix</code><em class="property"> :str =</em><a class="headerlink" href="#mars_troughs.Model.prefix" title="Permalink to this definition">¶</a></dt>
+<dd><p>A prefix to prepend to parameter naems when supplying them.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="mars_troughs.Model.parameter_names">
 <em class="property">property </em><code class="sig-name descname">parameter_names</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span> &#x2192; List[str]<a class="headerlink" href="#mars_troughs.Model.parameter_names" title="Permalink to this definition">¶</a></dt>
@@ -504,7 +522,7 @@ parameters.</p>
 <dt id="mars_troughs.Model.parameters">
 <em class="property">property </em><code class="sig-name descname">parameters</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span> &#x2192; Dict[str, Any]<a class="headerlink" href="#mars_troughs.Model.parameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>The parameters for <strong>this</strong> object, but not any of its sub-models.
-The parameters <strong>must</strong> be attributes of the object</p>
+The parameters <strong>must</strong> be attributes of the object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>name/value pairs where values can be numbers or arrays of numbers</p>
@@ -539,7 +557,8 @@ The parameters <strong>must</strong> be attributes of the object</p>
 <dl class="class">
 <dt id="mars_troughs.Trough">
 <em class="property">class </em><code class="sig-prename descclassname">mars_troughs.</code><code class="sig-name descname">Trough</code><span class="sig-paren">(</span><em class="sig-param">acc_model: Union[str, mars_troughs.model.Model], lag_model: Union[str, mars_troughs.model.Model], acc_params: Optional[List[float]] = None, lag_params: Optional[List[float]] = None, errorbar: float = 1.0, angle: float = 2.9</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.Trough" title="Permalink to this definition">¶</a></dt>
-<dd><p>This object models trough migration patterns (TMPs). It is composed of
+<dd><p>Bases: <a class="reference internal" href="model/index.html#mars_troughs.model.Model" title="mars_troughs.model.Model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mars_troughs.model.Model</span></code></a></p>
+<p>This object models trough migration patterns (TMPs). It is composed of
 a model for the accumulation of ice on the surface of the trough, accessible
 as the <code class="xref py py-attr docutils literal notranslate"><span class="pre">accuModel</span></code> attribute, as well as a model for the lag
 that builds up over time, accesible as the <code class="xref py py-attr docutils literal notranslate"><span class="pre">lagModel</span></code> attribute.</p>
@@ -560,18 +579,19 @@ insolation data.</p></li>
 </dd>
 </dl>
 <dl class="method">
+<dt id="mars_troughs.Trough.parameter_names">
+<em class="property">property </em><code class="sig-name descname">parameter_names</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span> &#x2192; List[str]<a class="headerlink" href="#mars_troughs.Trough.parameter_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Just the errorbar</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="mars_troughs.Trough.set_model">
-<code class="sig-name descname">set_model</code><span class="sig-paren">(</span><em class="sig-param">self, acc_params: Dict[str, float], lag_params: Dict[str, float], errorbar: float</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#mars_troughs.Trough.set_model" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates trough model with new accumulation and lag parameters.</p>
+<code class="sig-name descname">set_model</code><span class="sig-paren">(</span><em class="sig-param">self, all_parameters: Dict[str, float]</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#mars_troughs.Trough.set_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates trough model with new accumulation and lag parameters.
+Then updates all splines.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>acc_params</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>float</em><em>]</em>) – Accumulation parameter(s) (same
-length as current acumulation parameter(s)).</p></li>
-<li><p><strong>lag_params</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>float</em><em>]</em>) – Lag parameter(s) (same length as
-current lag parameter(s)).</p></li>
-<li><p><strong>errorbar</strong> (<em>float</em>) – Errorbar of the datapoints in pixels</p></li>
-</ul>
+<dd class="field-odd"><p><strong>all_parameter</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>float</em><em>]</em>) – new parameters to the models</p>
 </dd>
 </dl>
 </dd></dl>

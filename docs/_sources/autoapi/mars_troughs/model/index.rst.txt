@@ -37,6 +37,12 @@ Classes
                       model that serve their own purpose
    :type sub_models: Optional[List["Model"]]
 
+   .. attribute:: prefix
+      :annotation: :str = 
+
+      A prefix to prepend to parameter naems when supplying them.
+
+
    .. method:: parameter_names(self) -> List[str]
       :property:
 
@@ -65,7 +71,7 @@ Classes
       :property:
 
       The parameters for **this** object, but not any of its sub-models.
-      The parameters **must** be attributes of the object
+      The parameters **must** be attributes of the object.
 
       :returns: name/value pairs where values can be numbers or arrays of numbers
 

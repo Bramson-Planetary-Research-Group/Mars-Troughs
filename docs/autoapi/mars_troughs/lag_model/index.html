@@ -218,6 +218,12 @@
 <p>Abstract class for lag models, that have a method
 called <a class="reference internal" href="#mars_troughs.lag_model.LagModel.get_lag_at_t" title="mars_troughs.lag_model.LagModel.get_lag_at_t"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_lag_at_t()</span></code></a> that returns the lag
 as a function of time.</p>
+<dl class="attribute">
+<dt id="mars_troughs.lag_model.LagModel.prefix">
+<code class="sig-name descname">prefix</code><em class="property"> :str = lag_</em><a class="headerlink" href="#mars_troughs.lag_model.LagModel.prefix" title="Permalink to this definition">¶</a></dt>
+<dd><p>All parameters of lag models start with ‘lag’.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="mars_troughs.lag_model.LagModel.get_lag_at_t">
 <code class="sig-name descname">get_lag_at_t</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#mars_troughs.lag_model.LagModel.get_lag_at_t" title="Permalink to this definition">¶</a></dt>

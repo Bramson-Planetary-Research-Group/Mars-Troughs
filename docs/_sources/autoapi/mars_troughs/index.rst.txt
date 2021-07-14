@@ -64,6 +64,12 @@ Attributes
 
    Abstract class for computing the amount of ice accumulation.
 
+   .. attribute:: prefix
+      :annotation: :str = acc_
+
+      All parameters of accumulations models start with 'acc'.
+
+
    .. method:: get_accumulation_at_t(self, time: numpy.ndarray) -> numpy.ndarray
       :abstractmethod:
 
@@ -211,6 +217,12 @@ Attributes
    called :meth:`get_lag_at_t` that returns the lag
    as a function of time.
 
+   .. attribute:: prefix
+      :annotation: :str = lag_
+
+      All parameters of lag models start with 'lag'.
+
+
    .. method:: get_lag_at_t(self, time: numpy.ndarray) -> numpy.ndarray
 
       Lag as a function of time
@@ -254,6 +266,12 @@ Attributes
                       model that serve their own purpose
    :type sub_models: Optional[List["Model"]]
 
+   .. attribute:: prefix
+      :annotation: :str = 
+
+      A prefix to prepend to parameter naems when supplying them.
+
+
    .. method:: parameter_names(self) -> List[str]
       :property:
 
@@ -282,7 +300,7 @@ Attributes
       :property:
 
       The parameters for **this** object, but not any of its sub-models.
-      The parameters **must** be attributes of the object
+      The parameters **must** be attributes of the object.
 
       :returns: name/value pairs where values can be numbers or arrays of numbers
 
@@ -307,6 +325,8 @@ Attributes
 .. class:: Trough(acc_model: Union[str, mars_troughs.model.Model], lag_model: Union[str, mars_troughs.model.Model], acc_params: Optional[List[float]] = None, lag_params: Optional[List[float]] = None, errorbar: float = 1.0, angle: float = 2.9)
 
 
+   Bases: :py:obj:`mars_troughs.model.Model`
+
    This object models trough migration patterns (TMPs). It is composed of
    a model for the accumulation of ice on the surface of the trough, accessible
    as the :attr:`accuModel` attribute, as well as a model for the lag
@@ -330,18 +350,19 @@ Attributes
                            insolation data.
    :type insolation_path: Union[str, Path], optional
 
-   .. method:: set_model(self, acc_params: Dict[str, float], lag_params: Dict[str, float], errorbar: float) -> None
+   .. method:: parameter_names(self) -> List[str]
+      :property:
+
+      Just the errorbar
+
+
+   .. method:: set_model(self, all_parameters: Dict[str, float]) -> None
 
       Updates trough model with new accumulation and lag parameters.
+      Then updates all splines.
 
-      :param acc_params: Accumulation parameter(s) (same
-                         length as current acumulation parameter(s)).
-      :type acc_params: Dict[str, float]
-      :param lag_params: Lag parameter(s) (same length as
-                         current lag parameter(s)).
-      :type lag_params: Dict[str, float]
-      :param errorbar: Errorbar of the datapoints in pixels
-      :type errorbar: float
+      :param all_parameter: new parameters to the models
+      :type all_parameter: Dict[str, float]
 
 
    .. method:: get_trajectory(self, times: Optional[numpy.ndarray] = None) -> Tuple[numpy.ndarray, numpy.ndarray]
