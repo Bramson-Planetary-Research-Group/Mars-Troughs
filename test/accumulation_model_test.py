@@ -95,7 +95,11 @@ class QuadraticAccumulationTest(TestCase):
         insolation = np.sin(np.radians(np.linspace(0, 360, 100)))
         times = np.linspace(0, 100, 100)
         model = Quadratic_Insolation(times, insolation)
-        assert model.parameter_names == ["intercept", "linearCoeff", "quadCoeff"]
+        assert model.parameter_names == [
+            "intercept",
+            "linearCoeff",
+            "quadCoeff",
+        ]
 
     def test_constant(self):
         insolation = np.sin(np.radians(np.linspace(0, 360, 100)))

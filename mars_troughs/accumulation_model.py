@@ -16,6 +16,9 @@ class AccumulationModel(Model):
     Abstract class for computing the amount of ice accumulation.
     """
 
+    prefix: str = "acc_"
+    """All parameters of accumulations models start with 'acc'."""
+
     @abstractmethod
     def get_accumulation_at_t(self, time: np.ndarray) -> np.ndarray:
         raise NotImplementedError  # pragma: no cover
@@ -197,7 +200,6 @@ class Linear_Obliquity(TimeDependentAccumulationModel, LinearModel):
         intercept: float = 1.0,
         slope: float = 1.0,
     ):
-
         LinearModel.__init__(self, intercept, slope)
         super().__init__(obl_times, obliquity)
 

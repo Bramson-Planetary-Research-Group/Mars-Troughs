@@ -17,7 +17,7 @@ from mars_troughs.lag_model import LAG_MODEL_MAP
 from mars_troughs.model import Model
 
 
-class Trough:
+class Trough(Model):
     """
     This object models trough migration patterns (TMPs). It is composed of
     a model for the accumulation of ice on the surface of the trough, accessible
@@ -106,6 +106,10 @@ class Trough:
         else:  # custom model was given
             self.lagModel = lag_model
 
+        # Call super() with the acc and lag models. This
+        # way their parameters are visible here.
+        super().__init__(sub_models=[self.accuModel, self.lagModel])
+
         # Calculate the model of retreat of ice per time
         self.retreat_model_t = self.ret_data_spline.ev(
             self.lagModel.get_lag_at_t(times), times
@@ -114,28 +118,23 @@ class Trough:
         # Compute the Retreat(time) spline
         self.retreat_model_t_spline = IUS(self.times, self.retreat_model_t)
 
+    @property
+    def parameter_names(self) -> List[str]:
+        """Just the errorbar"""
+        return ["errorbar"]
+
     def set_model(
         self,
-        acc_params: Dict[str, float],
-        lag_params: Dict[str, float],
-        errorbar: float,
+        all_parameters: Dict[str, float],
     ) -> None:
         """
         Updates trough model with new accumulation and lag parameters.
+        Then updates all splines.
 
         Args:
-          acc_params (Dict[str, float]): Accumulation parameter(s) (same
-            length as current acumulation parameter(s)).
-          lag_params (Dict[str, float]): Lag parameter(s) (same length as
-            current lag parameter(s)).
-          errorbar (float): Errorbar of the datapoints in pixels
+            all_parameter (Dict[str, float]): new parameters to the models
         """
-        # Set the new errorbar
-        self.errorbar = errorbar
-
-        # Update submodels
-        self.accuModel.parameters = acc_params
-        self.lagModel.parameters = lag_params
+        self.all_parameters = all_parameters
 
         # Update the model of retreat of ice per time
         self.retreat_model_t = self.ret_data_spline.ev(

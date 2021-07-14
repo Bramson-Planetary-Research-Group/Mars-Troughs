@@ -19,9 +19,12 @@ class Model(ABC):
         model that serve their own purpose
     """
 
+    prefix: str = ""
+    """A prefix to prepend to parameter naems when supplying them."""
+
     def __init__(self, sub_models: Optional[List["Model"]] = None) -> None:
         # Add sub_models as an attribute
-        self.sub_models = sub_models or []
+        self.sub_models: List[Model] = sub_models or []
 
         # Check for duplicate names between here and the sub-models
         our_names = set(self.parameter_names)
@@ -61,7 +64,7 @@ class Model(ABC):
     def parameters(self) -> Dict[str, Any]:
         """
         The parameters for **this** object, but not any of its sub-models.
-        The parameters **must** be attributes of the object
+        The parameters **must** be attributes of the object.
 
         Returns:
           name/value pairs where values can be numbers or arrays of numbers
@@ -76,7 +79,6 @@ class Model(ABC):
         Args:
           params (Dict[str, Any]): new parameters
         """
-        assert set(params.keys()) == set(self.parameter_names)
         for key, value in params.items():
             setattr(self, key, value)
         return
@@ -101,8 +103,12 @@ class Model(ABC):
         """
         # Find parameters of sub_models
         sub_pars = {}
-        for sub_model in self.sub_models:
-            sub_pars = {**sub_pars, **sub_model.all_parameters}
+        for i, sub_model in enumerate(self.sub_models):
+            # If the sub model doesn't have a prefix then prepend a number
+            sub_prefix = sub_model.prefix or str(i) + "_"
+            # Attach the prefix of submodels to their keys
+            for key, value in sub_model.all_parameters.items():
+                sub_pars[sub_prefix + key] = value
 
         # Bundle up our parameters and all sub model's parameters
         return {**self.parameters, **sub_pars}
@@ -119,8 +125,15 @@ class Model(ABC):
         self.parameters = {key: params[key] for key in self.parameter_names}
 
         # Update sub model's parameters
-        for sub_model in self.sub_models:
-            sub_model.all_parameters = {
-                key: params[key] for key in sub_model.all_parameter_names
+        for i, sub_model in enumerate(self.sub_models):
+            # Pull out only the parameters associated with the sub model,
+            # based on its prefix (or the default assigned prefix)
+            # Set the sub model's `all_parameters` to be this parameter subset
+            sub_prefix = sub_model.prefix or str(i) + "_"
+            sub_params = {
+                k[len(sub_prefix) :]: v
+                for k, v in params.items()
+                if k.startswith(sub_prefix)
             }
+            sub_model.all_parameters = sub_params
         return

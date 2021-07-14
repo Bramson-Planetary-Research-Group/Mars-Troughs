@@ -16,6 +16,9 @@ class LagModel(Model):
     as a function of time.
     """
 
+    prefix: str = "lag_"
+    """All parameters of lag models start with 'lag'."""
+
     def get_lag_at_t(self, time: np.ndarray) -> np.ndarray:
         """
         Lag as a function of time

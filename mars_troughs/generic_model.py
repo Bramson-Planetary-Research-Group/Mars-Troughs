@@ -28,6 +28,7 @@ class ConstantModel(Model):
 
     def __init__(self, constant: float = 1.0):
         self.constant = constant
+        super().__init__()
 
     @property
     def parameter_names(self) -> List[str]:
@@ -54,6 +55,7 @@ class LinearModel(Model):
     def __init__(self, intercept: float = 1.0, slope: float = 1.0):
         self.intercept = intercept
         self.slope = slope
+        super().__init__()
 
     @property
     def parameter_names(self) -> List[str]:
@@ -84,10 +86,15 @@ class QuadModel(Model):
         self.intercept = intercept
         self.linearCoeff = linearCoeff
         self.quadCoeff = quadCoeff
+        super().__init__()
 
     @property
     def parameter_names(self) -> List[str]:
-        return ["intercept", "linearCoeff", "quadCoeff"]
+        return [
+            "intercept",
+            "linearCoeff",
+            "quadCoeff",
+        ]
 
     def eval(self, x) -> float:
         p = [self.intercept, self.linearCoeff, self.quadCoeff]
