@@ -6,21 +6,14 @@ Created on Mon Jul 12 09:31:34 2021
 @author: kris
 """
 #import modules
-import os
 import time
-from typing import Callable, Dict, List, Optional, Tuple, Union
-import h5py
+from typing import Dict, List, Optional, Union
 import numpy as np
-import matplotlib.pyplot as plt
 import scipy.optimize as op
 import mars_troughs as mt
-import emcee, corner
-from importlib import reload
+import emcee
 from mars_troughs import DATAPATHS, Model
-from mars_troughs.datapaths import (
-    load_insolation_data,
-    load_obliquity_data,
-    load_retreat_data)
+from mars_troughs.datapaths import load_insolation_data
 
 class MCMC():
     """
@@ -45,17 +38,22 @@ class MCMC():
         self.acc_model_name = acc_model_name
         self.lag_model_name = lag_model_name
         
+        #Load data
+        self.xdata,self.ydata=np.loadtxt(DATAPATHS.TMP, unpack=True) #Observed TMP data
+        self.xdata=self.xdata*1000 #km to m 
+        (inst,times) = load_insolation_data() #Insolation data and times
+        self.times=-times
+        
         # Create  trough object 
         self.tr = mt.Trough(self.acc_model_name,self.lag_model_name,acc_params,
                        lag_params,
                        errorbar,angle)
-        breakpoint()
         
         self.parameter_names = ([key for key in self.tr.all_parameters])
         
         #Find number of dimensions and number of parameters per submodel
         self.ndim=len(self.parameter_names)
-        self.nwalkers=ndim*4
+        self.nwalkers=self.ndim*4
         
         #Define the log likelihood
     
@@ -67,18 +65,20 @@ class MCMC():
         
         #Set file to save progress 
         backend=emcee.backends.HDFBackend(filename+'.h5')
-        backend.reset(nwalkers,ndim)
+        backend.reset(self.nwalkers,self.ndim)
         
         #Set optimized parameter values as initial values of MCMC chains 
-        self.initParams=np.array([optParams+ 
-                        1e-3*optParams*np.random.randn(ndim) 
-                        for i in range(nwalkers)])
+        self.initParams=np.array([self.optParams+ 
+                        1e-3*self.optParams*np.random.randn(self.ndim) 
+                        for i in range(self.nwalkers)])
     
         start = time.time()
         
         #Initialize sampler
-        self.sampler = emcee.EnsembleSampler(nwalkers, ndim, self.ln_likelihood, 
-                                        backend=backend, parameter_names=self.parameter_names)
+        self.sampler = emcee.EnsembleSampler(self.nwalkers, self.ndim, 
+                                             self.ln_likelihood, 
+                                             backend=backend, 
+                                             parameter_names=self.parameter_names)
         #Run MCMC and track progress
         self.sampler.reset()
         #Iteratively compute autocorrelation time Tau
@@ -118,20 +118,20 @@ class MCMC():
     
         self.tr.set_model(params)
         
-        lag_t=self.tr.lagModel.get_lag_at_t(times)
+        lag_t=self.tr.lagModel.get_lag_at_t(self.times)
     
         if any(lag_t < 0) or any(lag_t > 20):
     
             return -1e99
     
-        return self.tr.lnlikelihood(xdata,ydata)
+        return self.tr.lnlikelihood(self.xdata,self.ydata)
     
     #And the negative of the log likelihood
     def neg_ln_likelihood(self,paramsArray):
         
         params=dict(zip(self.parameter_names, paramsArray))
         
-        return -ln_likelihood(params)
+        return -self.ln_likelihood(params)
 
     
 
