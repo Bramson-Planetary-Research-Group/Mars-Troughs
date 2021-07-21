@@ -9,6 +9,7 @@ from .datapaths import DATAPATHS
 from .lag_model import LAG_MODEL_MAP, ConstantLag, LagModel, LinearLag
 from .model import Model
 from .trough import Trough
+from .mcmc import MCMC
 
 __author__ = [
     "Tom McClintock <thmsmcclintock@gmail.com>",
