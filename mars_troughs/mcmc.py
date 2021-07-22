@@ -14,6 +14,7 @@ import mars_troughs as mt
 import emcee
 from mars_troughs import DATAPATHS, Model
 from mars_troughs.datapaths import load_insolation_data
+import os
 
 class MCMC():
     """
@@ -24,7 +25,6 @@ class MCMC():
         self,
         maxSteps: int,
         subIter: int,
-        filename: str,
         acc_model_name = Union[str, Model],
         lag_model_name = Union[str, Model],
         acc_params: Optional[List[float]] = None,
@@ -34,7 +34,6 @@ class MCMC():
     ):
         self.maxSteps = maxSteps
         self.subIter = subIter
-        self.filename = filename
         self.acc_model_name = acc_model_name
         self.lag_model_name = lag_model_name
         
@@ -55,16 +54,26 @@ class MCMC():
         self.ndim=len(self.parameter_names)
         self.nwalkers=self.ndim*4
         
+        #Create directory to save ensemble and figures
+        directory='../../outputMCMC/'
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        self.subdir='acc_'+acc_model_name+'_lag_'+lag_model_name+'/'
+        if not os.path.exists(directory+self.subdir):
+            os.makedirs(directory+self.subdir)
+    
+        self.filename=directory+self.subdir+str(self.maxSteps)
+        
         #Define the log likelihood
     
-    #Linear optimization
+        #Linear optimization
         guessParams=np.array([errorbar]+acc_params+lag_params)
         optObj= op.minimize(self.neg_ln_likelihood, x0=guessParams, 
                             method='Nelder-Mead')
         self.optParams=optObj['x']
         
         #Set file to save progress 
-        backend=emcee.backends.HDFBackend(filename+'.h5')
+        backend=emcee.backends.HDFBackend(self.filename+'.h5')
         backend.reset(self.nwalkers,self.ndim)
         
         #Set optimized parameter values as initial values of MCMC chains 
