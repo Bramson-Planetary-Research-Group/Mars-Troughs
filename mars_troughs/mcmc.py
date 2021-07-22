@@ -25,6 +25,7 @@ class MCMC():
         self,
         maxSteps: int,
         subIter: int,
+        directory: str,
         acc_model_name = Union[str, Model],
         lag_model_name = Union[str, Model],
         acc_params: Optional[List[float]] = None,
@@ -36,6 +37,7 @@ class MCMC():
         self.subIter = subIter
         self.acc_model_name = acc_model_name
         self.lag_model_name = lag_model_name
+        
         
         #Load data
         self.xdata,self.ydata=np.loadtxt(DATAPATHS.TMP, unpack=True) #Observed TMP data
@@ -55,7 +57,6 @@ class MCMC():
         self.nwalkers=self.ndim*4
         
         #Create directory to save ensemble and figures
-        directory='../../outputMCMC/'
         if not os.path.exists(directory):
             os.makedirs(directory)
         self.subdir='acc_'+acc_model_name+'_lag_'+lag_model_name+'/'
@@ -63,6 +64,7 @@ class MCMC():
             os.makedirs(directory+self.subdir)
     
         self.filename=directory+self.subdir+str(self.maxSteps)
+        
         
         #Define the log likelihood
     
