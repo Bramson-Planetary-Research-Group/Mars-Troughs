@@ -59,7 +59,7 @@ class MCMC():
         #Create directory to save ensemble and figures
         if not os.path.exists(directory):
             os.makedirs(directory)
-        self.subdir='acc_'+acc_model_name+'_lag_'+lag_model_name+'/'
+        self.subdir='acc_'+self.acc_model_name+'_lag_'+self.lag_model_name+'/'
         if not os.path.exists(directory+self.subdir):
             os.makedirs(directory+self.subdir)
     
