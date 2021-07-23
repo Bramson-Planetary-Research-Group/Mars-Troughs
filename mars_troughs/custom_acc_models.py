@@ -8,7 +8,7 @@ Created on Fri Jul 23 13:14:58 2021
 from abc import abstractmethod
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
-from mars_troughs.generic_model import QuadModel, CubicModel
+from mars_troughs.generic_model import QuadModel, CubicModel, PowerLawModel
 from mars_troughs.model import Model
 
 class CustomAccumulationModel(Model):
@@ -172,6 +172,43 @@ class Cubic_Obliquity(TimeDependentAccumulationModel, CubicModel):
                         - self._int_var3_data_spline(0))
                   )
                )
+
+class PowerLaw_Obliquity(TimeDependentAccumulationModel, PowerLawModel):
+    def __init__(
+        self,
+        obl_times: np.ndarray,
+        obliquity: np.ndarray,
+        coeff: float = 1.0,
+        exponent: float = 1.0
+        ):
+        
+        PowerLawModel.__init__(self, coeff, exponent)
+        super().__init__(obl_times, obliquity)
+        
+        self._variable_exp = self._variable**self.exponent
+        self._var_exp_data_spline = IUS(self._times, self._variable_exp )
+        self._int_var_exp_data_spline = self._var_data_spline.antiderivative()
+
+    def get_yt(self, time: np.ndarray):
+        """
+        Calculates the vertical distance y (in m) at traveled by a point
+        in the center of the high side of the trough. This distance  is a
+        function of the accumulation rate A as y(t)=integral(A(ins(t)), dt) or
+        dy/dt=A(ins(t))
+
+        Args:
+            time (np.ndarray): times at which we want to calculate y, in years.
+        Output:
+            np.ndarray of the same size as time input containing values of
+            the vertical distance y, in meters.
+
+        """
+        
+        return -(self.coeff*
+                     (self._int_var_exp_data_spline(time)
+                     -self._int_var_exp_data_spline(0)
+                     )
+                )
     
     
         
