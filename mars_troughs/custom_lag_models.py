@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Fri Jul 23 10:00:25 2021
-
-@author: kris
+Custom lag models
 """
 import numpy as np
 from mars_troughs.generic_model import QuadModel, CubicModel, PowerLawModel
