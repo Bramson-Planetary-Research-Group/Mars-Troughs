@@ -99,3 +99,60 @@ class QuadModel(Model):
     def eval(self, x) -> float:
         p = [self.intercept, self.linearCoeff, self.quadCoeff]
         return sum((a * x ** i for i, a in enumerate(p)))
+
+class CubicModel(Model):
+    """
+    A model for a cubic function of the input
+    
+    Args:
+      intercept (float, optional) default is 1.0
+      linearCoeff (float, optional) default is 1e-6
+      quadCoeff (float, optional) default is 1e-6 
+      cubicCoeff (float, optional) defatul is 1e-6
+      
+    y = intercept + linearCoeff * x + quadCoeff * x^2 + cubicCoeff * x^3
+    """
+    
+    def __init__(
+        self,
+        intercept: float = 1.0,
+        linearCoeff: float = 1e-6,
+        quadCoeff: float = 1e-6,
+        cubicCoeff: float = 1e-6,
+    ):
+        self.intercept = intercept
+        self.linearCoeff = linearCoeff
+        self.quadCoeff = quadCoeff
+        self.cubicCoeff = cubicCoeff
+        super().__init__()
+
+    @property
+    def parameter_names(self) -> List[str]:
+        return [
+            "intercept",
+            "linearCoeff",
+            "quadCoeff",
+            "cubicCoeff"
+        ]
+    
+    def eval(self, x) -> float:
+        p = [self.intercept, self.linearCoeff, self.quadCoeff, self.cubicCoeff]
+        return sum((a * x ** i for i, a in enumerate(p)))
+    
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
