@@ -6,7 +6,7 @@ Created on Fri Jul 23 10:00:25 2021
 @author: kris
 """
 import numpy as np
-from mars_troughs.generic_model import QuadModel, CubicModel
+from mars_troughs.generic_model import QuadModel, CubicModel, PowerLawModel
 from mars_troughs.model import Model
 
 class CustomLagModel(Model):
@@ -64,6 +64,21 @@ class CubicLag(CustomLagModel,CubicModel):
                                 linearCoeff=linearCoeff,
                                 quadCoeff=quadCoeff,
                                 cubicCoeff=cubicCoeff)
+    
+class PowerLawLag(CustomLagModel,PowerLawModel):
+    """
+    Lag follows a power law function with time
+    """
+    def __init__(
+        self,
+        coeff: float = 1.0,
+        exponent: float = 1.0,
+        ):
+        super().__init__()
+        PowerLawModel.__init__(self, coeff, exponent)
+        
+        
+    
         
     
     

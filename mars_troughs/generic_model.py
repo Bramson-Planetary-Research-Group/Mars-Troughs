@@ -139,6 +139,35 @@ class CubicModel(Model):
         p = [self.intercept, self.linearCoeff, self.quadCoeff, self.cubicCoeff]
         return sum((a * x ** i for i, a in enumerate(p)))
     
+class PowerLawModel(Model):
+    """
+    A model for a power law function of the input
+    
+    Args:
+      coeff (float, optional) default is 1.0
+      exponent (float, optional) default is 1.0
+      
+    y = coeff * x^exponent
+    """
+    
+    def __init__(
+        self,
+        coeff: float = 1.0,
+        exponent: float = 1.0,
+    ):
+        self.coeff=coeff
+        self.exponent=exponent
+        super().__init__()
+
+    @property
+    def parameter_names(self) -> List[str]:
+        return [
+            "coeff",
+            "exponent",
+        ]
+    
+    def eval(self, x) -> float:
+        return self.coeff * x ** self.exponent
       
       
       
