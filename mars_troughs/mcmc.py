@@ -13,7 +13,6 @@ import scipy.optimize as op
 import mars_troughs as mt
 import emcee
 from mars_troughs import DATAPATHS, Model
-from mars_troughs.datapaths import load_insolation_data
 import os
 
 class MCMC():
@@ -26,8 +25,8 @@ class MCMC():
         maxSteps: int,
         subIter: int,
         directory: str,
-        acc_model_name = Union[str, Model],
-        lag_model_name = Union[str, Model],
+        acc_model = Union[str, Model],
+        lag_model = Union[str, Model],
         acc_params: Optional[List[float]] = None,
         lag_params: Optional[List[float]] = None,
         errorbar = np.sqrt(1.6), #errorbar in pixels on the datapoints
@@ -35,18 +34,15 @@ class MCMC():
     ):
         self.maxSteps = maxSteps
         self.subIter = subIter
-        self.acc_model_name = acc_model_name
-        self.lag_model_name = lag_model_name
-        
+        self.acc_model = acc_model
+        self.lag_model = lag_model
         
         #Load data
         self.xdata,self.ydata=np.loadtxt(DATAPATHS.TMP, unpack=True) #Observed TMP data
         self.xdata=self.xdata*1000 #km to m 
-        (inst,times) = load_insolation_data() #Insolation data and times
-        self.times=-times
         
         # Create  trough object 
-        self.tr = mt.Trough(self.acc_model_name,self.lag_model_name,acc_params,
+        self.tr = mt.Trough(self.acc_model,self.lag_model,acc_params,
                        lag_params,
                        errorbar,angle)
         
@@ -56,23 +52,45 @@ class MCMC():
         self.ndim=len(self.parameter_names)
         self.nwalkers=self.ndim*4
         
+        
+        #Linear optimization
+        
+        guessParams=np.array([errorbar]
+                             +list(self.tr.accuModel.parameters.values())
+                             +list(self.tr.lagModel.parameters.values()))
+        optObj= op.minimize(self.neg_ln_likelihood, x0=guessParams, 
+                            method='Nelder-Mead')
+        self.optParams=optObj['x']
+        
+        
         #Create directory to save ensemble and figures
+        if isinstance(self.acc_model, str):
+            #do nothing
+            acc_model_name=self.acc_model
+        else:
+            auxAcc=str(self.acc_model).split(' ')
+            auxAcc=auxAcc[0]
+            acc_model_name=auxAcc.split('.')
+            acc_model_name=acc_model_name[2]
+            
+        
+        if isinstance(self.lag_model, str):
+            #do nothing
+            lag_model_name=self.lag_model
+        else:
+            auxLag=str(lag_model).split(' ')
+            auxLag=auxLag[0]
+            lag_model_name=auxLag.split('.')
+            lag_model_name=lag_model_name[2]
+        
+        
         if not os.path.exists(directory):
             os.makedirs(directory)
-        self.subdir='acc_'+self.acc_model_name+'_lag_'+self.lag_model_name+'/'
+        self.subdir='acc_'+acc_model_name+'_lag_'+lag_model_name+'/'
         if not os.path.exists(directory+self.subdir):
             os.makedirs(directory+self.subdir)
     
         self.filename=directory+self.subdir+str(self.maxSteps)
-        
-        
-        #Define the log likelihood
-    
-        #Linear optimization
-        guessParams=np.array([errorbar]+acc_params+lag_params)
-        optObj= op.minimize(self.neg_ln_likelihood, x0=guessParams, 
-                            method='Nelder-Mead')
-        self.optParams=optObj['x']
         
         #Set file to save progress 
         backend=emcee.backends.HDFBackend(self.filename+'.h5')
@@ -94,7 +112,7 @@ class MCMC():
         self.sampler.reset()
         #Iteratively compute autocorrelation time Tau
         index=0
-        autocorr=np.zeros(int(maxSteps/subIter))
+        autocorr=np.zeros(int(self.maxSteps/self.subIter))
         old_tau=np.inf
         
         #compute tau every subIter iterations
@@ -129,7 +147,7 @@ class MCMC():
     
         self.tr.set_model(params)
         
-        lag_t=self.tr.lagModel.get_lag_at_t(self.times)
+        lag_t=self.tr.lagModel.get_lag_at_t(self.tr.times)
     
         if any(lag_t < 0) or any(lag_t > 20):
     
