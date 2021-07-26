@@ -4,7 +4,11 @@
 Custom lag models
 """
 import numpy as np
-from mars_troughs.generic_model import QuadModel, CubicModel, PowerLawModel
+from mars_troughs.generic_model import (ConstantModel, 
+                                        LinearModel,
+                                        QuadModel, 
+                                        CubicModel, 
+                                        PowerLawModel)
 from mars_troughs.model import Model
 
 class CustomLagModel(Model):
@@ -28,6 +32,43 @@ class CustomLagModel(Model):
             np.ndarray of the same size as time input containing values of lag.
         """
         return self.eval(time)
+    
+class ConstantLag(CustomLagModel, ConstantModel):
+    """
+    The lag thickness is constant and does not depend on time.
+
+    Args:
+        constant (float, optional): default is 1 millimeter. The lag
+            thickness at all times.
+    """
+
+    def __init__(
+        self,
+        constant: float = 1e-6,
+    ):
+        super().__init__()  # note: `super` maps to the LagModel parent class
+        ConstantModel.__init__(self, constant=constant)
+
+
+class LinearLag(CustomLagModel, LinearModel):
+    """
+    The lag thickness is linear in time. Lag changes as
+    lag(t) = intercept + slope*t.
+
+    Args:
+        intercept (float, optional): default is 1 millimeter. The lag
+            thickness at time t=0 (present day).
+        slope (float, optional): default is 1e-6 mm per year. The rate
+            of change of the lag per time.
+    """
+
+    def __init__(
+        self,
+        intercept: float = 1e-6,
+        slope: float = 1e-6,
+    ):
+        super().__init__()
+        LinearModel.__init__(self, intercept=intercept, slope=slope)
     
 class QuadraticLag(CustomLagModel,QuadModel):
     """
