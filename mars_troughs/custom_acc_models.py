@@ -8,7 +8,7 @@ Created on Fri Jul 23 13:14:58 2021
 from abc import abstractmethod
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
-from mars_troughs.generic_model import QuadModel, CubicModel, PowerLawModel
+from mars_troughs.generic_model import LinearModel, QuadModel, CubicModel, PowerLawModel
 from mars_troughs.model import Model
 
 class CustomAccumulationModel(Model):
@@ -84,6 +84,40 @@ class TimeDependentAccumulationModel(CustomAccumulationModel):
 
         return -cot_angle * yt + csc_angle * (
             int_retreat_model_t_spline(time) - int_retreat_model_t_spline(0)
+        )
+
+class Linear_Obliquity(TimeDependentAccumulationModel, LinearModel):
+    def __init__(
+        self,
+        obl_times: np.ndarray,
+        obliquity: np.ndarray,
+        intercept: float = 1.0,
+        slope: float = 1.0,
+    ):
+        LinearModel.__init__(self, intercept, slope)
+        super().__init__(obl_times, obliquity)
+
+    def get_yt(self, time: np.ndarray):
+        """
+        Calculates the vertical distance y (in m) traveled by a point
+        in the center of the high side of the trough. This distance  is a
+        function of the accumulation rate A as y(t)=integral(A(obl(t)), dt) or
+        dy/dt=A(obl(t))
+
+        Args:
+            time (np.ndarray): times at which we want to calculate y, in years.
+        Output:
+            np.ndarray of the same size as time input containing values of
+            the vertical distance y, in meters.
+
+        """
+
+        return -(
+            self.intercept * time
+            + (
+                self.slope
+                * (self._int_var_data_spline(time) - self._int_var_data_spline(0))
+            )
         )
 
     
