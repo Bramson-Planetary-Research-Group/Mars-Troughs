@@ -86,7 +86,7 @@ class MCMC():
         
         if not os.path.exists(directory):
             os.makedirs(directory)
-        self.subdir='acc_'+acc_model_name+'_lag_'+lag_model_name+'/'
+        self.subdir=acc_model_name+'_'+lag_model_name+'/'
         if not os.path.exists(directory+self.subdir):
             os.makedirs(directory+self.subdir)
     
