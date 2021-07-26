@@ -117,11 +117,12 @@ class MCMC():
         
         #compute tau every subIter iterations
         for sample in self.sampler.sample(self.initParams,iterations=self.maxSteps, 
-        progress=True):
+        progress=False):
         
             if self.sampler.iteration%self.subIter:
                 continue
                 
+            print(self.sampler.iteration/self.maxSteps*100,'%')
             tau=self.sampler.get_autocorr_time(tol=0)
             autocorr[index]=np.mean(tau)
             index+=1
@@ -136,7 +137,8 @@ class MCMC():
         end = time.time()
         running_time=end-start
 
-        print("MCMC running time {0:.1f} seconds".format(running_time))
+        print("Running time {0:.1f} seconds".format(running_time), 
+              'for',self.subdir,self.maxSteps)
 
     def ln_likelihood(self,params: Dict[str,float]):
         
