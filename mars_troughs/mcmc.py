@@ -78,7 +78,7 @@ class MCMC():
             #do nothing
             lag_model_name=self.lag_model
         else:
-            auxLag=str(lag_model).split(' ')
+            auxLag=str(self.lag_model).split(' ')
             auxLag=auxLag[0]
             lag_model_name=auxLag.split('.')
             lag_model_name=lag_model_name[2]
