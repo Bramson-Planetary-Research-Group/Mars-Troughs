@@ -150,9 +150,10 @@ class MCMC():
         self.tr.set_model(params)
         
         lag_t=self.tr.lagModel.get_lag_at_t(self.tr.times)
+        
     
-        if any(lag_t < 0) or any(lag_t > 20):
-    
+        if any(lag_t < 1e-10) or any(lag_t > 20):
+            
             return -1e99
     
         return self.tr.lnlikelihood(self.xdata,self.ydata)
