@@ -112,7 +112,7 @@ class MCMC():
         self.sampler.reset()
         #Iteratively compute autocorrelation time Tau
         index=0
-        autocorr=np.zeros(int(self.maxSteps/self.subIter))
+        self.autocorr=np.zeros(int(self.maxSteps/self.subIter))
         old_tau=np.inf
         
         #compute tau every subIter iterations
@@ -124,7 +124,7 @@ class MCMC():
                 
             print(self.sampler.iteration/self.maxSteps*100,'%')
             tau=self.sampler.get_autocorr_time(tol=0)
-            autocorr[index]=np.mean(tau)
+            self.autocorr[index]=np.mean(tau)
             index+=1
             converged=np.all(tau*50<self.sampler.iteration)
             converged&=np.all(np.abs(old_tau-tau)/tau<0.01)
