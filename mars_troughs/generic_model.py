@@ -167,7 +167,7 @@ class PowerLawModel(Model):
         ]
     
     def eval(self, x) -> float:
-        return self.coeff * (x/np.max(x)) ** self.exponent
+        return self.coeff * x ** self.exponent
 
       
       

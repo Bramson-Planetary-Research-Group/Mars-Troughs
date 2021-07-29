@@ -75,8 +75,11 @@ class Trough(Model):
         # Positive times are now in the past
         # TODO: reverse this in the data files
         ins_times = -ins_times
+        ins_times[0]=1e-10
         times = -times
+        times[0]=1e-10
         obl_times = -obl_times
+        obl_times[0]=1e-10
 
         # Create data splines of retreat of ice (no dependency
         # on model parameters)

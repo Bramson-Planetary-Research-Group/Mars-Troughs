@@ -152,7 +152,7 @@ class MCMC():
         lag_t=self.tr.lagModel.get_lag_at_t(self.tr.times)
         
     
-        if any(lag_t < 1e-10) or any(lag_t > 20):
+        if any(lag_t < 1e-15) or any(lag_t > 20):
             
             return -1e99
     
