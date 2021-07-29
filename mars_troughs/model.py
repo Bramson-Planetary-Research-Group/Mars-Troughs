@@ -91,7 +91,7 @@ class Model(ABC):
         Returns:
           names of parametes for this object and all sub-models
         """
-        return sorted(self.all_parameters.keys())
+        return self.all_parameters.keys()
 
     @property
     def all_parameters(self) -> Dict[str, Any]:
