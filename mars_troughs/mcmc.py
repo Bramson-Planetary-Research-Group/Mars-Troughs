@@ -66,27 +66,27 @@ class MCMC():
         #Create directory to save ensemble and figures
         if isinstance(self.acc_model, str):
             #do nothing
-            acc_model_name=self.acc_model
+            self.acc_model_name=self.acc_model
         else:
             auxAcc=str(self.acc_model).split(' ')
             auxAcc=auxAcc[0]
-            acc_model_name=auxAcc.split('.')
-            acc_model_name=acc_model_name[2]
+            self.acc_model_name=auxAcc.split('.')
+            self.acc_model_name=self.acc_model_name[2]
             
         
         if isinstance(self.lag_model, str):
             #do nothing
-            lag_model_name=self.lag_model
+            self.lag_model_name=self.lag_model
         else:
             auxLag=str(self.lag_model).split(' ')
             auxLag=auxLag[0]
-            lag_model_name=auxLag.split('.')
-            lag_model_name=lag_model_name[2]
+            self.lag_model_name=auxLag.split('.')
+            self.lag_model_name=self.lag_model_name[2]
         
         
         if not os.path.exists(directory):
             os.makedirs(directory)
-        self.subdir=acc_model_name+'_'+lag_model_name+'/'
+        self.subdir=self.acc_model_name+'_'+self.lag_model_name+'/'
         if not os.path.exists(directory+self.subdir):
             os.makedirs(directory+self.subdir)
     
