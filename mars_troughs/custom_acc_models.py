@@ -91,8 +91,8 @@ class Linear_Obliquity(TimeDependentAccumulationModel, LinearModel):
         self,
         obl_times: np.ndarray,
         obliquity: np.ndarray,
-        intercept: float = 1.0,
-        slope: float = 1.0,
+        intercept: float = 1e-6,
+        slope: float = 1e-6,
     ):
         LinearModel.__init__(self, intercept, slope)
         super().__init__(obl_times, obliquity)
@@ -126,7 +126,7 @@ class Quadratic_Obliquity(TimeDependentAccumulationModel, QuadModel):
         self,
         obl_times: np.ndarray,
         obliquity: np.ndarray,
-        intercept: float = 1.0,
+        intercept: float = 1e-6,
         linearCoeff: float = 1e-6,
         quadCoeff: float = 1e-6,
         ):
@@ -167,7 +167,7 @@ class Cubic_Obliquity(TimeDependentAccumulationModel, CubicModel):
         self,
         obl_times: np.ndarray,
         obliquity: np.ndarray,
-        intercept: float = 1.0,
+        intercept: float = 1e-6,
         linearCoeff: float = 1e-6,
         quadCoeff: float = 1e-6,
         cubicCoeff: float =1e-6,
@@ -212,8 +212,8 @@ class PowerLaw_Obliquity(TimeDependentAccumulationModel, PowerLawModel):
         self,
         obl_times: np.ndarray,
         obliquity: np.ndarray,
-        coeff: float = 1.0,
-        exponent: float = 1.0
+        coeff: float = 1e-6,
+        exponent: float = 1e-6,
         ):
         
         PowerLawModel.__init__(self, coeff, exponent)
@@ -221,7 +221,7 @@ class PowerLaw_Obliquity(TimeDependentAccumulationModel, PowerLawModel):
         
         self._variable_exp = self._variable**self.exponent
         self._var_exp_data_spline = IUS(self._times, self._variable_exp )
-        self._int_var_exp_data_spline = self._var_data_spline.antiderivative()
+        self._int_var_exp_data_spline = self._var_exp_data_spline.antiderivative()
 
     def get_yt(self, time: np.ndarray):
         """
