@@ -96,7 +96,7 @@ class CubicLag(CustomLagModel,CubicModel):
         intercept: float = 1e-6,
         linearCoeff: float = 1e-6,
         quadCoeff: float = 1e-15,
-        cubicCoeff: float = 1e-25,
+        cubicCoeff: float = 1e-30,
     ):
         super().__init__()
         CubicModel.__init__(self, intercept=intercept, 
