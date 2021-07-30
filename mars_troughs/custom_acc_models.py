@@ -219,9 +219,6 @@ class PowerLaw_Obliquity(TimeDependentAccumulationModel, PowerLawModel):
         PowerLawModel.__init__(self, coeff, exponent)
         super().__init__(obl_times, obliquity)
         
-        self._variable_exp = self._variable**self.exponent
-        self._var_exp_data_spline = IUS(self._times, self._variable_exp )
-        self._int_var_exp_data_spline = self._var_exp_data_spline.antiderivative()
 
     def get_yt(self, time: np.ndarray):
         """
@@ -237,6 +234,9 @@ class PowerLaw_Obliquity(TimeDependentAccumulationModel, PowerLawModel):
             the vertical distance y, in meters.
 
         """
+        self._variable_exp = self._variable**self.exponent
+        self._var_exp_data_spline = IUS(self._times, self._variable_exp )
+        self._int_var_exp_data_spline = self._var_exp_data_spline.antiderivative()
         
         return -(self.coeff*
                      (self._int_var_exp_data_spline(time)
