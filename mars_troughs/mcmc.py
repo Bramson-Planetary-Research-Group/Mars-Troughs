@@ -14,6 +14,7 @@ import mars_troughs as mt
 import emcee
 from mars_troughs import DATAPATHS, Model
 import os
+import sys
 
 class MCMC():
     """
@@ -122,7 +123,7 @@ class MCMC():
             if self.sampler.iteration%self.subIter:
                 continue
                 
-            print(self.sampler.iteration/self.maxSteps*100,'%')
+            print(self.sampler.iteration/self.maxSteps*100,'%',file=sys.stderr)
             tau=self.sampler.get_autocorr_time(tol=0)
             self.autocorr[index]=np.mean(tau)
             index+=1
@@ -138,7 +139,7 @@ class MCMC():
         running_time=end-start
 
         print("Running time {0:.1f} seconds".format(running_time), 
-              'for',self.subdir,self.maxSteps)
+              'for',self.subdir,self.maxSteps,file=sys.stderr)
 
     def ln_likelihood(self,params: Dict[str,float]):
         
