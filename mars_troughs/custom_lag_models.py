@@ -79,7 +79,7 @@ class QuadraticLag(CustomLagModel,QuadModel):
         self,
         intercept: float = 1e-6,
         linearCoeff: float = 1e-6,
-        quadCoeff: float = 1e-6,
+        quadCoeff: float = 1e-15,
     ):
         super().__init__()
         QuadModel.__init__(self, intercept=intercept, 
@@ -95,8 +95,8 @@ class CubicLag(CustomLagModel,CubicModel):
         self,
         intercept: float = 1e-6,
         linearCoeff: float = 1e-6,
-        quadCoeff: float = 1e-6,
-        cubicCoeff: float = 1e-6,
+        quadCoeff: float = 1e-15,
+        cubicCoeff: float = 1e-25,
     ):
         super().__init__()
         CubicModel.__init__(self, intercept=intercept, 
