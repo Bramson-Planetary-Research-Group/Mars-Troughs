@@ -158,8 +158,13 @@ class MCMC():
     
         y = self.tr.accuModel.get_yt(self.tr.accuModel._times)
         
-        if any(y < -20e3) or any(y > 0):
+        if any(y < -2e3) or any(y > 0):
             
+            return -1e99
+        
+        acc_t=self.tr.accuModel.get_accumulation_at_t(self.tr.accuModel._times)
+        
+        if any(acc_t < 0):
             return -1e99
         
         return self.tr.lnlikelihood(self.xdata,self.ydata)
