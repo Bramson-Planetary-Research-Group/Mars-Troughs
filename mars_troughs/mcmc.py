@@ -91,7 +91,7 @@ class MCMC():
         if not os.path.exists(directory+self.modelName+'/'):
             os.makedirs(directory+self.modelName)
     
-        self.filename=directory+self.modelName+str(self.maxSteps)
+        self.filename=directory+self.modelName+'/'+str(self.maxSteps)
         
         #Set file to save progress 
         backend=emcee.backends.HDFBackend(self.filename+'.h5')
