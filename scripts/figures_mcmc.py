@@ -167,6 +167,23 @@ bestTMPindx=np.argmax(logprob2d)
 bestTMP=tmpt[bestTMPindx,:,:]
 plt.plot(bestTMP[:,0],bestTMP[:,1],c='b',label='Best TMP')
 
+ratioyx=0.2;
+
+#find nearest points
+ndata=len(xdata)
+x_model=bestTMP[:,0]
+y_model=bestTMP[:,1]
+xnear = np.zeros_like(xdata)
+ynear = np.zeros_like(ydata)
+timenear = np.zeros_like(xdata)
+
+for i, (xdi, ydi) in enumerate(zip(xdata, ydata)):
+    dist = newmcmc.tr._L2_distance(x_model, xdi, y_model, ydi)
+    ind = np.argmin(dist)
+    xnear[i] = x_model[ind]
+    ynear[i] = y_model[ind]
+    timenear[i] = obl_times[ind]
+    
 #plot tmp data assuming errorbar is last errorbar of mcmc
 xerr, yerr = newmcmc.tr.errorbar*newmcmc.tr.meters_per_pixel
 plt.errorbar(x=xdata, xerr=xerr, y=ydata, yerr=yerr, 
@@ -180,5 +197,22 @@ plt.xlabel("Horizontal dist [m]")
 plt.ylabel("V. dist [m]")
 ax=plt.gca()
 ax.legend()
-plt.savefig(args.filename+'_tmp'+'.pdf',facecolor='w',pad_inches=0.1)
+ymin,ymax=ax.get_ylim()
+xmin,xmax=ax.get_xlim()
+ax.set_ylim(ymin,0)
+ax.set_xlim(0,xmax)
+ax.set_box_aspect(ratioyx)
+
+#plot times on right axis
+ax2=ax.twiny()
+color='m'
+ax2.set_xlabel('Time before present ( 10^3 years)',color=color)
+plt.scatter(xnear,ynear,marker="o",color='m')
+ax2.set_ylim(ymin,0)
+ax2.set_xlim(0,xmax)
+ax2.tick_params(axis='x',labelcolor=color)
+plt.xticks(xnear,np.round(timenear/1000).astype(int),rotation=90)
+ax2.set_box_aspect(ratioyx)
+
+plt.savefig(newmcmc.filename+'_tmp'+'.pdf',facecolor='w',pad_inches=0.1)
 
