@@ -13,9 +13,10 @@ import corner
 import pickle
 import matplotlib.pyplot as plt
 import argparse
+import os
 
 p=argparse.ArgumentParser(description="filename for plotting")
-p.add_argument("-filename",type=str,help="filename for loading mcmc object and saving figures")
+p.add_argument("-filename",type=str,help="filename for loading mcmc object")
 p.add_argument("-nmodels",type=int,help="nmodels for ensamble")
 args=p.parse_args()
 
@@ -33,6 +34,10 @@ times[0]=1e-10
 infile=open(args.filename+'obj','rb')
 newmcmc=pickle.load(infile)
 infile.close()
+
+#create folder for saving figures
+if not os.path.exists(newmcmc.directory+'figures/'):
+    os.makedirs(newmcmc.directory+'figures/')
 
 #set parameters for plotting
 paramsList=list(newmcmc.tr.all_parameter_names)
@@ -64,7 +69,14 @@ plt.subplot(numparams,1,numparams)
 plt.plot(xaxis,ensemble[:,:,numparams-1])
 plt.title(paramsList[numparams-1])
 plt.xlabel('Step')
-plt.savefig(args.filename+'_paramsIter'+'.pdf',facecolor='w',pad_inches=0.1)
+
+#create folder for saving figure
+if not os.path.exists(newmcmc.directory+'figures/'+'paramsIter/'):
+    os.makedirs(newmcmc.directory+'figures/'+'paramsIter/')
+    
+plt.savefig(newmcmc.directory+'figures/'+'paramsIter/'
+            +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
+            facecolor='w',pad_inches=0.1)
 
 #corner plot
 #reshape ensemble
@@ -76,7 +88,14 @@ for i in range(1,newmcmc.nwalkers):
     
 #plot
 fig=corner.corner(ensemble2d,labels=paramsList)
-plt.savefig(newmcmc.filename+'_corner'+'.pdf',facecolor='w',pad_inches=0.1)
+
+#create folder for saving figure
+if not os.path.exists(newmcmc.directory+'figures/'+'corner/'):
+    os.makedirs(newmcmc.directory+'figures/'+'corner/')
+    
+plt.savefig(newmcmc.directory+'figures/'+'corner/'
+            +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
+            facecolor='w',pad_inches=0.1)
 
 #log prob
 all_logprob=newmcmc.sampler.get_log_prob()
@@ -87,7 +106,15 @@ for i in np.arange(0,newmcmc.nwalkers):
     plt.plot(xaxis,logprob[:,i])
 plt.xlabel('Step')
 plt.ylabel('log prob')
-plt.savefig(args.filename+'_logprob'+'.pdf',facecolor='w',pad_inches=0.1)
+
+
+#create folder for saving figure
+if not os.path.exists(newmcmc.directory+'figures/'+'logprob/'):
+    os.makedirs(newmcmc.directory+'figures/'+'logprob/')
+    
+plt.savefig(newmcmc.directory+'figures/'+'logprob/'
+            +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
+            facecolor='w',pad_inches=0.1)
 
 plt.figure()
 #autocorrelation values
@@ -100,7 +127,15 @@ plt.xlabel('Step')
 plt.ylabel(r'mean $\tau$')
 ax=plt.gca()
 ax.legend()
-plt.savefig(args.filename+'_autocorr'+'.pdf',facecolor='w',pad_inches=0.1)
+
+
+#create folder for saving figure
+if not os.path.exists(newmcmc.directory+'figures/'+'autocorr/'):
+    os.makedirs(newmcmc.directory+'figures/'+'autocorr/')
+    
+plt.savefig(newmcmc.directory+'figures/'+'autocorr/'
+            +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
+            facecolor='w',pad_inches=0.1)
 
 #lag, acc rate and y per time for each model 
 #indxlagparams=paramsList.index(lagparamsList[0])
@@ -153,9 +188,13 @@ plt.plot(obl_times,tmpt[:,:,0].T)
 plt.xlabel('Time (years)')
 plt.title('Horizontal distance (m)')
 
-plt.savefig(args.filename+'_lagt_acct_xyt'+'.pdf',facecolor='w',pad_inches=0.1)
-
-
+#create folder for saving figure
+if not os.path.exists(newmcmc.directory+'figures/'+'lagaccdist/'):
+    os.makedirs(newmcmc.directory+'figures/'+'lagaccdist/')
+    
+plt.savefig(newmcmc.directory+'figures/'+'lagaccdist/'
+            +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
+            facecolor='w',pad_inches=0.1)
 
 # tmp for opt params, params with highest log prob and 100 random models in ensemble
 #reshape logprob
@@ -214,5 +253,11 @@ ax2.tick_params(axis='x',labelcolor=color)
 plt.xticks(xnear,np.round(timenear/1000).astype(int),rotation=90)
 ax2.set_box_aspect(ratioyx)
 
-plt.savefig(newmcmc.filename+'_tmp'+'.pdf',facecolor='w',pad_inches=0.1)
+#create folder for saving figure
+if not os.path.exists(newmcmc.directory+'figures/'+'tmp/'):
+    os.makedirs(newmcmc.directory+'figures/'+'tmp/')
+    
+plt.savefig(newmcmc.directory+'figures/'+'tmp/'
+            +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
+            facecolor='w',pad_inches=0.1)
 

@@ -37,6 +37,7 @@ class MCMC():
         self.subIter = subIter
         self.acc_model = acc_model
         self.lag_model = lag_model
+        self.directory = directory
         
         #Load data
         self.xdata,self.ydata=np.loadtxt(DATAPATHS.TMP, unpack=True) #Observed TMP data
@@ -85,13 +86,15 @@ class MCMC():
             self.lag_model_name=self.lag_model_name[2]
         
         
-        if not os.path.exists(directory):
-            os.makedirs(directory)
+        if not os.path.exists(self.directory):
+            os.makedirs(self.directory)
         self.modelName=self.acc_model_name+'_'+self.lag_model_name
-        if not os.path.exists(directory+self.modelName+'/'):
-            os.makedirs(directory+self.modelName)
+        if not os.path.exists(self.directory+'obj/'):
+            os.makedirs(self.directory+'obj/')
+        if not os.path.exists(self.directory+'obj/'+self.modelName+'/'):
+            os.makedirs(self.directory+'obj/'+self.modelName+'/')
     
-        self.filename=directory+self.modelName+'/'+str(self.maxSteps)
+        self.filename=self.directory+'obj/'+self.modelName+'/'+str(self.maxSteps)
         
         #Set file to save progress 
         backend=emcee.backends.HDFBackend(self.filename+'.h5')
