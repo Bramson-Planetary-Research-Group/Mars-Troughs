@@ -87,11 +87,11 @@ class MCMC():
         
         if not os.path.exists(directory):
             os.makedirs(directory)
-        self.subdir=self.acc_model_name+'_'+self.lag_model_name+'/'
-        if not os.path.exists(directory+self.subdir):
-            os.makedirs(directory+self.subdir)
+        self.modelName=self.acc_model_name+'_'+self.lag_model_name
+        if not os.path.exists(directory+self.modelName+'/'):
+            os.makedirs(directory+self.modelName)
     
-        self.filename=directory+self.subdir+str(self.maxSteps)
+        self.filename=directory+self.modelName+str(self.maxSteps)
         
         #Set file to save progress 
         backend=emcee.backends.HDFBackend(self.filename+'.h5')
@@ -139,7 +139,7 @@ class MCMC():
         running_time=end-start
 
         print("Running time {0:.1f} seconds".format(running_time), 
-              'for',self.subdir,self.maxSteps,file=sys.stderr)
+              'for',self.modelName,self.maxSteps,file=sys.stderr)
 
     def ln_likelihood(self,params: Dict[str,float]):
         
