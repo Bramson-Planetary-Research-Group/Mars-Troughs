@@ -127,6 +127,8 @@ class MCMC():
                 continue
                 
             print(self.sampler.iteration/self.maxSteps*100,'%',file=sys.stderr)
+            sys.stderr.flush()
+            
             tau=self.sampler.get_autocorr_time(tol=0)
             self.autocorr[index]=np.mean(tau)
             index+=1
@@ -143,6 +145,7 @@ class MCMC():
 
         print("Running time {0:.1f} seconds".format(running_time), 
               'for',self.modelName,self.maxSteps,file=sys.stderr)
+        sys.stderr.flush()
 
     def ln_likelihood(self,params: Dict[str,float]):
         
