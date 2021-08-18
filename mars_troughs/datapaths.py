@@ -18,7 +18,8 @@ class _DataPaths:
     DATA: Path = (Path(__file__) / ".." / "data").resolve()
     INSOLATION: Path = DATA / "Insolation.txt"
     RETREAT: Path = DATA / "Retreat_data.txt"
-    TMP: Path = DATA / "TMP_xz.txt"
+    TMP1: Path = DATA / "TMP_xz.txt"
+    TMP2: Path = DATA / "TMP2" / "TMP_xz.txt"
     OBLIQUITY: Path = DATA / "Obliquity_new.txt"
 
 

@@ -26,6 +26,7 @@ class MCMC():
         maxSteps: int,
         subIter: int,
         directory: str,
+        tmp: int,
         acc_model = Union[str, Model],
         lag_model = Union[str, Model],
         acc_params: Optional[List[float]] = None,
@@ -38,9 +39,16 @@ class MCMC():
         self.acc_model = acc_model
         self.lag_model = lag_model
         self.directory = directory
+        self.tmp=tmp
         
         #Load data
-        self.xdata,self.ydata=np.loadtxt(DATAPATHS.TMP, unpack=True) #Observed TMP data
+        if tmp:
+            self.xdata,self.ydata=np.loadtxt(DATAPATHS.TMP1, 
+                                         unpack=True) #Observed TMP data
+        else:
+            self.xdata,self.ydata=np.loadtxt(DATAPATHS.TMP2, 
+                                         unpack=True) #Observed TMP data    
+        
         self.xdata=self.xdata*1000 #km to m 
         
         # Create  trough object 
@@ -65,7 +73,6 @@ class MCMC():
         self.optParams=optObj['x']
         
         
-        #Create directory to save ensemble and figures
         if isinstance(self.acc_model, str):
             #do nothing
             self.acc_model_name=self.acc_model
@@ -85,7 +92,7 @@ class MCMC():
             self.lag_model_name=auxLag.split('.')
             self.lag_model_name=self.lag_model_name[2]
         
-        
+        #Create directory to save ensemble and figures
         if not os.path.exists(self.directory):
             os.makedirs(self.directory)
         self.modelName=self.acc_model_name+'_'+self.lag_model_name
