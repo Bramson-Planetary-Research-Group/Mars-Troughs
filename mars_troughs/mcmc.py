@@ -72,6 +72,7 @@ class MCMC():
                             method='Nelder-Mead')
         self.optParams=optObj['x']
         
+        #aux for creating directories
         
         if isinstance(self.acc_model, str):
             #do nothing
@@ -92,16 +93,19 @@ class MCMC():
             self.lag_model_name=auxLag.split('.')
             self.lag_model_name=self.lag_model_name[2]
         
-        #Create directory to save ensemble and figures
+        #Create directory to save outputs
         if not os.path.exists(self.directory):
             os.makedirs(self.directory)
-        self.modelName=self.acc_model_name+'_'+self.lag_model_name
+        #Create directory to save objects and h5 tracking file
         if not os.path.exists(self.directory+'obj/'):
             os.makedirs(self.directory+'obj/')
-        if not os.path.exists(self.directory+'obj/'+self.modelName+'/'):
-            os.makedirs(self.directory+'obj/'+self.modelName+'/')
+            
+        self.modelName=self.acc_model_name+'_'+self.lag_model_name
+        #if not os.path.exists(self.directory+'obj/'+self.modelName+'/'):
+         #   os.makedirs(self.directory+'obj/'+self.modelName+'/')
     
-        self.filename=self.directory+'obj/'+self.modelName+'/'+str(self.maxSteps)
+        #self.filename=self.directory+'obj/'+self.modelName+'/'+str(self.maxSteps)
+        self.filename=self.directory+'obj/'+self.modelName+'_'+str(self.maxSteps)
         
         #Set file to save progress 
         backend=emcee.backends.HDFBackend(self.filename+'.h5')
