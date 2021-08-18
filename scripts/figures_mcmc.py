@@ -6,7 +6,6 @@ Created on Thu Jul 29 20:37:17 2021
 @author: kris
 """
 import numpy as np
-from mars_troughs import DATAPATHS
 from mars_troughs.datapaths import (load_obliquity_data,
                                     load_retreat_data)
 import corner
@@ -22,8 +21,6 @@ args=p.parse_args()
 
 
 #Load data
-xdata,ydata=np.loadtxt(DATAPATHS.TMP, unpack=True) #Observed TMP data
-xdata=xdata*1000 #km to m 
 (obliquity,obl_times) = load_obliquity_data() #Insolation data and times
 obl_times=-obl_times
 obl_times[0]=1e-10
@@ -209,14 +206,14 @@ plt.plot(bestTMP[:,0],bestTMP[:,1],c='b',label='Best TMP')
 ratioyx=0.2;
 
 #find nearest points
-ndata=len(xdata)
+ndata=len(newmcmc.xdata)
 x_model=bestTMP[:,0]
 y_model=bestTMP[:,1]
-xnear = np.zeros_like(xdata)
-ynear = np.zeros_like(ydata)
-timenear = np.zeros_like(xdata)
+xnear = np.zeros_like(newmcmc.xdata)
+ynear = np.zeros_like(newmcmc.ydata)
+timenear = np.zeros_like(newmcmc.xdata)
 
-for i, (xdi, ydi) in enumerate(zip(xdata, ydata)):
+for i, (xdi, ydi) in enumerate(zip(newmcmc.xdata, newmcmc.ydata)):
     dist = newmcmc.tr._L2_distance(x_model, xdi, y_model, ydi)
     ind = np.argmin(dist)
     xnear[i] = x_model[ind]
@@ -225,7 +222,7 @@ for i, (xdi, ydi) in enumerate(zip(xdata, ydata)):
     
 #plot tmp data assuming errorbar is last errorbar of mcmc
 xerr, yerr = newmcmc.tr.errorbar*newmcmc.tr.meters_per_pixel
-plt.errorbar(x=xdata, xerr=xerr, y=ydata, yerr=yerr, 
+plt.errorbar(x=newmcmc.xdata, xerr=xerr, y=newmcmc.ydata, yerr=yerr, 
              c='r', marker='.', ls='',label='Observed TMP')
 
 for i in range(nmodels):
