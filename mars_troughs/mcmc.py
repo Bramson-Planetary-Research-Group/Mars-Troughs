@@ -42,7 +42,7 @@ class MCMC():
         self.tmp=tmp
         
         #Load data
-        if tmp:
+        if tmp==1:
             self.xdata,self.ydata=np.loadtxt(DATAPATHS.TMP1, 
                                          unpack=True) #Observed TMP data
         else:

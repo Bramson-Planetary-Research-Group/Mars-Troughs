@@ -16,7 +16,8 @@ class _DataPaths:
     """
 
     DATA: Path = (Path(__file__) / ".." / "data").resolve()
-    INSOLATION: Path = DATA / "Insolation.txt"
+    INSOLATION1: Path = DATA / "Insolation.txt"
+    INSOLATION2: Path = DATA / "TMP2" / "Insolation.txt"
     RETREAT: Path = DATA / "Retreat_data.txt"
     TMP1: Path = DATA / "TMP_xz.txt"
     TMP2: Path = DATA / "TMP2" / "TMP_xz.txt"
@@ -64,7 +65,7 @@ def load_obliquity_data() -> Tuple[np.ndarray, np.ndarray]:
     return obl, times
 
 
-def load_insolation_data() -> Tuple[np.ndarray, np.ndarray]:
+def load_insolation_data(tmp) -> Tuple[np.ndarray, np.ndarray]:
     """
     Unpack the insolation data.
 
@@ -72,9 +73,15 @@ def load_insolation_data() -> Tuple[np.ndarray, np.ndarray]:
       insolation (np.ndarray): the insolation values
       times (np.ndarray): times the insolation is measured at
     """
-    df = pd.read_csv(
-        DATAPATHS.INSOLATION, names=["insolation", "times"], skiprows=1, sep="\t"
-    )
+    if tmp==1:
+        
+        df = pd.read_csv(
+        DATAPATHS.INSOLATION1, names=["insolation", "times"], skiprows=1, sep="\t"
+        )
+    else:
+        df = pd.read_csv(
+        DATAPATHS.INSOLATION2, names=["insolation", "times"], skiprows=1, sep="\t"
+        )
     times: np.ndarray = df["times"].values
     ins: np.ndarray = df["insolation"].values
     return ins, times

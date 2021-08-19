@@ -58,28 +58,15 @@ class Trough(Model):
         """
 
         # Load in all data
-        (
-            insolation,
-            ins_times,
-        ) = load_insolation_data()
         times, retreats, lags = load_retreat_data()
-        obliquity, obl_times = load_obliquity_data()
-
-        # Trough angle
-        self.angle = angle
-
-        # Set up the trough model
-        self.errorbar = errorbar
-        self.meters_per_pixel = np.array([500.0, 20.0])  # meters per pixel
-
         # Positive times are now in the past
         # TODO: reverse this in the data files
-        ins_times = -ins_times
-        ins_times[0]=1e-10
         times = -times
         times[0]=1e-10
-        obl_times = -obl_times
-        obl_times[0]=1e-10
+
+        self.angle = angle
+        self.errorbar = errorbar
+        self.meters_per_pixel = np.array([500.0, 20.0])  # meters per pixel
 
         # Create data splines of retreat of ice (no dependency
         # on model parameters)
@@ -88,10 +75,18 @@ class Trough(Model):
         self.re2_data_spline = RBS(lags, times, retreats ** 2)
 
         # Create submodels
-        if isinstance(acc_model, str):  # name of existing model is given
+        
+        if isinstance(acc_model, str):  # name of existing model is given                  
             if "obliquity" in acc_model:
+                #load obliquity data and times
+                obliquity, obl_times = load_obliquity_data()
+                obl_times = -obl_times
+                obl_times[0]=1e-10
                 acc_time, acc_y = obl_times, obliquity
             else:
+                insolation,ins_times = load_insolation_data()
+                ins_times = -ins_times
+                ins_times[0]=1e-10
                 acc_time, acc_y = ins_times, insolation
 
             self.accuModel = ACCUMULATION_MODEL_MAP[acc_model](
