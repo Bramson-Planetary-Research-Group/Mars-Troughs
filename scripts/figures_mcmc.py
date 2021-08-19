@@ -30,11 +30,11 @@ newmcmc=pickle.load(infile)
 infile.close()
 
 #load obliquity or insolation data
-if "Obliquity" in newmcmc.modelname:
+if "Obliquity" in newmcmc.modelName:
     (var,var_times) = load_obliquity_data() #Insolation data and times
     var_times=-var_times
     var_times[0]=1e-10
-elif "Insolation" in newmcmc.modelname:
+elif "Insolation" in newmcmc.modelName:
     (var,var_times) = load_insolation_data(newmcmc.tmp) #Insolation data and times
     var_times=-var_times
     var_times[0]=1e-10
