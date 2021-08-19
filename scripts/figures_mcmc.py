@@ -7,6 +7,7 @@ Created on Thu Jul 29 20:37:17 2021
 """
 import numpy as np
 from mars_troughs.datapaths import (load_obliquity_data,
+                                    load_insolation_data,
                                     load_retreat_data)
 import corner
 import pickle
@@ -19,11 +20,7 @@ p.add_argument("-filename",type=str,help="filename for loading mcmc object")
 p.add_argument("-nmodels",type=int,help="nmodels for ensamble")
 args=p.parse_args()
 
-
-#Load data
-(obliquity,obl_times) = load_obliquity_data() #Insolation data and times
-obl_times=-obl_times
-obl_times[0]=1e-10
+#load lag data
 times, retreats, lags = load_retreat_data()
 times=-times
 times[0]=1e-10
@@ -32,6 +29,17 @@ infile=open(args.filename+'obj','rb')
 newmcmc=pickle.load(infile)
 infile.close()
 
+#load obliquity or insolation data
+if "Obliquity" in newmcmc.modelname:
+    (var,var_times) = load_obliquity_data() #Insolation data and times
+    var_times=-var_times
+    var_times[0]=1e-10
+elif "Insolation" in newmcmc.modelname:
+    (var,var_times) = load_insolation_data(newmcmc.tmp) #Insolation data and times
+    var_times=-var_times
+    var_times[0]=1e-10
+
+    
 #create folder for saving figures
 if not os.path.exists(newmcmc.directory+'figures/'):
     os.makedirs(newmcmc.directory+'figures/')
@@ -139,8 +147,8 @@ plt.savefig(newmcmc.directory+'figures/'+'autocorr/'
 testensemble=ensemble[:,1,:]
 iparams=newmcmc.tr.all_parameters
 lagt=np.zeros((nmodels*newmcmc.nwalkers,len(times)))
-acct=np.zeros((nmodels*newmcmc.nwalkers,len(obl_times)))
-tmpt=np.zeros((nmodels*newmcmc.nwalkers,len(obl_times),2))
+acct=np.zeros((nmodels*newmcmc.nwalkers,len(var_times)))
+tmpt=np.zeros((nmodels*newmcmc.nwalkers,len(var_times),2))
 
 indxw=0
 
@@ -150,8 +158,8 @@ for w in range(0,newmcmc.nwalkers):
         newmcmc.tr.set_model(iparams)
         
         lagti=newmcmc.tr.lagModel.get_lag_at_t(times)
-        accti=newmcmc.tr.accuModel.get_accumulation_at_t(obl_times)
-        tmpti=np.array(newmcmc.tr.get_trajectory(obl_times))
+        accti=newmcmc.tr.accuModel.get_accumulation_at_t(var_times)
+        tmpti=np.array(newmcmc.tr.get_trajectory(var_times))
         
         lagt[indxw]=lagti
         acct[indxw]=accti
@@ -169,19 +177,19 @@ plt.title('Lag (mm)')
 
 #plot lagt
 plt.subplot(4,1,2)
-plt.plot(obl_times,acct.T)
+plt.plot(var_times,acct.T)
 plt.xticks([], [])
 plt.title('acc rate (m/year)')
 
 #plot yt
 plt.subplot(4,1,3)
-plt.plot(obl_times,tmpt[:,:,1].T)
+plt.plot(var_times,tmpt[:,:,1].T)
 plt.title('Vertical distance (m)')
 plt.xticks([], [])
 
 #plot xt
 plt.subplot(4,1,4)
-plt.plot(obl_times,tmpt[:,:,0].T)
+plt.plot(var_times,tmpt[:,:,0].T)
 plt.xlabel('Time (years)')
 plt.title('Horizontal distance (m)')
 
@@ -218,7 +226,7 @@ for i, (xdi, ydi) in enumerate(zip(newmcmc.xdata, newmcmc.ydata)):
     ind = np.argmin(dist)
     xnear[i] = x_model[ind]
     ynear[i] = y_model[ind]
-    timenear[i] = obl_times[ind]
+    timenear[i] = var_times[ind]
     
 #plot tmp data assuming errorbar is last errorbar of mcmc
 xerr, yerr = newmcmc.tr.errorbar*newmcmc.tr.meters_per_pixel
