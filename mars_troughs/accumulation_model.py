@@ -39,6 +39,8 @@ class TimeDependentAccumulationModel(AccumulationModel):
     """
 
     def __init__(self, times: np.ndarray, variable: np.ndarray):
+        dt = np.diff(times)
+        assert (dt > 0).all(), "times must be monotonically increasing"
         self._times = times
         self._variable = variable
         self._var_data_spline = IUS(self._times, self._variable)
