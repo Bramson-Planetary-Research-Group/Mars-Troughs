@@ -61,22 +61,6 @@ class TimeDependentAccumulationModel(AccumulationModel):
         """
         return self.eval(self._var_data_spline(time))
 
-    def get_yt(self, time: np.ndarray):
-        """
-        Calculates the vertical distance y (in m) traveled by a point
-        in the center of the high side of the trough. This distance  is a
-        function of the accumulation rate A as y(t)=integral(A(ins(t)), dt) or
-        dy/dt=A(ins(t))
-
-        Args:
-            time (np.ndarray): times at which we want to calculate y, in years.
-        Output:
-            np.ndarray of the same size as time input containing values of
-            the vertical distance y, in meters.
-
-        """
-        return self.eval_integral(self._var_data_spline(time))
-
     def get_xt(
         self,
         time: np.ndarray,
