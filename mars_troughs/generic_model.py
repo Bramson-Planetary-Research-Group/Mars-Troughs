@@ -63,7 +63,7 @@ class LinearModel(Model):
         return ["constant", "slope"]
 
     def eval(self, x: Union[Number, np.ndarray]) -> Union[Number, np.ndarray]:
-        return self.constant + x * self.slope
+        return self.constant + self.slope * x
 
 
 class QuadModel(Model):
