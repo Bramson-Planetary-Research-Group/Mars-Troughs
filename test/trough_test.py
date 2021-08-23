@@ -46,15 +46,15 @@ class TroughTest(TestCase):
         # Update the model, mimicing how
         # we would pass new parameters in from our sampler
         new_params = {
-            "acc_intercept": 1,
+            "acc_constant": 1,
             "acc_slope": 2,
-            "lag_intercept": 3,
+            "lag_constant": 3,
             "lag_slope": 4,
             "errorbar": 5,
         }
         tr.set_model(new_params)
-        assert tr.accuModel.parameters == {"intercept": 1, "slope": 2}
-        assert tr.lagModel.parameters == {"intercept": 3, "slope": 4}
+        assert tr.accuModel.parameters == {"constant": 1, "slope": 2}
+        assert tr.lagModel.parameters == {"constant": 3, "slope": 4}
         assert tr.errorbar == 5
         assert tr.retreat_model_t_spline is not old_spline
         assert np.any(old_model_retreat != tr.retreat_model_t)
@@ -117,13 +117,13 @@ class TroughTest(TestCase):
         old_model_retreat = tr.retreat_model_t
         # Come up with new parameters
         new_params = {
-            "acc_intercept": 1,
+            "acc_constant": 1,
             "acc_slope": 2,
             "lag_constant": 3,
             "errorbar": 5,
         }
         tr.set_model(new_params)
-        assert tr.accuModel.parameters == {"intercept": 1, "slope": 2}
+        assert tr.accuModel.parameters == {"constant": 1, "slope": 2}
         assert tr.lagModel.parameters == {"constant": 3}
         assert tr.errorbar == 5
         assert tr.retreat_model_t_spline is not old_spline
