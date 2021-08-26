@@ -1,5 +1,5 @@
-:mod:`mars_troughs`
-===================
+:py:mod:`mars_troughs`
+======================
 
 .. py:module:: mars_troughs
 
@@ -27,9 +27,9 @@ Classes
 .. autoapisummary::
 
    mars_troughs.AccumulationModel
-   mars_troughs.Linear_Insolation
-   mars_troughs.Linear_Obliquity
-   mars_troughs.Quadratic_Insolation
+   mars_troughs.LinearInsolation
+   mars_troughs.LinearObliquity
+   mars_troughs.QuadraticInsolation
    mars_troughs.ConstantLag
    mars_troughs.LagModel
    mars_troughs.LinearLag
@@ -52,36 +52,33 @@ Attributes
    mars_troughs.__docs__
 
 
-.. data:: ACCUMULATION_MODEL_MAP
+.. py:data:: ACCUMULATION_MODEL_MAP
    :annotation: :Dict[str, mars_troughs.model.Model]
 
    
 
-.. class:: AccumulationModel(sub_models: Optional[List[Model]] = None)
-
+.. py:class:: AccumulationModel(sub_models: Optional[List[Model]] = None)
 
    Bases: :py:obj:`mars_troughs.model.Model`
 
    Abstract class for computing the amount of ice accumulation.
 
-   .. attribute:: prefix
+   .. py:attribute:: prefix
       :annotation: :str = acc_
 
       All parameters of accumulations models start with 'acc'.
 
-
-   .. method:: get_accumulation_at_t(self, time: numpy.ndarray) -> numpy.ndarray
+   .. py:method:: get_accumulation_at_t(self, time: numpy.ndarray) -> numpy.ndarray
       :abstractmethod:
 
 
 
-.. class:: Linear_Insolation(times: numpy.ndarray, insolations: numpy.ndarray, intercept: float = 1e-06, slope: float = 1e-06)
-
+.. py:class:: LinearInsolation(times: numpy.ndarray, insolations: numpy.ndarray, constant: float = 1e-06, slope: float = 1e-06)
 
    Bases: :py:obj:`TimeDependentAccumulationModel`, :py:obj:`mars_troughs.generic_model.LinearModel`
 
    Accumulation is linear in solar insolation.
-   A(ins(t)) = intercept + slope*ins(t).
+   A(ins(t)) = constant + slope*ins(t).
    A is in m/year.
 
    :param times: times at which the solar insolation is known
@@ -89,14 +86,14 @@ Attributes
    :type times: np.ndarray
    :param insolation values: values of solar insolation (in W/m^2)
    :type insolation values: np.ndarray
-   :param intercept: accumulation rate at present time.
-                     Default is 1e-6 m/year
-   :type intercept: float, optional
+   :param constant: accumulation rate at present time.
+                    Default is 1e-6 m/year
+   :type constant: float, optional
    :param slope: default is 1e-6 m/year per unit
                  of solar insolation (m^3/(year*W)).
    :type slope: float, optional
 
-   .. method:: get_yt(self, time: numpy.ndarray)
+   .. py:method:: get_yt(self, time: numpy.ndarray)
 
       Calculates the vertical distance y (in m) traveled by a point
       in the center of the high side of the trough. This distance  is a
@@ -112,8 +109,8 @@ Attributes
 
 
 
-.. class:: Linear_Obliquity(obl_times: numpy.ndarray, obliquity: numpy.ndarray, intercept: float = 1.0, slope: float = 1.0)
 
+.. py:class:: LinearObliquity(obl_times: numpy.ndarray, obliquity: numpy.ndarray, constant: float = 1.0, slope: float = 1.0)
 
    Bases: :py:obj:`TimeDependentAccumulationModel`, :py:obj:`mars_troughs.generic_model.LinearModel`
 
@@ -130,7 +127,7 @@ Attributes
    :param (solar insolation:
    :type (solar insolation: in W/m^2), obliquity (in degrees)
 
-   .. method:: get_yt(self, time: numpy.ndarray)
+   .. py:method:: get_yt(self, time: numpy.ndarray)
 
       Calculates the vertical distance y (in m) traveled by a point
       in the center of the high side of the trough. This distance  is a
@@ -146,13 +143,13 @@ Attributes
 
 
 
-.. class:: Quadratic_Insolation(times, insolation, intercept: float = 1.0, linearCoeff: float = 1e-06, quadCoeff: float = 1e-06)
 
+.. py:class:: QuadraticInsolation(times, insolation, constant: float = 1.0, slope: float = 1e-06, quad: float = 1e-06)
 
    Bases: :py:obj:`TimeDependentAccumulationModel`, :py:obj:`mars_troughs.generic_model.QuadModel`
 
    Accumulation rate A (in m/year) as a  quadratic polynomial of insolation.
-   A(ins(t)) = intercept + linearCoeff*ins(t)+ quadCoeff*ins(t)^2.
+   A(ins(t)) = constant + slope*ins(t)+ quad*ins(t)^2.
    A is in m/year.
 
    :param times: times at which the solar insolation is known, in
@@ -160,16 +157,16 @@ Attributes
    :type times: np.ndarray
    :param insolations: value of the solar insolations (in W/m^2)
    :type insolations: np.ndarray
-   :param intercept: default is 1 m/year
-   :type intercept: float, optional
-   :param linearCoeff: default is 1e-6 m/year per unit
-                       of solar insolation (m^3/(year*W)).
-   :type linearCoeff: float, optional
-   :param quadCoeff: default is 1e-6 m/year per unit
-                     of solar insolation squared (m^5/(year*W^2)).
-   :type quadCoeff: float, optional
+   :param constant: default is 1 m/year
+   :type constant: float, optional
+   :param slope: default is 1e-6 m/year per unit
+                 of solar insolation (m^3/(year*W)).
+   :type slope: float, optional
+   :param quad: default is 1e-6 m/year per unit
+                of solar insolation squared (m^5/(year*W^2)).
+   :type quad: float, optional
 
-   .. method:: get_yt(self, time: numpy.ndarray)
+   .. py:method:: get_yt(self, time: numpy.ndarray)
 
       Calculates the vertical distance y (in m) at traveled by a point
       in the center of the high side of the trough. This distance  is a
@@ -185,19 +182,18 @@ Attributes
 
 
 
-.. data:: DATAPATHS
+
+.. py:data:: DATAPATHS
    
 
    Global object that holds paths.
 
-
-.. data:: LAG_MODEL_MAP
+.. py:data:: LAG_MODEL_MAP
    :annotation: :Dict[str, mars_troughs.model.Model]
 
    
 
-.. class:: ConstantLag(constant: float = 1e-06)
-
+.. py:class:: ConstantLag(constant: float = 1e-06)
 
    Bases: :py:obj:`LagModel`, :py:obj:`mars_troughs.generic_model.ConstantModel`
 
@@ -208,8 +204,7 @@ Attributes
    :type constant: float, optional
 
 
-.. class:: LagModel(sub_models: Optional[List[Model]] = None)
-
+.. py:class:: LagModel(sub_models: Optional[List[Model]] = None)
 
    Bases: :py:obj:`mars_troughs.model.Model`
 
@@ -217,13 +212,12 @@ Attributes
    called :meth:`get_lag_at_t` that returns the lag
    as a function of time.
 
-   .. attribute:: prefix
+   .. py:attribute:: prefix
       :annotation: :str = lag_
 
       All parameters of lag models start with 'lag'.
 
-
-   .. method:: get_lag_at_t(self, time: numpy.ndarray) -> numpy.ndarray
+   .. py:method:: get_lag_at_t(self, time: numpy.ndarray) -> numpy.ndarray
 
       Lag as a function of time
 
@@ -235,24 +229,22 @@ Attributes
 
 
 
-.. class:: LinearLag(intercept: float = 1e-06, slope: float = 1e-06)
-
+.. py:class:: LinearLag(constant: float = 1e-06, slope: float = 1e-06)
 
    Bases: :py:obj:`LagModel`, :py:obj:`mars_troughs.generic_model.LinearModel`
 
    The lag thickness is linear in time. Lag changes as
-   lag(t) = intercept + slope*t.
+   lag(t) = constant + slope*t.
 
-   :param intercept: default is 1 millimeter. The lag
-                     thickness at time t=0 (present day).
-   :type intercept: float, optional
+   :param constant: default is 1 millimeter. The lag
+                    thickness at time t=0 (present day).
+   :type constant: float, optional
    :param slope: default is 1e-6 mm per year. The rate
                  of change of the lag per time.
    :type slope: float, optional
 
 
-.. class:: Model(sub_models: Optional[List[Model]] = None)
-
+.. py:class:: Model(sub_models: Optional[List[Model]] = None)
 
    Bases: :py:obj:`abc.ABC`
 
@@ -266,13 +258,12 @@ Attributes
                       model that serve their own purpose
    :type sub_models: Optional[List["Model"]]
 
-   .. attribute:: prefix
-      :annotation: :str = 
+   .. py:attribute:: prefix
+      :annotation: :Optional[str]
 
       A prefix to prepend to parameter naems when supplying them.
 
-
-   .. method:: parameter_names(self) -> List[str]
+   .. py:method:: parameter_names(self) -> List[str]
       :property:
 
       Names of the parameters for **this** object sorted alphabetically.
@@ -296,7 +287,7 @@ Attributes
       :returns: names of parametes for **this** object
 
 
-   .. method:: parameters(self) -> Dict[str, Any]
+   .. py:method:: parameters(self) -> Dict[str, Any]
       :property:
 
       The parameters for **this** object, but not any of its sub-models.
@@ -305,7 +296,7 @@ Attributes
       :returns: name/value pairs where values can be numbers or arrays of numbers
 
 
-   .. method:: all_parameter_names(self) -> List[str]
+   .. py:method:: all_parameter_names(self) -> List[str]
       :property:
 
       Names of the parameters for this object and all sub-models.
@@ -313,7 +304,7 @@ Attributes
       :returns: names of parametes for this object and all sub-models
 
 
-   .. method:: all_parameters(self) -> Dict[str, Any]
+   .. py:method:: all_parameters(self) -> Dict[str, Any]
       :property:
 
       The parameters for this model and all sub-models.
@@ -322,8 +313,7 @@ Attributes
 
 
 
-.. class:: Trough(acc_model: Union[str, mars_troughs.model.Model], lag_model: Union[str, mars_troughs.model.Model], acc_params: Optional[List[float]] = None, lag_params: Optional[List[float]] = None, errorbar: float = 1.0, angle: float = 2.9)
-
+.. py:class:: Trough(acc_model: Union[str, mars_troughs.model.Model], lag_model: Union[str, mars_troughs.model.Model], acc_params: Optional[List[float]] = None, lag_params: Optional[List[float]] = None, errorbar: float = 1.0, angle: float = 2.9)
 
    Bases: :py:obj:`mars_troughs.model.Model`
 
@@ -350,13 +340,13 @@ Attributes
                            insolation data.
    :type insolation_path: Union[str, Path], optional
 
-   .. method:: parameter_names(self) -> List[str]
+   .. py:method:: parameter_names(self) -> List[str]
       :property:
 
       Just the errorbar
 
 
-   .. method:: set_model(self, all_parameters: Dict[str, float]) -> None
+   .. py:method:: set_model(self, all_parameters: Dict[str, float]) -> None
 
       Updates trough model with new accumulation and lag parameters.
       Then updates all splines.
@@ -365,7 +355,7 @@ Attributes
       :type all_parameter: Dict[str, float]
 
 
-   .. method:: get_trajectory(self, times: Optional[numpy.ndarray] = None) -> Tuple[numpy.ndarray, numpy.ndarray]
+   .. py:method:: get_trajectory(self, times: Optional[numpy.ndarray] = None) -> Tuple[numpy.ndarray, numpy.ndarray]
 
       Obtains the x and y coordinates (in m) of the trough model as a
       function of time.
@@ -378,7 +368,7 @@ Attributes
           x and y coordinates (tuple) of size 2 x len(times) (in m).
 
 
-   .. method:: _L2_distance(x1, x2, y1, y2) -> Union[float, numpy.ndarray]
+   .. py:method:: _L2_distance(x1, x2, y1, y2) -> Union[float, numpy.ndarray]
       :staticmethod:
 
       The L2 (Eulerean) distance (squared) between two 2D vectors.
@@ -395,7 +385,7 @@ Attributes
       Output: L2 distance (int or float)
 
 
-   .. method:: get_nearest_points(self, x_data: numpy.ndarray, y_data: numpy.ndarray, dist_func: Optional[Callable] = None) -> Tuple[numpy.ndarray, numpy.ndarray]
+   .. py:method:: get_nearest_points(self, x_data: numpy.ndarray, y_data: numpy.ndarray, dist_func: Optional[Callable] = None) -> Tuple[numpy.ndarray, numpy.ndarray]
 
       Finds the coordinates of the nearest points between the model TMP
       and the data TMP.
@@ -414,7 +404,7 @@ Attributes
           (Tuple), size 2 x len(x_data)
 
 
-   .. method:: lnlikelihood(self, x_data: numpy.ndarray, y_data: numpy.ndarray) -> float
+   .. py:method:: lnlikelihood(self, x_data: numpy.ndarray, y_data: numpy.ndarray) -> float
 
       Calculates the log-likelihood of the data given the model.
       Note that this is the natural log (ln).
@@ -428,36 +418,36 @@ Attributes
           log-likelihood value (float)
 
 
-   .. method:: angle(self) -> float
+   .. py:method:: angle(self) -> float
       :property:
 
       Slope angle in degrees.
 
 
-   .. method:: csc_angle(self) -> float
+   .. py:method:: csc_angle(self) -> float
       :property:
 
       Cosecant of the slope angle.
 
 
-   .. method:: cot_angle(self) -> float
+   .. py:method:: cot_angle(self) -> float
       :property:
 
       Cotangent of the slope angle.
 
 
 
-.. data:: __author__
+.. py:data:: __author__
    :annotation: = ['Tom McClintock <thmsmcclintock@gmail.com>', 'Kristel Izquierdo...
 
    
 
-.. data:: __version__
+.. py:data:: __version__
    :annotation: = 0.0.1
 
    
 
-.. data:: __docs__
+.. py:data:: __docs__
    :annotation: = Simulating martian ice troughs.
 
    

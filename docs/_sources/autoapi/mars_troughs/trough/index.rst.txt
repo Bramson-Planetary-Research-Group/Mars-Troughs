@@ -1,5 +1,5 @@
-:mod:`mars_troughs.trough`
-==========================
+:py:mod:`mars_troughs.trough`
+=============================
 
 .. py:module:: mars_troughs.trough
 
@@ -22,8 +22,7 @@ Classes
 
 
 
-.. class:: Trough(acc_model: Union[str, mars_troughs.model.Model], lag_model: Union[str, mars_troughs.model.Model], acc_params: Optional[List[float]] = None, lag_params: Optional[List[float]] = None, errorbar: float = 1.0, angle: float = 2.9)
-
+.. py:class:: Trough(acc_model: Union[str, mars_troughs.model.Model], lag_model: Union[str, mars_troughs.model.Model], acc_params: Optional[List[float]] = None, lag_params: Optional[List[float]] = None, errorbar: float = 1.0, angle: float = 2.9)
 
    Bases: :py:obj:`mars_troughs.model.Model`
 
@@ -50,13 +49,13 @@ Classes
                            insolation data.
    :type insolation_path: Union[str, Path], optional
 
-   .. method:: parameter_names(self) -> List[str]
+   .. py:method:: parameter_names(self) -> List[str]
       :property:
 
       Just the errorbar
 
 
-   .. method:: set_model(self, all_parameters: Dict[str, float]) -> None
+   .. py:method:: set_model(self, all_parameters: Dict[str, float]) -> None
 
       Updates trough model with new accumulation and lag parameters.
       Then updates all splines.
@@ -65,7 +64,7 @@ Classes
       :type all_parameter: Dict[str, float]
 
 
-   .. method:: get_trajectory(self, times: Optional[numpy.ndarray] = None) -> Tuple[numpy.ndarray, numpy.ndarray]
+   .. py:method:: get_trajectory(self, times: Optional[numpy.ndarray] = None) -> Tuple[numpy.ndarray, numpy.ndarray]
 
       Obtains the x and y coordinates (in m) of the trough model as a
       function of time.
@@ -78,7 +77,7 @@ Classes
           x and y coordinates (tuple) of size 2 x len(times) (in m).
 
 
-   .. method:: _L2_distance(x1, x2, y1, y2) -> Union[float, numpy.ndarray]
+   .. py:method:: _L2_distance(x1, x2, y1, y2) -> Union[float, numpy.ndarray]
       :staticmethod:
 
       The L2 (Eulerean) distance (squared) between two 2D vectors.
@@ -95,7 +94,7 @@ Classes
       Output: L2 distance (int or float)
 
 
-   .. method:: get_nearest_points(self, x_data: numpy.ndarray, y_data: numpy.ndarray, dist_func: Optional[Callable] = None) -> Tuple[numpy.ndarray, numpy.ndarray]
+   .. py:method:: get_nearest_points(self, x_data: numpy.ndarray, y_data: numpy.ndarray, dist_func: Optional[Callable] = None) -> Tuple[numpy.ndarray, numpy.ndarray]
 
       Finds the coordinates of the nearest points between the model TMP
       and the data TMP.
@@ -114,7 +113,7 @@ Classes
           (Tuple), size 2 x len(x_data)
 
 
-   .. method:: lnlikelihood(self, x_data: numpy.ndarray, y_data: numpy.ndarray) -> float
+   .. py:method:: lnlikelihood(self, x_data: numpy.ndarray, y_data: numpy.ndarray) -> float
 
       Calculates the log-likelihood of the data given the model.
       Note that this is the natural log (ln).
@@ -128,19 +127,19 @@ Classes
           log-likelihood value (float)
 
 
-   .. method:: angle(self) -> float
+   .. py:method:: angle(self) -> float
       :property:
 
       Slope angle in degrees.
 
 
-   .. method:: csc_angle(self) -> float
+   .. py:method:: csc_angle(self) -> float
       :property:
 
       Cosecant of the slope angle.
 
 
-   .. method:: cot_angle(self) -> float
+   .. py:method:: cot_angle(self) -> float
       :property:
 
       Cotangent of the slope angle.

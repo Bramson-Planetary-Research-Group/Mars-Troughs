@@ -1,5 +1,5 @@
-:mod:`mars_troughs.datapaths`
-=============================
+:py:mod:`mars_troughs.datapaths`
+================================
 
 .. py:module:: mars_troughs.datapaths
 
@@ -41,45 +41,44 @@ Attributes
    mars_troughs.datapaths.DATAPATHS
 
 
-.. class:: _DataPaths
+.. py:class:: _DataPaths
 
    A class for holding paths to data files.
    Do not reference directly. Use the global
    DATAPATHS variable instead.
 
-   .. attribute:: DATA
+   .. py:attribute:: DATA
       :annotation: :pathlib.Path
 
       
 
-   .. attribute:: INSOLATION
+   .. py:attribute:: INSOLATION
       :annotation: :pathlib.Path
 
       
 
-   .. attribute:: RETREAT
+   .. py:attribute:: RETREAT
       :annotation: :pathlib.Path
 
       
 
-   .. attribute:: TMP
+   .. py:attribute:: TMP
       :annotation: :pathlib.Path
 
       
 
-   .. attribute:: OBLIQUITY
+   .. py:attribute:: OBLIQUITY
       :annotation: :pathlib.Path
 
       
 
 
-.. data:: DATAPATHS
+.. py:data:: DATAPATHS
    
 
    Global object that holds paths.
 
-
-.. function:: load_retreat_data() -> Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]
+.. py:function:: load_retreat_data() -> Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]
 
    Unpack the retreat data from the Bramson et al. thermal model used
    to create a bivariate spline. This data is 'static' and so can be
@@ -93,7 +92,7 @@ Attributes
    :rtype: times (np.ndarray)
 
 
-.. function:: load_obliquity_data() -> Tuple[numpy.ndarray, numpy.ndarray]
+.. py:function:: load_obliquity_data() -> Tuple[numpy.ndarray, numpy.ndarray]
 
    Unpack the obliquity data.
 
@@ -102,7 +101,7 @@ Attributes
    :rtype: obliquity (np.ndarray)
 
 
-.. function:: load_insolation_data() -> Tuple[numpy.ndarray, numpy.ndarray]
+.. py:function:: load_insolation_data() -> Tuple[numpy.ndarray, numpy.ndarray]
 
    Unpack the insolation data.
 
@@ -111,7 +110,7 @@ Attributes
    :rtype: insolation (np.ndarray)
 
 
-.. function:: load_TMP_data() -> Tuple[numpy.ndarray, numpy.ndarray]
+.. py:function:: load_TMP_data() -> Tuple[numpy.ndarray, numpy.ndarray]
 
    Loads the TMP data for the trough being investigated now.
 

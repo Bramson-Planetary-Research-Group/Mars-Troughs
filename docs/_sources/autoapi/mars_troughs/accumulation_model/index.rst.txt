@@ -1,5 +1,5 @@
-:mod:`mars_troughs.accumulation_model`
-======================================
+:py:mod:`mars_troughs.accumulation_model`
+=========================================
 
 .. py:module:: mars_troughs.accumulation_model
 
@@ -19,9 +19,9 @@ Classes
 
    mars_troughs.accumulation_model.AccumulationModel
    mars_troughs.accumulation_model.TimeDependentAccumulationModel
-   mars_troughs.accumulation_model.Linear_Insolation
-   mars_troughs.accumulation_model.Quadratic_Insolation
-   mars_troughs.accumulation_model.Linear_Obliquity
+   mars_troughs.accumulation_model.LinearInsolation
+   mars_troughs.accumulation_model.QuadraticInsolation
+   mars_troughs.accumulation_model.LinearObliquity
 
 
 
@@ -34,26 +34,23 @@ Attributes
    mars_troughs.accumulation_model.ACCUMULATION_MODEL_MAP
 
 
-.. class:: AccumulationModel(sub_models: Optional[List[Model]] = None)
-
+.. py:class:: AccumulationModel(sub_models: Optional[List[Model]] = None)
 
    Bases: :py:obj:`mars_troughs.model.Model`
 
    Abstract class for computing the amount of ice accumulation.
 
-   .. attribute:: prefix
+   .. py:attribute:: prefix
       :annotation: :str = acc_
 
       All parameters of accumulations models start with 'acc'.
 
-
-   .. method:: get_accumulation_at_t(self, time: numpy.ndarray) -> numpy.ndarray
+   .. py:method:: get_accumulation_at_t(self, time: numpy.ndarray) -> numpy.ndarray
       :abstractmethod:
 
 
 
-.. class:: TimeDependentAccumulationModel(times: numpy.ndarray, variable: numpy.ndarray)
-
+.. py:class:: TimeDependentAccumulationModel(times: numpy.ndarray, variable: numpy.ndarray)
 
    Bases: :py:obj:`AccumulationModel`
 
@@ -70,7 +67,7 @@ Attributes
    :param (solar insolation:
    :type (solar insolation: in W/m^2), obliquity (in degrees)
 
-   .. method:: get_accumulation_at_t(self, time: numpy.ndarray) -> numpy.ndarray
+   .. py:method:: get_accumulation_at_t(self, time: numpy.ndarray) -> numpy.ndarray
 
       Calculates the accumulation rate at times "time".
 
@@ -82,7 +79,8 @@ Attributes
           accumulation rates A, in m/year
 
 
-   .. method:: get_xt(self, time: numpy.ndarray, int_retreat_model_t_spline: numpy.ndarray, cot_angle, csc_angle)
+
+   .. py:method:: get_xt(self, time: numpy.ndarray, int_retreat_model_t_spline: numpy.ndarray, cot_angle, csc_angle)
 
       Calculates the horizontal distance x (in m) traveled by a point in the
       center of the high side of the trough. This distance x is a function of
@@ -99,13 +97,12 @@ Attributes
 
 
 
-.. class:: Linear_Insolation(times: numpy.ndarray, insolations: numpy.ndarray, intercept: float = 1e-06, slope: float = 1e-06)
-
+.. py:class:: LinearInsolation(times: numpy.ndarray, insolations: numpy.ndarray, constant: float = 1e-06, slope: float = 1e-06)
 
    Bases: :py:obj:`TimeDependentAccumulationModel`, :py:obj:`mars_troughs.generic_model.LinearModel`
 
    Accumulation is linear in solar insolation.
-   A(ins(t)) = intercept + slope*ins(t).
+   A(ins(t)) = constant + slope*ins(t).
    A is in m/year.
 
    :param times: times at which the solar insolation is known
@@ -113,14 +110,14 @@ Attributes
    :type times: np.ndarray
    :param insolation values: values of solar insolation (in W/m^2)
    :type insolation values: np.ndarray
-   :param intercept: accumulation rate at present time.
-                     Default is 1e-6 m/year
-   :type intercept: float, optional
+   :param constant: accumulation rate at present time.
+                    Default is 1e-6 m/year
+   :type constant: float, optional
    :param slope: default is 1e-6 m/year per unit
                  of solar insolation (m^3/(year*W)).
    :type slope: float, optional
 
-   .. method:: get_yt(self, time: numpy.ndarray)
+   .. py:method:: get_yt(self, time: numpy.ndarray)
 
       Calculates the vertical distance y (in m) traveled by a point
       in the center of the high side of the trough. This distance  is a
@@ -136,13 +133,13 @@ Attributes
 
 
 
-.. class:: Quadratic_Insolation(times, insolation, intercept: float = 1.0, linearCoeff: float = 1e-06, quadCoeff: float = 1e-06)
 
+.. py:class:: QuadraticInsolation(times, insolation, constant: float = 1.0, slope: float = 1e-06, quad: float = 1e-06)
 
    Bases: :py:obj:`TimeDependentAccumulationModel`, :py:obj:`mars_troughs.generic_model.QuadModel`
 
    Accumulation rate A (in m/year) as a  quadratic polynomial of insolation.
-   A(ins(t)) = intercept + linearCoeff*ins(t)+ quadCoeff*ins(t)^2.
+   A(ins(t)) = constant + slope*ins(t)+ quad*ins(t)^2.
    A is in m/year.
 
    :param times: times at which the solar insolation is known, in
@@ -150,16 +147,16 @@ Attributes
    :type times: np.ndarray
    :param insolations: value of the solar insolations (in W/m^2)
    :type insolations: np.ndarray
-   :param intercept: default is 1 m/year
-   :type intercept: float, optional
-   :param linearCoeff: default is 1e-6 m/year per unit
-                       of solar insolation (m^3/(year*W)).
-   :type linearCoeff: float, optional
-   :param quadCoeff: default is 1e-6 m/year per unit
-                     of solar insolation squared (m^5/(year*W^2)).
-   :type quadCoeff: float, optional
+   :param constant: default is 1 m/year
+   :type constant: float, optional
+   :param slope: default is 1e-6 m/year per unit
+                 of solar insolation (m^3/(year*W)).
+   :type slope: float, optional
+   :param quad: default is 1e-6 m/year per unit
+                of solar insolation squared (m^5/(year*W^2)).
+   :type quad: float, optional
 
-   .. method:: get_yt(self, time: numpy.ndarray)
+   .. py:method:: get_yt(self, time: numpy.ndarray)
 
       Calculates the vertical distance y (in m) at traveled by a point
       in the center of the high side of the trough. This distance  is a
@@ -175,8 +172,8 @@ Attributes
 
 
 
-.. class:: Linear_Obliquity(obl_times: numpy.ndarray, obliquity: numpy.ndarray, intercept: float = 1.0, slope: float = 1.0)
 
+.. py:class:: LinearObliquity(obl_times: numpy.ndarray, obliquity: numpy.ndarray, constant: float = 1.0, slope: float = 1.0)
 
    Bases: :py:obj:`TimeDependentAccumulationModel`, :py:obj:`mars_troughs.generic_model.LinearModel`
 
@@ -193,7 +190,7 @@ Attributes
    :param (solar insolation:
    :type (solar insolation: in W/m^2), obliquity (in degrees)
 
-   .. method:: get_yt(self, time: numpy.ndarray)
+   .. py:method:: get_yt(self, time: numpy.ndarray)
 
       Calculates the vertical distance y (in m) traveled by a point
       in the center of the high side of the trough. This distance  is a
@@ -209,7 +206,8 @@ Attributes
 
 
 
-.. data:: ACCUMULATION_MODEL_MAP
+
+.. py:data:: ACCUMULATION_MODEL_MAP
    :annotation: :Dict[str, mars_troughs.model.Model]
 
    

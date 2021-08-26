@@ -256,14 +256,14 @@ thickness at all times.</p>
 
 <dl class="class">
 <dt id="mars_troughs.lag_model.LinearLag">
-<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.lag_model.</code><code class="sig-name descname">LinearLag</code><span class="sig-paren">(</span><em class="sig-param">intercept: float = 1e-06</em>, <em class="sig-param">slope: float = 1e-06</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.lag_model.LinearLag" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.lag_model.</code><code class="sig-name descname">LinearLag</code><span class="sig-paren">(</span><em class="sig-param">constant: float = 1e-06</em>, <em class="sig-param">slope: float = 1e-06</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.lag_model.LinearLag" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#mars_troughs.lag_model.LagModel" title="mars_troughs.lag_model.LagModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LagModel</span></code></a>, <a class="reference internal" href="../generic_model/index.html#mars_troughs.generic_model.LinearModel" title="mars_troughs.generic_model.LinearModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mars_troughs.generic_model.LinearModel</span></code></a></p>
 <p>The lag thickness is linear in time. Lag changes as
-lag(t) = intercept + slope*t.</p>
+lag(t) = constant + slope*t.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>intercept</strong> (<em>float</em><em>, </em><em>optional</em>) – default is 1 millimeter. The lag
+<li><p><strong>constant</strong> (<em>float</em><em>, </em><em>optional</em>) – default is 1 millimeter. The lag
 thickness at time t=0 (present day).</p></li>
 <li><p><strong>slope</strong> (<em>float</em><em>, </em><em>optional</em>) – default is 1e-6 mm per year. The rate
 of change of the lag per time.</p></li>

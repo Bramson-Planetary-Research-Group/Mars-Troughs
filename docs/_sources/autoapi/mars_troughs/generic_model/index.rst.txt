@@ -1,5 +1,5 @@
-:mod:`mars_troughs.generic_model`
-=================================
+:py:mod:`mars_troughs.generic_model`
+====================================
 
 .. py:module:: mars_troughs.generic_model
 
@@ -28,8 +28,7 @@ Classes
 
 
 
-.. class:: ConstantModel(constant: float = 1.0)
-
+.. py:class:: ConstantModel(constant: float = 1.0)
 
    Bases: :py:obj:`mars_troughs.model.Model`
 
@@ -42,99 +41,57 @@ Classes
                     parameter.
    :type constant: float, optional
 
-   .. method:: parameter_names(self) -> List[str]
+   .. py:method:: parameter_names(self) -> List[str]
       :property:
 
       Returns ``["constant"]``
 
 
-   .. method:: eval(self, x) -> float
+   .. py:method:: eval(self, x: Union[numbers.Number, numpy.ndarray]) -> Union[numbers.Number, numpy.ndarray]
 
       Returns the value of :attr:`constant`.
 
 
 
-.. class:: LinearModel(intercept: float = 1.0, slope: float = 1.0)
-
+.. py:class:: LinearModel(constant: float = 1.0, slope: float = 1.0)
 
    Bases: :py:obj:`mars_troughs.model.Model`
 
    A model where the output is linearly proportional to the x value.
 
-   :param intercept: default value is 1.
-   :type intercept: float, optional
+   :param constant: default value is 1.
+   :type constant: float, optional
    :param slope: default value is 1.
    :type slope: float, optional
-   :param y = slope*x + intercept:
+   :param y = slope*x + constant:
 
-   .. method:: parameter_names(self) -> List[str]
+   .. py:method:: parameter_names(self) -> List[str]
       :property:
 
-      Names of the parameters for **this** object sorted alphabetically.
-      This method **must** be implemented for all subclasses, and the names
-      must consist of the names of the attributes that contain the
-      parameters.
 
-      Example:
-
-      .. code-block:: python
-
-         class MyModel(Model):
-             a = 3
-
-             @property
-             def parameter_names(self):
-                 return ["a"]
-
-             ...
-
-      :returns: names of parametes for **this** object
-
-
-   .. method:: eval(self, x) -> float
+   .. py:method:: eval(self, x: Union[numbers.Number, numpy.ndarray]) -> Union[numbers.Number, numpy.ndarray]
 
 
 
-.. class:: QuadModel(intercept: float = 1.0, linearCoeff: float = 1e-06, quadCoeff: float = 1e-06)
-
+.. py:class:: QuadModel(constant: float = 1.0, slope: float = 1e-06, quad: float = 1e-06)
 
    Bases: :py:obj:`mars_troughs.model.Model`
 
    A model for a quadratic function of the input
 
-   :param intercept:
-   :type intercept: float, optional
-   :param linearcoeff:
-   :type linearcoeff: float, optional
+   :param constant:
+   :type constant: float, optional
+   :param slope:
+   :type slope: float, optional
    :param quadcoeff:
    :type quadcoeff: float, optional
-   :param y = intercept + linearcoeff*x + quadcoeff*x^2:
+   :param y = constant + linearcoeff*x + quadcoeff*x^2:
 
-   .. method:: parameter_names(self) -> List[str]
+   .. py:method:: parameter_names(self) -> List[str]
       :property:
 
-      Names of the parameters for **this** object sorted alphabetically.
-      This method **must** be implemented for all subclasses, and the names
-      must consist of the names of the attributes that contain the
-      parameters.
 
-      Example:
-
-      .. code-block:: python
-
-         class MyModel(Model):
-             a = 3
-
-             @property
-             def parameter_names(self):
-                 return ["a"]
-
-             ...
-
-      :returns: names of parametes for **this** object
-
-
-   .. method:: eval(self, x) -> float
+   .. py:method:: eval(self, x: Union[numbers.Number, numpy.ndarray]) -> Union[numbers.Number, numpy.ndarray]
 
 
 

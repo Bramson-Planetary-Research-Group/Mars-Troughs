@@ -1,5 +1,5 @@
-:mod:`mars_troughs.lag_model`
-=============================
+:py:mod:`mars_troughs.lag_model`
+================================
 
 .. py:module:: mars_troughs.lag_model
 
@@ -32,8 +32,7 @@ Attributes
    mars_troughs.lag_model.LAG_MODEL_MAP
 
 
-.. class:: LagModel(sub_models: Optional[List[Model]] = None)
-
+.. py:class:: LagModel(sub_models: Optional[List[Model]] = None)
 
    Bases: :py:obj:`mars_troughs.model.Model`
 
@@ -41,13 +40,12 @@ Attributes
    called :meth:`get_lag_at_t` that returns the lag
    as a function of time.
 
-   .. attribute:: prefix
+   .. py:attribute:: prefix
       :annotation: :str = lag_
 
       All parameters of lag models start with 'lag'.
 
-
-   .. method:: get_lag_at_t(self, time: numpy.ndarray) -> numpy.ndarray
+   .. py:method:: get_lag_at_t(self, time: numpy.ndarray) -> numpy.ndarray
 
       Lag as a function of time
 
@@ -59,8 +57,7 @@ Attributes
 
 
 
-.. class:: ConstantLag(constant: float = 1e-06)
-
+.. py:class:: ConstantLag(constant: float = 1e-06)
 
    Bases: :py:obj:`LagModel`, :py:obj:`mars_troughs.generic_model.ConstantModel`
 
@@ -71,23 +68,22 @@ Attributes
    :type constant: float, optional
 
 
-.. class:: LinearLag(intercept: float = 1e-06, slope: float = 1e-06)
-
+.. py:class:: LinearLag(constant: float = 1e-06, slope: float = 1e-06)
 
    Bases: :py:obj:`LagModel`, :py:obj:`mars_troughs.generic_model.LinearModel`
 
    The lag thickness is linear in time. Lag changes as
-   lag(t) = intercept + slope*t.
+   lag(t) = constant + slope*t.
 
-   :param intercept: default is 1 millimeter. The lag
-                     thickness at time t=0 (present day).
-   :type intercept: float, optional
+   :param constant: default is 1 millimeter. The lag
+                    thickness at time t=0 (present day).
+   :type constant: float, optional
    :param slope: default is 1e-6 mm per year. The rate
                  of change of the lag per time.
    :type slope: float, optional
 
 
-.. data:: LAG_MODEL_MAP
+.. py:data:: LAG_MODEL_MAP
    :annotation: :Dict[str, mars_troughs.model.Model]
 
    
