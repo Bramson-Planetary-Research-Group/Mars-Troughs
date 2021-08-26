@@ -13,12 +13,14 @@ class CustomAccuModel(Model):
     Custom accumulation model
     """
 
+    prefix = "acc_"
+
     def __init__(
         self,
         coeff: float = 1e-6,
         insolation_path: Union[str, Path] = DATAPATHS.INSOLATION,
     ):
-
+        super().__init__()
         insolations, times = np.loadtxt(insolation_path, skiprows=1).T
         times = -times
 
@@ -63,12 +65,15 @@ class CustomLagModel(Model):
     Custom lag model
     """
 
+    prefix = "lag_"
+
     def __init__(
         self,
         intercept: float = 1e-6,
         linearCoeff: float = 1e-6,
         quadCoeff: float = 1e-6,
     ):
+        super().__init__()
 
         self.intercept = intercept
         self.linearCoeff = linearCoeff
@@ -110,12 +115,21 @@ class TroughTestCustom(TestCase):
     def test_set_model(self):
         tr = self.get_trough_object()
         # Come up with new parameters
-        acc_params = {"coeff": 1e-6}
-        lag_params = {"intercept": 1e-7, "linearCoeff": 2e-6, "quadCoeff": 2e-6}
+        acc_params = {"acc_coeff": 1e-6}
+        lag_params = {
+            "lag_intercept": 1e-7,
+            "lag_linearCoeff": 2e-6,
+            "lag_quadCoeff": 2e-6,
+        }
         errorbar = 200.0
-        tr.set_model(acc_params, lag_params, errorbar)
-        assert tr.accuModel.parameters == acc_params
-        assert tr.lagModel.parameters == lag_params
+        params = {"errorbar": errorbar, **acc_params, **lag_params}
+        tr.set_model(params)
+        assert tr.accuModel.parameters == {"coeff": 1e-6}
+        assert tr.lagModel.parameters == {
+            "intercept": 1e-7,
+            "linearCoeff": 2e-6,
+            "quadCoeff": 2e-6,
+        }
         assert tr.errorbar == errorbar
 
     def test_get_trajectory(self):

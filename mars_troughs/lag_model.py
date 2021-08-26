@@ -52,10 +52,10 @@ class ConstantLag(LagModel, ConstantModel):
 class LinearLag(LagModel, LinearModel):
     """
     The lag thickness is linear in time. Lag changes as
-    lag(t) = intercept + slope*t.
+    lag(t) = constant + slope*t.
 
     Args:
-        intercept (float, optional): default is 1 millimeter. The lag
+        constant (float, optional): default is 1 millimeter. The lag
             thickness at time t=0 (present day).
         slope (float, optional): default is 1e-6 mm per year. The rate
             of change of the lag per time.
@@ -63,11 +63,11 @@ class LinearLag(LagModel, LinearModel):
 
     def __init__(
         self,
-        intercept: float = 1e-6,
+        constant: float = 1e-6,
         slope: float = 1e-6,
     ):
         super().__init__()
-        LinearModel.__init__(self, intercept=intercept, slope=slope)
+        LinearModel.__init__(self, constant=constant, slope=slope)
 
 
 LAG_MODEL_MAP: Dict[str, Model] = {
