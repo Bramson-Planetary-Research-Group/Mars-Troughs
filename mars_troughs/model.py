@@ -19,7 +19,7 @@ class Model(ABC):
         model that serve their own purpose
     """
 
-    prefix: str = ""
+    prefix: Optional[str] = None
     """A prefix to prepend to parameter naems when supplying them."""
 
     def __init__(self, sub_models: Optional[List["Model"]] = None) -> None:
