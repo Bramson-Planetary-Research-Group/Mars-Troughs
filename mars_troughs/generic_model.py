@@ -175,16 +175,4 @@ class PowerLawModel(Model):
       
       
       
-      
-      
-      
-      
-      
-      
-      
-      
-      
-=======
-    def eval(self, x: Union[Number, np.ndarray]) -> Union[Number, np.ndarray]:
-        return self.quad * x ** 2 + self.slope * x + self.constant
->>>>>>> main
+    
