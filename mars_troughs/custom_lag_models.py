@@ -64,11 +64,11 @@ class LinearLag(CustomLagModel, LinearModel):
 
     def __init__(
         self,
-        intercept: float = 1e-6,
+        constant: float = 1e-6,
         slope: float = 1e-6,
     ):
         super().__init__()
-        LinearModel.__init__(self, intercept=intercept, slope=slope)
+        LinearModel.__init__(self, constant=constant, slope=slope)
     
 class QuadraticLag(CustomLagModel,QuadModel):
     """
@@ -77,14 +77,14 @@ class QuadraticLag(CustomLagModel,QuadModel):
     
     def __init__(
         self,
-        intercept: float = 1e-6,
-        linearCoeff: float = 1e-6,
-        quadCoeff: float = 1e-15,
+        constant: float = 1e-6,
+        slope: float = 1e-6,
+        quad: float = 1e-15,
     ):
         super().__init__()
-        QuadModel.__init__(self, intercept=intercept, 
-                                linearCoeff=linearCoeff,
-                                quadCoeff=quadCoeff)
+        QuadModel.__init__(self, constant=constant, 
+                                 slope=slope,
+                                 quad=quad)
         
 class CubicLag(CustomLagModel,CubicModel):
     """
@@ -93,16 +93,16 @@ class CubicLag(CustomLagModel,CubicModel):
     
     def __init__(
         self,
-        intercept: float = 1e-6,
-        linearCoeff: float = 1e-6,
-        quadCoeff: float = 1e-15,
-        cubicCoeff: float = 1e-30,
+        constant: float = 1e-6,
+        slope: float = 1e-6,
+        quad: float = 1e-15,
+        cubic: float = 1e-30,
     ):
         super().__init__()
-        CubicModel.__init__(self, intercept=intercept, 
-                                linearCoeff=linearCoeff,
-                                quadCoeff=quadCoeff,
-                                cubicCoeff=cubicCoeff)
+        CubicModel.__init__(self, constant=constant, 
+                                  slope=slope,
+                                  quad=quad,
+                                  cubic=cubic)
     
 class PowerLawLag(CustomLagModel,PowerLawModel):
     """

@@ -91,10 +91,10 @@ class Linear_Obliquity(TimeDependentAccumulationModel, LinearModel):
         self,
         obl_times: np.ndarray,
         obliquity: np.ndarray,
-        intercept: float = 1e-6,
+        constant: float = 1e-6,
         slope: float = 1e-6,
     ):
-        LinearModel.__init__(self, intercept, slope)
+        LinearModel.__init__(self, constant, slope)
         super().__init__(obl_times, obliquity)
 
     def get_yt(self, time: np.ndarray):
@@ -113,7 +113,7 @@ class Linear_Obliquity(TimeDependentAccumulationModel, LinearModel):
         """
 
         return -(
-            self.intercept * time
+            self.constant * time
             + (
                 self.slope
                 * (self._int_var_data_spline(time) - self._int_var_data_spline(0))
@@ -126,12 +126,12 @@ class Quadratic_Obliquity(TimeDependentAccumulationModel, QuadModel):
         self,
         obl_times: np.ndarray,
         obliquity: np.ndarray,
-        intercept: float = 1e-6,
-        linearCoeff: float = 1e-6,
-        quadCoeff: float = 1e-6,
+        constant: float = 1e-6,
+        slope: float = 1e-6,
+        quad: float = 1e-6,
         ):
         
-        QuadModel.__init__(self, intercept, linearCoeff, quadCoeff)
+        QuadModel.__init__(self, constant, slope, quad)
         super().__init__(obl_times, obliquity)
         
     def get_yt(self, time: np.ndarray):
@@ -149,12 +149,12 @@ class Quadratic_Obliquity(TimeDependentAccumulationModel, QuadModel):
 
         """
         return -(
-            self.intercept * time
+            self.constant * time
             + (
-                self.linearCoeff
+                self.slope
                 * (self._int_var_data_spline(time) - self._int_var_data_spline(0))
                 
-                + self.quadCoeff
+                + self.quad
                 * (
                     self._int_var2_data_spline(time)
                     - self._int_var2_data_spline(0)
@@ -167,13 +167,13 @@ class Cubic_Obliquity(TimeDependentAccumulationModel, CubicModel):
         self,
         obl_times: np.ndarray,
         obliquity: np.ndarray,
-        intercept: float = 1e-6,
-        linearCoeff: float = 1e-6,
-        quadCoeff: float = 1e-6,
-        cubicCoeff: float =1e-6,
+        constant: float = 1e-6,
+        slope: float = 1e-6,
+        quad: float = 1e-6,
+        cubic: float =1e-6,
         ):
         
-        CubicModel.__init__(self, intercept, linearCoeff, quadCoeff, cubicCoeff)
+        CubicModel.__init__(self, constant, slope, quad, cubic)
         super().__init__(obl_times, obliquity)
         
     def get_yt(self, time: np.ndarray):
@@ -190,18 +190,18 @@ class Cubic_Obliquity(TimeDependentAccumulationModel, CubicModel):
             the vertical distance y, in meters.
 
         """
-        return -(self.intercept * time
+        return -(self.constant * time
                 + 
                   (
-                    self.linearCoeff
+                    self.slope
                     * (self._int_var_data_spline(time) 
                        - self._int_var_data_spline(0))
                     
-                    + self.quadCoeff
+                    + self.quad
                     * (self._int_var2_data_spline(time)
                         - self._int_var2_data_spline(0))
                     
-                    + self.cubicCoeff
+                    + self.cubic
                     * (self._int_var3_data_spline(time)
                         - self._int_var3_data_spline(0))
                   )
@@ -248,10 +248,10 @@ class Linear_Insolation(TimeDependentAccumulationModel, LinearModel):
         self,
         ins_times: np.ndarray,
         insolations: np.ndarray,
-        intercept: float = 1e-6,
+        constant: float = 1e-6,
         slope: float = 1e-6,
     ):
-        LinearModel.__init__(self, intercept, slope)
+        LinearModel.__init__(self, constant, slope)
         super().__init__(ins_times, 1/insolations)
 
     def get_yt(self, time: np.ndarray):
@@ -270,7 +270,7 @@ class Linear_Insolation(TimeDependentAccumulationModel, LinearModel):
         """
 
         return -(
-            self.intercept * time
+            self.constant * time
             + (
                 self.slope
                 * (self._int_var_data_spline(time) - self._int_var_data_spline(0))
@@ -283,12 +283,12 @@ class Quadratic_Insolation(TimeDependentAccumulationModel, QuadModel):
         self,
         ins_times: np.ndarray,
         insolations: np.ndarray,
-        intercept: float = 1e-6,
-        linearCoeff: float = 1e-6,
-        quadCoeff: float = 1e-6,
+        constant: float = 1e-6,
+        slope: float = 1e-6,
+        quad: float = 1e-6,
         ):
         
-        QuadModel.__init__(self, intercept, linearCoeff, quadCoeff)
+        QuadModel.__init__(self, constant, slope, quad)
         super().__init__(ins_times, 1/insolations)
         
     def get_yt(self, time: np.ndarray):
@@ -306,12 +306,12 @@ class Quadratic_Insolation(TimeDependentAccumulationModel, QuadModel):
 
         """
         return -(
-            self.intercept * time
+            self.constant * time
             + (
-                self.linearCoeff
+                self.slope
                 * (self._int_var_data_spline(time) - self._int_var_data_spline(0))
                 
-                + self.quadCoeff
+                + self.quad
                 * (
                     self._int_var2_data_spline(time)
                     - self._int_var2_data_spline(0)
@@ -325,13 +325,13 @@ class Cubic_Insolation(TimeDependentAccumulationModel, CubicModel):
         self,
         ins_times: np.ndarray,
         insolations: np.ndarray,
-        intercept: float = 1e-6,
-        linearCoeff: float = 1e-6,
-        quadCoeff: float = 1e-6,
-        cubicCoeff: float =1e-6,
+        constant: float = 1e-6,
+        slope: float = 1e-6,
+        quad: float = 1e-6,
+        cubic: float =1e-6,
         ):
         
-        CubicModel.__init__(self, intercept, linearCoeff, quadCoeff, cubicCoeff)
+        CubicModel.__init__(self, constant, slope, quad, cubic)
         super().__init__(ins_times, insolations)
         
     def get_yt(self, time: np.ndarray):
@@ -348,18 +348,18 @@ class Cubic_Insolation(TimeDependentAccumulationModel, CubicModel):
             the vertical distance y, in meters.
 
         """
-        return -(self.intercept * time
+        return -(self.constant * time
                 + 
                   (
-                    self.linearCoeff
+                    self.slope
                     * (self._int_var_data_spline(time) 
                        - self._int_var_data_spline(0))
                     
-                    + self.quadCoeff
+                    + self.quad
                     * (self._int_var2_data_spline(time)
                         - self._int_var2_data_spline(0))
                     
-                    + self.cubicCoeff
+                    + self.cubic
                     * (self._int_var3_data_spline(time)
                         - self._int_var3_data_spline(0))
                   )
