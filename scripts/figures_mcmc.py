@@ -85,11 +85,7 @@ plt.savefig(newmcmc.directory+'figures/'+'paramsIter/'
 
 #corner plot
 #reshape ensemble
-ensemble2d=ensemble[:,0,:]
-
-#labels
-for i in range(1,newmcmc.nwalkers):
-    ensemble2d=np.vstack([ensemble2d,ensemble[:,i,:]])
+ensemble2d=ensemble.reshape((newmcmc.nwalkers*nmodels,numparams))
     
 #plot
 fig=corner.corner(ensemble2d,labels=paramsList)
@@ -106,11 +102,11 @@ plt.savefig(newmcmc.directory+'figures/'+'corner/'
 all_logprob=newmcmc.sampler.get_log_prob()
 logprob=all_logprob[initmodel:,:]
 
-plt.figure()
-for i in np.arange(0,newmcmc.nwalkers):
-    plt.plot(xaxis,logprob[:,i])
+plt.figure
+plt.plot(xaxis,logprob)
 plt.xlabel('Step')
 plt.ylabel('log prob')
+plt.show()
 
 
 #create folder for saving figure
@@ -144,8 +140,7 @@ plt.savefig(newmcmc.directory+'figures/'+'autocorr/'
 
 #lag, acc rate and y per time for each model 
 #indxlagparams=paramsList.index(lagparamsList[0])
-testensemble=ensemble[:,1,:]
-iparams=newmcmc.tr.all_parameters
+
 lagt=np.zeros((nmodels*newmcmc.nwalkers,len(times)))
 acct=np.zeros((nmodels*newmcmc.nwalkers,len(var_times)))
 tmpt=np.zeros((nmodels*newmcmc.nwalkers,len(var_times),2))
@@ -205,13 +200,17 @@ plt.savefig(newmcmc.directory+'figures/'+'lagaccdist/'
 #reshape logprob
 plt.figure()
 
-logprob2d=logprob.T.reshape(1,nmodels*newmcmc.nwalkers)
+logprob2d=logprob.reshape(nmodels*newmcmc.nwalkers,1)
 #best model params
 bestTMPindx=np.argmax(logprob2d)
 bestTMP=tmpt[bestTMPindx,:,:]
 plt.plot(bestTMP[:,0],bestTMP[:,1],c='b',label='Best TMP')
 
-ratioyx=0.2;
+#get errorbar of best tmp
+errorbar1d=ensemble[:,:,0].reshape(nmodels*newmcmc.nwalkers,1)
+bestErrorbar=errorbar1d[bestTMPindx]
+
+ratioyx=0.4;
 
 #find nearest points
 ndata=len(newmcmc.xdata)
@@ -229,7 +228,7 @@ for i, (xdi, ydi) in enumerate(zip(newmcmc.xdata, newmcmc.ydata)):
     timenear[i] = var_times[ind]
     
 #plot tmp data assuming errorbar is last errorbar of mcmc
-xerr, yerr = newmcmc.tr.errorbar*newmcmc.tr.meters_per_pixel
+xerr, yerr = bestErrorbar*newmcmc.tr.meters_per_pixel
 plt.errorbar(x=newmcmc.xdata, xerr=xerr, y=newmcmc.ydata, yerr=yerr, 
              c='r', marker='.', ls='',label='Observed TMP')
 
@@ -240,7 +239,7 @@ plt.plot(tmpt[indx,:,0],tmpt[indx,:,1],c="gray", alpha=0.1, zorder=-1,label='Ens
 plt.xlabel("Horizontal dist [m]")
 plt.ylabel("V. dist [m]")
 ax=plt.gca()
-ax.legend()
+ax.legend(bbox_to_anchor=(0.5, -0.3), loc='upper left')
 ymin,ymax=ax.get_ylim()
 xmin,xmax=ax.get_xlim()
 ax.set_ylim(ymin,0)
