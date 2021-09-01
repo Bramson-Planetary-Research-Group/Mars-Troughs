@@ -102,11 +102,11 @@ plt.savefig(newmcmc.directory+'figures/'+'corner/'
 all_logprob=newmcmc.sampler.get_log_prob()
 logprob=all_logprob[initmodel:,:]
 
-plt.figure
+plt.figure()
 plt.plot(xaxis,logprob)
 plt.xlabel('Step')
 plt.ylabel('log prob')
-plt.show()
+
 
 
 #create folder for saving figure
