@@ -170,13 +170,11 @@ class MCMC():
         lag_t=self.tr.lagModel.get_lag_at_t(self.tr.times)
     
         if any(lag_t < 1e-15) or any(lag_t > 20):
-            
             return -1e99
     
         y = self.tr.accuModel.get_yt(self.tr.accuModel._times)
         
         if any(y < -2e3) or any(y > 0):
-            
             return -1e99
         
         acc_t=self.tr.accuModel.get_accumulation_at_t(self.tr.accuModel._times)
