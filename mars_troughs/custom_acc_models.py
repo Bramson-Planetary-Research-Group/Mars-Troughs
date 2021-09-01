@@ -128,7 +128,7 @@ class Quadratic_Obliquity(TimeDependentAccumulationModel, QuadModel):
         obliquity: np.ndarray,
         constant: float = 1e-6,
         slope: float = 1e-6,
-        quad: float = 1e-6,
+        quad: float = 1e-15,
         ):
         
         QuadModel.__init__(self, constant, slope, quad)
@@ -169,8 +169,8 @@ class Cubic_Obliquity(TimeDependentAccumulationModel, CubicModel):
         obliquity: np.ndarray,
         constant: float = 1e-6,
         slope: float = 1e-6,
-        quad: float = 1e-6,
-        cubic: float =1e-6,
+        quad: float = 1e-15,
+        cubic: float =1e-30,
         ):
         
         CubicModel.__init__(self, constant, slope, quad, cubic)
@@ -285,7 +285,7 @@ class Quadratic_Insolation(TimeDependentAccumulationModel, QuadModel):
         insolations: np.ndarray,
         constant: float = 1e-6,
         slope: float = 1e-6,
-        quad: float = 1e-6,
+        quad: float = 1e-15,
         ):
         
         QuadModel.__init__(self, constant, slope, quad)
@@ -327,8 +327,8 @@ class Cubic_Insolation(TimeDependentAccumulationModel, CubicModel):
         insolations: np.ndarray,
         constant: float = 1e-6,
         slope: float = 1e-6,
-        quad: float = 1e-6,
-        cubic: float =1e-6,
+        quad: float = 1e-15,
+        cubic: float =1e-30,
         ):
         
         CubicModel.__init__(self, constant, slope, quad, cubic)
