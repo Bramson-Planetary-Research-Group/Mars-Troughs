@@ -115,6 +115,8 @@ class MCMC():
         self.initParams=np.array([self.optParams+ 
                         1e-3*self.optParams*np.random.randn(self.ndim) 
                         for i in range(self.nwalkers)])
+        
+        print(self.initParams,file=sys.stderr)
     
         start = time.time()
         
