@@ -92,7 +92,7 @@ class Linear_Obliquity(TimeDependentAccumulationModel, LinearModel):
         obl_times: np.ndarray,
         obliquity: np.ndarray,
         constant: float = 1e-6,
-        slope: float = 1e-6,
+        slope: float = 1e-8,
     ):
         LinearModel.__init__(self, constant, slope)
         super().__init__(obl_times, obliquity)
@@ -127,8 +127,8 @@ class Quadratic_Obliquity(TimeDependentAccumulationModel, QuadModel):
         obl_times: np.ndarray,
         obliquity: np.ndarray,
         constant: float = 1e-6,
-        slope: float = 1e-6,
-        quad: float = 1e-15,
+        slope: float = 1e-8,
+        quad: float = 1e-20,
         ):
         
         QuadModel.__init__(self, constant, slope, quad)
@@ -168,8 +168,8 @@ class Cubic_Obliquity(TimeDependentAccumulationModel, CubicModel):
         obl_times: np.ndarray,
         obliquity: np.ndarray,
         constant: float = 1e-6,
-        slope: float = 1e-6,
-        quad: float = 1e-15,
+        slope: float = 1e-8,
+        quad: float = 1e-20,
         cubic: float =1e-30,
         ):
         
@@ -249,7 +249,7 @@ class Linear_Insolation(TimeDependentAccumulationModel, LinearModel):
         ins_times: np.ndarray,
         insolations: np.ndarray,
         constant: float = 1e-6,
-        slope: float = 1e-6,
+        slope: float = 1e-8,
     ):
         LinearModel.__init__(self, constant, slope)
         super().__init__(ins_times, 1/insolations)
@@ -284,8 +284,8 @@ class Quadratic_Insolation(TimeDependentAccumulationModel, QuadModel):
         ins_times: np.ndarray,
         insolations: np.ndarray,
         constant: float = 1e-6,
-        slope: float = 1e-6,
-        quad: float = 1e-15,
+        slope: float = 1e-8,
+        quad: float = 1e-20,
         ):
         
         QuadModel.__init__(self, constant, slope, quad)
@@ -326,8 +326,8 @@ class Cubic_Insolation(TimeDependentAccumulationModel, CubicModel):
         ins_times: np.ndarray,
         insolations: np.ndarray,
         constant: float = 1e-6,
-        slope: float = 1e-6,
-        quad: float = 1e-15,
+        slope: float = 1e-8,
+        quad: float = 1e-20,
         cubic: float =1e-30,
         ):
         

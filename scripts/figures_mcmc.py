@@ -152,7 +152,7 @@ for w in range(0,newmcmc.nwalkers):
         iparams=dict(zip(newmcmc.tr.all_parameter_names,ensemble[i,w,:]))
         newmcmc.tr.set_model(iparams)
         
-        lagti=newmcmc.tr.lagModel.get_lag_at_t(times)
+        lagti=newmcmc.tr.lagModel.get_lag_at_t(var_times)
         accti=newmcmc.tr.accuModel.get_accumulation_at_t(var_times)
         tmpti=np.array(newmcmc.tr.get_trajectory(var_times))
         

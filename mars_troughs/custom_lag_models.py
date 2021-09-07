@@ -65,7 +65,7 @@ class LinearLag(CustomLagModel, LinearModel):
     def __init__(
         self,
         constant: float = 1e-6,
-        slope: float = 1e-6,
+        slope: float = 1e-8,
     ):
         super().__init__()
         LinearModel.__init__(self, constant=constant, slope=slope)
@@ -78,8 +78,8 @@ class QuadraticLag(CustomLagModel,QuadModel):
     def __init__(
         self,
         constant: float = 1e-6,
-        slope: float = 1e-6,
-        quad: float = 1e-25,
+        slope: float = 1e-8,
+        quad: float = 1e-20,
     ):
         super().__init__()
         QuadModel.__init__(self, constant=constant, 
@@ -94,9 +94,9 @@ class CubicLag(CustomLagModel,CubicModel):
     def __init__(
         self,
         constant: float = 1e-6,
-        slope: float = 1e-6,
-        quad: float = 1e-25,
-        cubic: float = 1e-40,
+        slope: float = 1e-8,
+        quad: float = 1e-20,
+        cubic: float = 1e-30,
     ):
         super().__init__()
         CubicModel.__init__(self, constant=constant, 
