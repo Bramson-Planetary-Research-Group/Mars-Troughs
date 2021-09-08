@@ -141,7 +141,7 @@ plt.savefig(newmcmc.directory+'figures/'+'autocorr/'
 #lag, acc rate and y per time for each model 
 #indxlagparams=paramsList.index(lagparamsList[0])
 
-lagt=np.zeros((nmodels*newmcmc.nwalkers,len(times)))
+lagt=np.zeros((nmodels*newmcmc.nwalkers,len(var_times)))
 acct=np.zeros((nmodels*newmcmc.nwalkers,len(var_times)))
 tmpt=np.zeros((nmodels*newmcmc.nwalkers,len(var_times),2))
 
@@ -166,7 +166,7 @@ plt.figure()
 
 #plot lagt
 plt.subplot(4,1,1)
-plt.plot(times,lagt.T)
+plt.plot(var_times,lagt.T)
 plt.xticks([], [])
 plt.title('Lag (mm)')
 
