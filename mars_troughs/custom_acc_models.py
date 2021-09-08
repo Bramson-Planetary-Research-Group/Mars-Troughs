@@ -212,8 +212,8 @@ class PowerLaw_Obliquity(TimeDependentAccumulationModel, PowerLawModel):
         self,
         obl_times: np.ndarray,
         obliquity: np.ndarray,
-        coeff: float = 1e-2,
-        exponent: float = 1e-2,
+        coeff: float = 1e-6,
+        exponent: float = 1e-6,
         ):
         
         PowerLawModel.__init__(self, coeff, exponent)
@@ -370,8 +370,8 @@ class PowerLaw_Insolation(TimeDependentAccumulationModel, PowerLawModel):
         self,
         ins_times: np.ndarray,
         insolations: np.ndarray,
-        coeff: float = 1e-2,
-        exponent: float = 1e-2,
+        coeff: float = 1e-6,
+        exponent: float = 1e-6,
         ):
         
         PowerLawModel.__init__(self, coeff, exponent)
