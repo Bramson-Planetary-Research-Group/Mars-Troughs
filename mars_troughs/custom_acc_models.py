@@ -332,7 +332,7 @@ class Cubic_Insolation(TimeDependentAccumulationModel, CubicModel):
         ):
         
         CubicModel.__init__(self, constant, slope, quad, cubic)
-        super().__init__(ins_times, insolations)
+        super().__init__(ins_times, 1/insolations)
         
     def get_yt(self, time: np.ndarray):
         """

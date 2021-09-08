@@ -68,9 +68,10 @@ class MCMC():
         guessParams=np.array([errorbar]
                              +list(self.tr.accuModel.parameters.values())
                              +list(self.tr.lagModel.parameters.values()))
-        optObj= op.minimize(self.neg_ln_likelihood, x0=guessParams, 
-                            method='Nelder-Mead')
-        self.optParams=optObj['x']
+        #optObj= op.minimize(self.neg_ln_likelihood, x0=guessParams, 
+        #                    method='Nelder-Mead')
+        #self.optParams=optObj['x']
+        self.optParams=guessParams
         
         #aux for creating directories
         
