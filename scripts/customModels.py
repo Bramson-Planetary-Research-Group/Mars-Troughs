@@ -38,12 +38,12 @@ tmp=args.tmp
 #if data is insolation,load insolation data
 if args.data=="insolation":
     (insolations,ins_times) = load_insolation_data(tmp)
-    ins_times=-ins_times
+    ins_times=-ins_times.astype(float)
     ins_times[0]=1e-10
     acc_model=accModel_ins_dict[args.acc](ins_times,insolations)
 else:
     (obliquity,obl_times) = load_obliquity_data()
-    obl_times=-obl_times
+    obl_times=-obl_times.astype(float)
     obl_times[0]=1e-10
     acc_model=accModel_obl_dict[args.acc](obl_times, obliquity)
 
