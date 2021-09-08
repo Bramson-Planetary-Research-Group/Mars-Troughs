@@ -7,8 +7,7 @@ Created on Thu Jul 29 20:37:17 2021
 """
 import numpy as np
 from mars_troughs.datapaths import (load_obliquity_data,
-                                    load_insolation_data,
-                                    load_retreat_data)
+                                    load_insolation_data)
 import corner
 import pickle
 import matplotlib.pyplot as plt
@@ -20,11 +19,6 @@ p.add_argument("-filename",type=str,help="filename for loading mcmc object")
 p.add_argument("-nmodels",type=int,help="nmodels for ensamble")
 args=p.parse_args()
 
-#load lag data
-times, retreats, lags = load_retreat_data()
-times=-times
-times[0]=1e-10
-
 infile=open(args.filename+'obj','rb')
 newmcmc=pickle.load(infile)
 infile.close()
@@ -32,11 +26,11 @@ infile.close()
 #load obliquity or insolation data
 if "Obliquity" in newmcmc.modelName:
     (var,var_times) = load_obliquity_data() #Insolation data and times
-    var_times=-var_times
+    var_times=-var_times.astype(float)
     var_times[0]=1e-10
 elif "Insolation" in newmcmc.modelName:
     (var,var_times) = load_insolation_data(newmcmc.tmp) #Insolation data and times
-    var_times=-var_times
+    var_times=-var_times.astype(float)
     var_times[0]=1e-10
 
     
