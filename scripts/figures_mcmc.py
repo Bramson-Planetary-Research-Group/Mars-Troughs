@@ -16,7 +16,8 @@ import os
 
 p=argparse.ArgumentParser(description="filename for plotting")
 p.add_argument("-filename",type=str,help="filename for loading mcmc object")
-p.add_argument("-nmodels",type=int,help="nmodels for ensamble")
+p.add_argument("-initmodel",type=int,help="nmodels for ensamble")
+p.add_argument("-stepEnsemble",type=int,help="nmodels for ensamble")
 args=p.parse_args()
 
 infile=open(args.filename+'obj','rb')
@@ -47,17 +48,16 @@ numlagparams=len(lagparamsList)
 accparamsList= [string for string in paramsList if 'acc_' in string]
 numaccparams=len(accparamsList)
 
-nmodels=args.nmodels
 totalsteps=newmcmc.sampler.iteration
-initmodel=totalsteps-nmodels
+xaxis=np.arange(args.initmodel+1,totalsteps+1,args.stepEnsemble)
+nmodels=len(xaxis)
 
 #all parameters per iter
 all_samples=newmcmc.sampler.get_chain()
-ensemble=all_samples[initmodel:,:,:]
+ensemble=all_samples[args.initmodel::args.stepEnsemble,:,:]
 
 plt.figure()
 
-xaxis=np.arange(initmodel+1,totalsteps+1)
 for i in np.arange(1,numparams):
     plt.subplot(numparams,1,i)
     plt.plot(xaxis,ensemble[:,:,i-1])
@@ -94,7 +94,7 @@ plt.savefig(newmcmc.directory+'figures/'+'corner/'
 
 #log prob
 all_logprob=newmcmc.sampler.get_log_prob()
-logprob=all_logprob[initmodel:,:]
+logprob=all_logprob[args.initmodel::args.stepEnsemble,:]
 
 plt.figure()
 plt.plot(xaxis,logprob)
