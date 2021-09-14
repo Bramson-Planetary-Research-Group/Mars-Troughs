@@ -184,7 +184,7 @@ class MCMC():
         if any(acc_t < 0):
             return -1e99
         
-        return self.tr.lnlikelihood(self.xdata,self.ydata)
+        return self.tr.lnlikelihood(self.xdata,self.ydata,self.tr.accuModel._times)
     
     #And the negative of the log likelihood
     def neg_ln_likelihood(self,paramsArray):

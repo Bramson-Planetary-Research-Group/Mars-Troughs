@@ -189,6 +189,7 @@ class Trough(Model):
         self,
         x_data: np.ndarray,
         y_data: np.ndarray,
+        times: Optional[np.ndarray] = None,
         dist_func: Optional[Callable] = None,
     ) -> Tuple[np.ndarray, np.ndarray]:
         """
@@ -206,8 +207,11 @@ class Trough(Model):
             x and y coordinates of the model TMP that are closer to the data TMP.
             (Tuple), size 2 x len(x_data)
         """
+        if np.all(times) is None:
+            times = self.times
+        
         dist_func = dist_func or Trough._L2_distance
-        x_model, y_model = self.get_trajectory()
+        x_model, y_model = self.get_trajectory(times)
         x_out = np.zeros_like(x_data)
         y_out = np.zeros_like(y_data)
         for i, (xdi, ydi) in enumerate(zip(x_data, y_data)):
@@ -217,7 +221,11 @@ class Trough(Model):
             y_out[i] = y_model[ind]
         return x_out, y_out
 
-    def lnlikelihood(self, x_data: np.ndarray, y_data: np.ndarray) -> float:
+    def lnlikelihood(
+            self, 
+            x_data: np.ndarray, 
+            y_data: np.ndarray,
+            times: Optional[np.ndarray] = None,) -> float:
         """
         Calculates the log-likelihood of the data given the model.
         Note that this is the natural log (ln).
@@ -229,7 +237,10 @@ class Trough(Model):
         Output:
             log-likelihood value (float)
         """
-        x_model, y_model = self.get_nearest_points(x_data, y_data)
+        if np.all(times) is None:
+            times = self.times
+        
+        x_model, y_model = self.get_nearest_points(x_data, y_data,times)
         # Variance in meters in both directions
         xvar, yvar = (self.errorbar * self.meters_per_pixel) ** 2
         chi2 = (x_data - x_model) ** 2 / xvar + (y_data - y_model) ** 2 / yvar
