@@ -24,7 +24,7 @@ class MCMC():
     def __init__(
         self,
         maxSteps: int,
-        subIter: int,
+        thin_by: int,
         directory: str,
         tmp: int,
         acc_model = Union[str, Model],
@@ -35,7 +35,7 @@ class MCMC():
         angle= 5.0,
     ):
         self.maxSteps = maxSteps
-        self.subIter = subIter
+        self.thin_by = thin_by
         self.acc_model = acc_model
         self.lag_model = lag_model
         self.directory = directory
@@ -108,10 +108,6 @@ class MCMC():
         #self.filename=self.directory+'obj/'+self.modelName+'/'+str(self.maxSteps)
         self.filename=self.directory+'obj/'+self.modelName+'_'+str(self.maxSteps)
         
-        #Set file to save progress 
-        backend=emcee.backends.HDFBackend(self.filename+'.h5')
-        backend.reset(self.nwalkers,self.ndim)
-        
         #Set optimized parameter values as initial values of MCMC chains 
         self.initParams=np.array([self.optParams+ 
                         1e-3*self.optParams*np.random.randn(self.ndim) 
@@ -122,21 +118,20 @@ class MCMC():
         
         #Initialize sampler
         self.sampler = emcee.EnsembleSampler(self.nwalkers, self.ndim, 
-                                             self.ln_likelihood, 
-                                             backend=backend, 
+                                             self.ln_likelihood,  
                                              parameter_names=self.parameter_names)
         #Run MCMC and track progress
         self.sampler.reset()
         #Iteratively compute autocorrelation time Tau
         index=0
-        self.autocorr=np.zeros(int(self.maxSteps/self.subIter))
+        self.autocorr=np.zeros(10)
         old_tau=np.inf
         
-        #compute tau every subIter iterations
+        #compute tau every n iterations
         for sample in self.sampler.sample(self.initParams,iterations=self.maxSteps, 
         progress=False):
         
-            if self.sampler.iteration%self.subIter:
+            if self.sampler.iteration%10:
                 continue
                 
             print(self.sampler.iteration/self.maxSteps*100,'%',file=sys.stderr)
@@ -159,6 +154,18 @@ class MCMC():
         print("Running time {0:.1f} seconds".format(running_time), 
               'for',self.modelName,self.maxSteps,file=sys.stderr)
         sys.stderr.flush()
+        
+        
+        #save samples and log prob every thin_by steps
+        all_samples=self.sampler.get_chain()
+        self.samples=all_samples[0::self.thin_by,:,:]
+        all_logprob=self.sampler.get_log_prob()
+        self.logprob=all_logprob[0::self.thin_by,:]
+        self.accFraction=self.sampler.acceptance_fraction
+        
+        #delete sampler because it is very large
+        del self.sampler
+        
 
     def ln_likelihood(self,params: Dict[str,float]):
         
