@@ -49,7 +49,7 @@ accparamsList= [string for string in paramsList if 'acc_' in string]
 numaccparams=len(accparamsList)
 
 totalsteps=newmcmc.sampler.iteration
-xaxis=np.arange(args.initmodel+1,totalsteps+1,args.stepEnsemble)
+xaxis=np.arange(args.initmodel+1,totalsteps+1,args.stepEnsemble*newmcmc.thin_by)
 nmodels=len(xaxis)
 
 #all parameters per iter
@@ -183,12 +183,12 @@ plt.xlabel('Time (years)')
 plt.title('Horizontal distance (m)')
 
 #create folder for saving figure
-if not os.path.exists(newmcmc.directory+'figures/'+'lagaccdist/'):
-    os.makedirs(newmcmc.directory+'figures/'+'lagaccdist/')
+# if not os.path.exists(newmcmc.directory+'figures/'+'lagaccdist/'):
+#     os.makedirs(newmcmc.directory+'figures/'+'lagaccdist/')
     
-plt.savefig(newmcmc.directory+'figures/'+'lagaccdist/'
-            +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
-            facecolor='w',pad_inches=0.1)
+# plt.savefig(newmcmc.directory+'figures/'+'lagaccdist/'
+#             +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
+#             facecolor='w',pad_inches=0.1)
 
 # tmp for opt params, params with highest log prob and 100 random models in ensemble
 #reshape logprob
