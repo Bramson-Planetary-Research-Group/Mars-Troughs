@@ -156,31 +156,31 @@ for w in range(0,newmcmc.nwalkers):
         indxw=indxw+1
         
         
-plt.figure()
+# plt.figure()
 
-#plot lagt
-plt.subplot(4,1,1)
-plt.plot(var_times,lagt.T)
-plt.xticks([], [])
-plt.title('Lag (mm)')
+# #plot lagt
+# plt.subplot(4,1,1)
+# plt.plot(var_times,lagt.T)
+# plt.xticks([], [])
+# plt.title('Lag (mm)')
 
-#plot lagt
-plt.subplot(4,1,2)
-plt.plot(var_times,acct.T)
-plt.xticks([], [])
-plt.title('acc rate (m/year)')
+# #plot lagt
+# plt.subplot(4,1,2)
+# plt.plot(var_times,acct.T)
+# plt.xticks([], [])
+# plt.title('acc rate (m/year)')
 
-#plot yt
-plt.subplot(4,1,3)
-plt.plot(var_times,tmpt[:,:,1].T)
-plt.title('Vertical distance (m)')
-plt.xticks([], [])
+# #plot yt
+# plt.subplot(4,1,3)
+# plt.plot(var_times,tmpt[:,:,1].T)
+# plt.title('Vertical distance (m)')
+# plt.xticks([], [])
 
-#plot xt
-plt.subplot(4,1,4)
-plt.plot(var_times,tmpt[:,:,0].T)
-plt.xlabel('Time (years)')
-plt.title('Horizontal distance (m)')
+# #plot xt
+# plt.subplot(4,1,4)
+# plt.plot(var_times,tmpt[:,:,0].T)
+# plt.xlabel('Time (years)')
+# plt.title('Horizontal distance (m)')
 
 #create folder for saving figure
 # if not os.path.exists(newmcmc.directory+'figures/'+'lagaccdist/'):
