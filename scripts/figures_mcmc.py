@@ -48,13 +48,12 @@ numlagparams=len(lagparamsList)
 accparamsList= [string for string in paramsList if 'acc_' in string]
 numaccparams=len(accparamsList)
 
-totalsteps=newmcmc.sampler.iteration
-xaxis=np.arange(args.initmodel+1,totalsteps+1,args.stepEnsemble*newmcmc.thin_by)
+#all parameters per iter
+ensemble=newmcmc.samples[int(args.initmodel/newmcmc.thin_by-1)::args.stepEnsemble,:,:]
+
+xaxis=np.arange(args.initmodel,newmcmc.totalSteps+1,args.stepEnsemble*newmcmc.thin_by)
 nmodels=len(xaxis)
 
-#all parameters per iter
-all_samples=newmcmc.sampler.get_chain()
-ensemble=all_samples[args.initmodel::args.stepEnsemble,:,:]
 
 plt.figure()
 
@@ -92,12 +91,11 @@ plt.savefig(newmcmc.directory+'figures/'+'corner/'
             +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
             facecolor='w',pad_inches=0.1)
 
+logprob=newmcmc.logprob[int(args.initmodel/newmcmc.thin_by-1)::args.stepEnsemble,:]
 #log prob
-all_logprob=newmcmc.sampler.get_log_prob()
-logprob=all_logprob[args.initmodel::args.stepEnsemble,:]
-
 plt.figure()
 plt.plot(xaxis,logprob)
+plt.title(label='mean acceptance ratio = '+ str(np.round(np.mean(newmcmc.accFraction),2)))
 plt.xlabel('Step')
 plt.ylabel('log prob')
 
@@ -113,7 +111,7 @@ plt.savefig(newmcmc.directory+'figures/'+'logprob/'
 
 plt.figure()
 #autocorrelation values
-autoxaxis=newmcmc.subIter*np.arange(1,totalsteps/newmcmc.subIter+1)
+autoxaxis=(newmcmc.maxSteps/10)*np.arange(1,11)
 autoxaxis=autoxaxis[:len(newmcmc.autocorr)]
 
 plt.plot(autoxaxis,autoxaxis/50,"--k",label=r'$\tau$<steps/50 ')
@@ -194,9 +192,9 @@ for w in range(0,newmcmc.nwalkers):
 #reshape logprob
 plt.figure()
 
-logprob2d=logprob.reshape(nmodels*newmcmc.nwalkers,1)
+logprob1d=logprob.reshape(nmodels*newmcmc.nwalkers,1)
 #best model params
-bestTMPindx=np.argmax(logprob2d)
+bestTMPindx=np.argmax(logprob1d)
 bestTMP=tmpt[bestTMPindx,:,:]
 plt.plot(bestTMP[:,0],bestTMP[:,1],c='b',label='Best TMP')
 

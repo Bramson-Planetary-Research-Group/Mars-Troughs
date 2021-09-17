@@ -131,7 +131,7 @@ class MCMC():
         for sample in self.sampler.sample(self.initParams,iterations=self.maxSteps, 
         progress=False):
         
-            if self.sampler.iteration%10:
+            if self.sampler.iteration%(self.maxSteps/10):
                 continue
                 
             print(self.sampler.iteration/self.maxSteps*100,'%',file=sys.stderr)
@@ -162,6 +162,7 @@ class MCMC():
         all_logprob=self.sampler.get_log_prob()
         self.logprob=all_logprob[0::self.thin_by,:]
         self.accFraction=self.sampler.acceptance_fraction
+        self.totalSteps=self.sampler.iteration
         
         #delete sampler because it is very large
         del self.sampler
