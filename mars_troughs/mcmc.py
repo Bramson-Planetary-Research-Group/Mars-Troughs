@@ -112,7 +112,26 @@ class MCMC():
         self.initParams=np.array([self.optParams+ 
                         1e-3*self.optParams*np.random.randn(self.ndim) 
                         for i in range(self.nwalkers)])
-
+        
+        #check that all initParams fit the priors
+        likeInit=np.zeros((self.nwalkers,1))
+        for i in range(0,self.nwalkers):
+            iparams=dict(zip(self.tr.all_parameter_names,self.initParams[i,:]))
+            likeInit[i]=self.ln_likelihood(iparams)
+        
+        indxProblem=[i for i, n in enumerate(likeInit) if n == -1e99]
+        
+        if len(indxProblem)>0:
+            for i in range(0,len(indxProblem)):
+                like=-1e99
+                while like==-1e99:
+                    iparamsTest=(self.optParams+ 1e-3*self.optParams*
+                                 np.random.randn(self.ndim))
+                    iparamsDict=dict(zip(self.tr.all_parameter_names,iparamsTest))
+                    like=self.ln_likelihood(iparamsDict)
+                self.initParams[indxProblem[i],:]=iparamsTest
+                
+        print('All initial parameters fit priors',file=sys.stderr)
 
         start = time.time()
         
