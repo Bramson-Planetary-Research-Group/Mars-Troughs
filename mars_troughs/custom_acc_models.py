@@ -370,8 +370,8 @@ class PowerLaw_Insolation(TimeDependentAccumulationModel, PowerLawModel):
         self,
         ins_times: np.ndarray,
         insolations: np.ndarray,
-        coeff: float = 1e-6,
-        exponent: float = 1e-6,
+        coeff: float = 1,
+        exponent: float = -1,
         ):
         
         PowerLawModel.__init__(self, coeff, exponent)
