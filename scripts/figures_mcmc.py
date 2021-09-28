@@ -115,7 +115,7 @@ autoxaxis=(newmcmc.maxSteps/10)*np.arange(1,11)
 autoxaxis=autoxaxis[:len(newmcmc.autocorr)]
 
 plt.plot(autoxaxis,autoxaxis/50,"--k",label=r'$\tau$<steps/50 ')
-plt.plot(autoxaxis,newmcmc.autocorr[np.nonzero(newmcmc.autocorr)],label=r'$\tau$ estimate')
+plt.plot(autoxaxis[np.nonzero(newmcmc.autocorr)],newmcmc.autocorr[np.nonzero(newmcmc.autocorr)],label=r'$\tau$ estimate')
 plt.xlabel('Step')
 plt.ylabel(r'mean $\tau$')
 ax=plt.gca()
