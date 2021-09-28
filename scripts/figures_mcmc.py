@@ -140,39 +140,39 @@ for w in range(0,newmcmc.nwalkers):
         indxw=indxw+1
         
         
-# plt.figure()
+plt.figure()
 
-# #plot lagt
-# plt.subplot(4,1,1)
-# plt.plot(var_times,lagt.T)
-# plt.xticks([], [])
-# plt.title('Lag (mm)')
+#plot lagt
+plt.subplot(4,1,1)
+plt.plot(newmcmc.tr.accuModel._times,lagt.T)
+plt.xticks([], [])
+plt.title('Lag (mm)')
 
-# #plot lagt
-# plt.subplot(4,1,2)
-# plt.plot(var_times,acct.T)
-# plt.xticks([], [])
-# plt.title('acc rate (m/year)')
+#plot lagt
+plt.subplot(4,1,2)
+plt.plot(newmcmc.tr.accuModel._times,acct.T)
+plt.xticks([], [])
+plt.title('acc rate (m/year)')
 
-# #plot yt
-# plt.subplot(4,1,3)
-# plt.plot(var_times,tmpt[:,:,1].T)
-# plt.title('Vertical distance (m)')
-# plt.xticks([], [])
+#plot yt
+plt.subplot(4,1,3)
+plt.plot(newmcmc.tr.accuModel._times,tmpt[:,:,1].T)
+plt.title('Vertical distance (m)')
+plt.xticks([], [])
 
-# #plot xt
-# plt.subplot(4,1,4)
-# plt.plot(var_times,tmpt[:,:,0].T)
-# plt.xlabel('Time (years)')
-# plt.title('Horizontal distance (m)')
+#plot xt
+plt.subplot(4,1,4)
+plt.plot(newmcmc.tr.accuModel._times,tmpt[:,:,0].T)
+plt.xlabel('Time (years)')
+plt.title('Horizontal distance (m)')
 
 #create folder for saving figure
-# if not os.path.exists(newmcmc.directory+'figures/'+'lagaccdist/'):
-#     os.makedirs(newmcmc.directory+'figures/'+'lagaccdist/')
+if not os.path.exists(newmcmc.directory+'figures/'+'lagaccdist/'):
+    os.makedirs(newmcmc.directory+'figures/'+'lagaccdist/')
     
-# plt.savefig(newmcmc.directory+'figures/'+'lagaccdist/'
-#             +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
-#             facecolor='w',pad_inches=0.1)
+plt.savefig(newmcmc.directory+'figures/'+'lagaccdist/'
+            +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
+            facecolor='w',pad_inches=0.1)
 
 # tmp for opt params, params with highest log prob and 100 random models in ensemble
 #reshape logprob
