@@ -6,8 +6,6 @@ Created on Thu Jul 29 20:37:17 2021
 @author: kris
 """
 import numpy as np
-from mars_troughs.datapaths import (load_obliquity_data,
-                                    load_insolation_data)
 import corner
 import pickle
 import matplotlib.pyplot as plt
@@ -23,17 +21,6 @@ args=p.parse_args()
 infile=open(args.filename+'obj','rb')
 newmcmc=pickle.load(infile)
 infile.close()
-
-#load obliquity or insolation data
-if "Obliquity" in newmcmc.modelName:
-    (var,var_times) = load_obliquity_data() #Insolation data and times
-    var_times=-var_times.astype(float)
-    var_times[0]=1e-10
-elif "Insolation" in newmcmc.modelName:
-    (var,var_times) = load_insolation_data(newmcmc.tmp) #Insolation data and times
-    var_times=-var_times.astype(float)
-    var_times[0]=1e-10
-
     
 #create folder for saving figures
 if not os.path.exists(newmcmc.directory+'figures/'):
@@ -92,14 +79,13 @@ plt.savefig(newmcmc.directory+'figures/'+'corner/'
             facecolor='w',pad_inches=0.1)
 
 logprob=newmcmc.logprob[int(args.initmodel/newmcmc.thin_by-1)::args.stepEnsemble,:]
+
 #log prob
 plt.figure()
 plt.plot(xaxis,logprob)
 plt.title(label='mean acceptance ratio = '+ str(np.round(np.mean(newmcmc.accFraction),2)))
 plt.xlabel('Step')
 plt.ylabel('log prob')
-
-
 
 #create folder for saving figure
 if not os.path.exists(newmcmc.directory+'figures/'+'logprob/'):
@@ -133,9 +119,9 @@ plt.savefig(newmcmc.directory+'figures/'+'autocorr/'
 #lag, acc rate and y per time for each model 
 #indxlagparams=paramsList.index(lagparamsList[0])
 
-lagt=np.zeros((nmodels*newmcmc.nwalkers,len(var_times)))
-acct=np.zeros((nmodels*newmcmc.nwalkers,len(var_times)))
-tmpt=np.zeros((nmodels*newmcmc.nwalkers,len(var_times),2))
+lagt=np.zeros((nmodels*newmcmc.nwalkers,len(newmcmc.tr.accuModel._times)))
+acct=np.zeros((nmodels*newmcmc.nwalkers,len(newmcmc.tr.accuModel._times)))
+tmpt=np.zeros((nmodels*newmcmc.nwalkers,len(newmcmc.tr.accuModel._times),2))
 
 indxw=0
 
@@ -144,9 +130,9 @@ for w in range(0,newmcmc.nwalkers):
         iparams=dict(zip(newmcmc.tr.all_parameter_names,ensemble[i,w,:]))
         newmcmc.tr.set_model(iparams)
         
-        lagti=newmcmc.tr.lagModel.get_lag_at_t(var_times)
-        accti=newmcmc.tr.accuModel.get_accumulation_at_t(var_times)
-        tmpti=np.array(newmcmc.tr.get_trajectory(var_times))
+        lagti=newmcmc.tr.lagModel.get_lag_at_t(newmcmc.tr.accuModel._times)
+        accti=newmcmc.tr.accuModel.get_accumulation_at_t(newmcmc.tr.accuModel._times)
+        tmpti=np.array(newmcmc.tr.get_trajectory(newmcmc.tr.accuModel._times))
         
         lagt[indxw]=lagti
         acct[indxw]=accti
@@ -217,7 +203,7 @@ for i, (xdi, ydi) in enumerate(zip(newmcmc.xdata, newmcmc.ydata)):
     ind = np.argmin(dist)
     xnear[i] = x_model[ind]
     ynear[i] = y_model[ind]
-    timenear[i] = var_times[ind]
+    timenear[i] = newmcmc.tr.accuModel._times[ind]
     
 #plot tmp data assuming errorbar is last errorbar of mcmc
 xerr, yerr = bestErrorbar*newmcmc.tr.meters_per_pixel
