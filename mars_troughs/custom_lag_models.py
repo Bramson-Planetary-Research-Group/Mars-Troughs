@@ -110,7 +110,7 @@ class PowerLawLag(CustomLagModel,PowerLawModel):
     """
     def __init__(
         self,
-        coeff: float = 1e-2,
+        coeff: float = 5,
         exponent: float = 1e-2,
         ):
         super().__init__()
