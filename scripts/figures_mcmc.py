@@ -35,11 +35,17 @@ numlagparams=len(lagparamsList)
 accparamsList= [string for string in paramsList if 'acc_' in string]
 numaccparams=len(accparamsList)
 
-#all parameters per iter
-ensemble=newmcmc.samples[int(args.initmodel/newmcmc.thin_by-1)::args.stepEnsemble,:,:]
-
-xaxis=np.arange(args.initmodel,newmcmc.totalSteps+1,args.stepEnsemble*newmcmc.thin_by)
-nmodels=len(xaxis)
+#subsample ensemble
+if newmcmc.totalSteps<= args.initmodel:
+    ensemble=newmcmc.samples[int((newmcmc.totalSteps/newmcmc.thin_by-1)/2)::args.stepEnsemble,:,:]
+    xaxis=np.arange(int(newmcmc.totalSteps/2),newmcmc.totalSteps+1,args.stepEnsemble*newmcmc.thin_by)
+    nmodels=len(xaxis)
+    logprob=newmcmc.logprob[int((newmcmc.totalSteps/newmcmc.thin_by-1)/2)::args.stepEnsemble,:]
+else:
+    ensemble=newmcmc.samples[int(args.initmodel/newmcmc.thin_by-1)::args.stepEnsemble,:,:]
+    xaxis=np.arange(args.initmodel,newmcmc.totalSteps+1,args.stepEnsemble*newmcmc.thin_by)
+    nmodels=len(xaxis) 
+    logprob=newmcmc.logprob[int(args.initmodel/newmcmc.thin_by-1)::args.stepEnsemble,:]
 
 
 plt.figure()
@@ -78,7 +84,6 @@ plt.savefig(newmcmc.directory+'figures/'+'corner/'
             +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
             facecolor='w',pad_inches=0.1)
 
-logprob=newmcmc.logprob[int(args.initmodel/newmcmc.thin_by-1)::args.stepEnsemble,:]
 
 #log prob
 plt.figure()
