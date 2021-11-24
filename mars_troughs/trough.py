@@ -61,7 +61,7 @@ class Trough(Model):
         times, retreats, lags = load_retreat_data()
         # Positive times are now in the past
         # TODO: reverse this in the data files
-        times = -times
+        times = -times.astype(float)
         #Replace zeros in times array for very small number (1e-10) so 
         #inverse models do not have undefined numbers
         condZero = times==0
@@ -85,7 +85,7 @@ class Trough(Model):
             if "obliquity" in acc_model:
                 #load obliquity data and times
                 obliquity, obl_times = load_obliquity_data()
-                obl_times = -obl_times
+                obl_times = -obl_times.astype(float)
                 #remove zeros from time array
                 condZero = obl_times==0
                 indx =np.array(range(len(condZero)))
@@ -95,7 +95,7 @@ class Trough(Model):
                 acc_time, acc_y = obl_times, obliquity
             else:
                 insolation,ins_times = load_insolation_data()
-                ins_times = -ins_times
+                ins_times = -ins_times.astype(float)
                 #remove zeros from time array
                 condZero = ins_times==0
                 indx =np.array(range(len(condZero)))

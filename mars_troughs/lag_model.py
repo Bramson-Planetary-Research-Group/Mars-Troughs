@@ -64,7 +64,7 @@ class LinearLag(LagModel, LinearModel):
     def __init__(
         self,
         constant: float = 1e-6,
-        slope: float = 1e-6,
+        slope: float = 1e-8,
     ):
         super().__init__()
         LinearModel.__init__(self, constant=constant, slope=slope)
