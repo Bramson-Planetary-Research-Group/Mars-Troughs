@@ -62,7 +62,12 @@ class Trough(Model):
         # Positive times are now in the past
         # TODO: reverse this in the data files
         times = -times
-        times[0]=1e-10
+        #Replace zeros in times array for very small number (1e-10) so 
+        #inverse models do not have undefined numbers
+        condZero = times==0
+        indx =np.array(range(len(condZero)))
+        indxZero=indx[condZero]
+        times[indxZero]=1e-10
 
         self.angle = angle
         self.errorbar = errorbar
@@ -81,12 +86,22 @@ class Trough(Model):
                 #load obliquity data and times
                 obliquity, obl_times = load_obliquity_data()
                 obl_times = -obl_times
-                obl_times[0]=1e-10
+                #remove zeros from time array
+                condZero = obl_times==0
+                indx =np.array(range(len(condZero)))
+                indxZero=indx[condZero]
+                obl_times[indxZero]=1e-10
+                
                 acc_time, acc_y = obl_times, obliquity
             else:
                 insolation,ins_times = load_insolation_data()
                 ins_times = -ins_times
-                ins_times[0]=1e-10
+                #remove zeros from time array
+                condZero = ins_times==0
+                indx =np.array(range(len(condZero)))
+                indxZero=indx[condZero]
+                ins_times[indxZero]=1e-10
+
                 acc_time, acc_y = ins_times, insolation
 
             self.accuModel = ACCUMULATION_MODEL_MAP[acc_model](
