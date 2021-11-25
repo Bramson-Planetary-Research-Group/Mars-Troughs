@@ -43,6 +43,7 @@ class Trough(Model):
         lag_model: Union[str, Model],
         acc_params: Optional[List[float]] = None,
         lag_params: Optional[List[float]] = None,
+        tmp: Optional[int] = None,
         errorbar: float = 1.0,
         angle: float = 2.9,
     ):
@@ -94,7 +95,7 @@ class Trough(Model):
                 
                 acc_time, acc_y = obl_times, obliquity
             else:
-                insolation,ins_times = load_insolation_data()
+                insolation,ins_times = load_insolation_data(tmp)
                 ins_times = -ins_times.astype(float)
                 #remove zeros from time array
                 condZero = ins_times==0

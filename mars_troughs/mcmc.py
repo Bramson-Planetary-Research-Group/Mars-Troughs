@@ -53,8 +53,7 @@ class MCMC():
         
         # Create  trough object 
         self.tr = mt.Trough(self.acc_model,self.lag_model,acc_params,
-                       lag_params,
-                       errorbar,angle)
+                       lag_params,tmp,errorbar,angle)
         
         self.parameter_names = ([key for key in self.tr.all_parameters])
         
