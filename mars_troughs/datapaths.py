@@ -58,7 +58,7 @@ def load_obliquity_data() -> Tuple[np.ndarray, np.ndarray]:
       times (np.ndarray): times the obliquity is measured at
     """
     df = pd.read_csv(
-        DATAPATHS.OBLIQUITY, names=["obliquity", "times"], skiprows=1, sep=" "
+        DATAPATHS.OBLIQUITY, names=["obliquity", "times"], skiprows=1, sep="\t"
     )
     times: np.ndarray = df["times"].values
     obl: np.ndarray = df["obliquity"].values
