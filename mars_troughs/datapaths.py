@@ -16,12 +16,12 @@ class _DataPaths:
     """
 
     DATA: Path = (Path(__file__) / ".." / "data").resolve()
-    INSOLATION1: Path = DATA / "Insolation.txt"
-    INSOLATION2: Path = DATA / "TMP2" / "Insolation.txt"
+    INSOLATION1: Path = DATA / "Insolation_5million_1.txt"
+    INSOLATION2: Path = DATA / "TMP2" / "Insolation_5million_2.txt"
     RETREAT: Path = DATA / "Retreat_data.txt"
     TMP1: Path = DATA / "TMP_xz.txt"
     TMP2: Path = DATA / "TMP2" / "TMP_xz.txt"
-    OBLIQUITY: Path = DATA / "Obliquity_new.txt"
+    OBLIQUITY: Path = DATA / "Obliquity_5million.txt"
 
 
 DATAPATHS = _DataPaths()
