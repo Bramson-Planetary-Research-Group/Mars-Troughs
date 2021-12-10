@@ -130,7 +130,9 @@ class MCMC():
                     like=self.ln_likelihood(iparamsDict)
                 self.initParams[indxProblem[i],:]=iparamsTest
                 
+        sys.stderr.flush()  
         print('All initial parameters fit priors',file=sys.stderr)
+        sys.stderr.flush()
 
         start = time.time()
         
