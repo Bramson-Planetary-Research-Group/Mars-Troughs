@@ -47,7 +47,7 @@ else:
     nmodels=len(xaxis) 
     logprob=newmcmc.logprob[int(args.initmodel/newmcmc.thin_by-1)::args.stepEnsemble,:]
 
-
+#parameter values per iteration---------------------------------
 plt.figure()
 
 for i in np.arange(1,numparams):
@@ -69,7 +69,7 @@ plt.savefig(newmcmc.directory+'figures/'+'paramsIter/'
             +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
             facecolor='w',pad_inches=0.1)
 
-#corner plot
+#corner plot posterior ----------------------------------------------
 #reshape ensemble
 ensemble2d=ensemble.reshape((newmcmc.nwalkers*nmodels,numparams))
     
@@ -85,7 +85,7 @@ plt.savefig(newmcmc.directory+'figures/'+'corner/'
             facecolor='w',pad_inches=0.1)
 
 
-#log prob
+#log likelihood -------------------------------------------------------
 plt.figure()
 plt.plot(xaxis,logprob)
 plt.title(label='mean acceptance ratio = '+ str(np.round(np.mean(newmcmc.accFraction),2)))
@@ -100,12 +100,12 @@ plt.savefig(newmcmc.directory+'figures/'+'logprob/'
             +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
             facecolor='w',pad_inches=0.1)
 
+#autocorrelation values-----------------------------------------------
 plt.figure()
-#autocorrelation values
 autoxaxis=(newmcmc.maxSteps/10)*np.arange(1,11)
 autoxaxis=autoxaxis[:len(newmcmc.autocorr)]
 
-plt.plot(autoxaxis,autoxaxis/50,"--k",label=r'$\tau$<steps/50 ')
+plt.plot(autoxaxis,autoxaxis/50,"--k",label=r'50*steps')
 plt.plot(autoxaxis[np.nonzero(newmcmc.autocorr)],newmcmc.autocorr[np.nonzero(newmcmc.autocorr)],label=r'$\tau$ estimate')
 plt.xlabel('Step')
 plt.ylabel(r'mean $\tau$')
@@ -121,7 +121,7 @@ plt.savefig(newmcmc.directory+'figures/'+'autocorr/'
             +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
             facecolor='w',pad_inches=0.1)
 
-#lag, acc rate and y per time for each model 
+#lag, acc rate and y per time for each model ----------------------------
 #indxlagparams=paramsList.index(lagparamsList[0])
 
 lagt=np.zeros((nmodels*newmcmc.nwalkers,len(newmcmc.tr.accuModel._times)))
@@ -146,28 +146,31 @@ for w in range(0,newmcmc.nwalkers):
         
         
 plt.figure()
+subsample=10
+timeaxis=newmcmc.tr.accuModel._times
+timesub=timeaxis[0::subsample]
 
 #plot lagt
 plt.subplot(4,1,1)
-plt.plot(newmcmc.tr.accuModel._times,lagt.T)
+plt.plot(timesub,lagt[:,0::subsample].T)
 plt.xticks([], [])
 plt.title('Lag (mm)')
 
 #plot lagt
 plt.subplot(4,1,2)
-plt.plot(newmcmc.tr.accuModel._times,acct.T)
+plt.plot(timesub,acct[:,0::subsample].T)
 plt.xticks([], [])
 plt.title('acc rate (m/year)')
 
 #plot yt
 plt.subplot(4,1,3)
-plt.plot(newmcmc.tr.accuModel._times,tmpt[:,:,1].T)
+plt.plot(timesub,tmpt[:,0::subsample,1].T)
 plt.title('Vertical distance (m)')
 plt.xticks([], [])
 
 #plot xt
 plt.subplot(4,1,4)
-plt.plot(newmcmc.tr.accuModel._times,tmpt[:,:,0].T)
+plt.plot(timesub,tmpt[:,0::subsample,0].T)
 plt.xlabel('Time (years)')
 plt.title('Horizontal distance (m)')
 
@@ -179,7 +182,7 @@ plt.savefig(newmcmc.directory+'figures/'+'lagaccdist/'
             +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
             facecolor='w',pad_inches=0.1)
 
-# tmp for opt params, params with highest log prob and 100 random models in ensemble
+# tmp fit ---------------------------------------------------
 #reshape logprob
 plt.figure()
 
@@ -203,6 +206,7 @@ xnear = np.zeros_like(newmcmc.xdata)
 ynear = np.zeros_like(newmcmc.ydata)
 timenear = np.zeros_like(newmcmc.xdata)
 
+
 for i, (xdi, ydi) in enumerate(zip(newmcmc.xdata, newmcmc.ydata)):
     dist = newmcmc.tr._L2_distance(x_model, xdi, y_model, ydi)
     ind = np.argmin(dist)
@@ -223,8 +227,10 @@ plt.xlabel("Horizontal dist [m]")
 plt.ylabel("V. dist [m]")
 ax=plt.gca()
 ax.legend(bbox_to_anchor=(0.5, -0.3), loc='upper left')
-ymin,ymax=ax.get_ylim()
-xmin,xmax=ax.get_xlim()
+#ymin,ymax=ax.get_ylim()
+#xmin,xmax=ax.get_xlim()
+xmax=np.max(newmcmc.xdata)+1000
+ymin=np.min(newmcmc.ydata)-100
 ax.set_ylim(ymin,0)
 ax.set_xlim(0,xmax)
 ax.set_box_aspect(ratioyx)
