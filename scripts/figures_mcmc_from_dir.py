@@ -259,8 +259,12 @@ for ifile in np.arange(0,numfiles):
     #create folder for saving figure
     if not os.path.exists(args.dir+'figures/'+'tmp/'):
         os.makedirs(args.dir+'figures/'+'tmp/')
+
         
     plt.savefig(args.dir+'figures/'+'tmp/'
                 +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
                 facecolor='w',pad_inches=0.1)
+    
+    plt.close('all')
+    print(ifile,file=sys.stderr)
 
