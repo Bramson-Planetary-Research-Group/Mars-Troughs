@@ -32,8 +32,8 @@ for ifile in np.arange(0,numfiles):
     infile.close()
         
     #create folder for saving figures
-    if not os.path.exists(newmcmc.directory+'figures/'):
-        os.makedirs(newmcmc.directory+'figures/')
+    if not os.path.exists(args.dir+'figures/'):
+        os.makedirs(args.dir+'figures/')
     
     #set parameters for plotting
     paramsList=list(newmcmc.tr.all_parameter_names)
