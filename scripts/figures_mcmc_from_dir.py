@@ -138,9 +138,8 @@ for ifile in np.arange(0,numfiles):
     tmpt=np.zeros((nmodels*newmcmc.nwalkers,len(newmcmc.tr.accuModel._times),2))
     
     indxw=0
-    
-    for w in range(0,newmcmc.nwalkers):
-        for i in range(0,nmodels):
+    for i in range(0,nmodels):
+        for w in range(0,newmcmc.nwalkers):
             iparams=dict(zip(newmcmc.tr.all_parameter_names,ensemble[i,w,:]))
             newmcmc.tr.set_model(iparams)
             
