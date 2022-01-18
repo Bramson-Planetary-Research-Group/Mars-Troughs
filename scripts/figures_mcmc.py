@@ -214,10 +214,8 @@ for i, (xdi, ydi) in enumerate(zip(newmcmc.xdata, newmcmc.ydata)):
     ynear[i] = y_model[ind]
     timenear[i] = newmcmc.tr.accuModel._times[ind]
     
-#plot tmp data assuming errorbar is last errorbar of mcmc
+#plot tmp data and errorbar
 xerr, yerr = bestErrorbar*newmcmc.tr.meters_per_pixel
-plt.errorbar(x=newmcmc.xdata, xerr=xerr, y=newmcmc.ydata, yerr=yerr, 
-             c='r', marker='.', ls='',label='Observed TMP')
 
 for i in range(nmodels):
     indx=np.random.randint(0,nmodels*newmcmc.nwalkers)
@@ -235,15 +233,17 @@ ax.set_ylim(ymin,0)
 ax.set_xlim(0,xmax)
 ax.set_box_aspect(ratioyx)
 
-#plot times on right axis
+#plot times on upper axis
 ax2=ax.twiny()
 color='m'
-ax2.set_xlabel('Time before present ( 10^3 years)',color=color)
+ax2.set_xlabel('Time before present ( Million years)',color=color)
 plt.scatter(xnear,ynear,marker="o",color='m')
+plt.errorbar(x=newmcmc.xdata, xerr=xerr, y=newmcmc.ydata, yerr=yerr, 
+         c='r', marker='.', ls='',label='Observed TMP')
 ax2.set_ylim(ymin,0)
 ax2.set_xlim(0,xmax)
 ax2.tick_params(axis='x',labelcolor=color)
-plt.xticks(xnear,np.round(timenear/1000).astype(int),rotation=90)
+plt.xticks(xnear,np.round(timenear/1000000).astype(int),rotation=90)
 ax2.set_box_aspect(ratioyx)
 
 #create folder for saving figure
