@@ -243,7 +243,7 @@ plt.errorbar(x=newmcmc.xdata, xerr=xerr, y=newmcmc.ydata, yerr=yerr,
 ax2.set_ylim(ymin,0)
 ax2.set_xlim(0,xmax)
 ax2.tick_params(axis='x',labelcolor=color)
-plt.xticks(xnear,np.round(timenear/1000000).astype(int),rotation=90)
+plt.xticks(xnear,np.round(timenear/1000000,2).astype(float),rotation=90)
 ax2.set_box_aspect(ratioyx)
 
 #create folder for saving figure
