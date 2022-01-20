@@ -140,7 +140,6 @@ def main():
         
         #lag, acc rate and y per time for each model ----------------------------
         #indxlagparams=paramsList.index(lagparamsList[0])
-        
         lagt=np.zeros((nmodels*newmcmc.nwalkers,len(newmcmc.tr.accuModel._times)))
         acct=np.zeros((nmodels*newmcmc.nwalkers,len(newmcmc.tr.accuModel._times)))
         tmpt=np.zeros((nmodels*newmcmc.nwalkers,len(newmcmc.tr.accuModel._times),2))
@@ -196,7 +195,7 @@ def main():
             os.makedirs(args.plotdir+'figures/'+'lagaccdist/')
             
         plt.savefig(args.plotdir+'figures/'+'lagaccdist/'
-                    +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
+                    +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.png',
                     facecolor='w',pad_inches=0.1)
         
         # tmp fit ---------------------------------------------------
