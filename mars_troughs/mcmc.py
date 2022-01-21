@@ -105,7 +105,7 @@ class MCMC():
          #   os.makedirs(self.directory+'obj/'+self.modelName+'/')
     
         #self.filename=self.directory+'obj/'+self.modelName+'/'+str(self.maxSteps)
-        self.filename=self.directory+'obj/'+self.modelName+'_'+str(self.maxSteps)
+        self.filename=self.directory+'obj/'+self.modelName+'_'+str(self.maxSteps)+'obj'
         
         #Set optimized parameter values as initial values of MCMC chains 
         self.initParams=np.array([self.optParams+ 
