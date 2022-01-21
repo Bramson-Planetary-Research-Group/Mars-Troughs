@@ -8,6 +8,8 @@ Created on Thu Jul 29 20:37:17 2021
 import numpy as np
 import corner
 import pickle
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import argparse
 import os
@@ -42,7 +44,7 @@ def main():
         print(listObj[ifile])
         newmcmc=pickle.load(infile)
         infile.close()
-        
+
         
         #create folder for saving figures
         if not os.path.exists(args.plotdir+'figures/'):
