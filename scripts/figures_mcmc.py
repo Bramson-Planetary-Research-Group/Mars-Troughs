@@ -65,6 +65,9 @@ def main():
             xaxis=np.arange(args.initmodel,newmcmc.totalSteps+1,args.stepEnsemble*newmcmc.thin_by)
             nmodels=len(xaxis) 
             logprob=newmcmc.logprob[int(args.initmodel/newmcmc.thin_by-1)::args.stepEnsemble,:]
+    
+        #find model with highest likelihood
+        indxbest2d=np.unravel_index(logprob.argmax(),logprob.shape)
         
         #parameter values per iteration---------------------------------
         plt.figure()
@@ -72,11 +75,15 @@ def main():
         for i in np.arange(1,numparams):
             plt.subplot(numparams,1,i)
             plt.plot(xaxis,ensemble[:,:,i-1])
+            plt.plot(xaxis[indxbest2d[0]],ensemble[indxbest2d[0],
+                                     indxbest2d[1],i-1],marker='*')
             plt.xticks([], [])
             plt.title(paramsList[i-1])
             
         plt.subplot(numparams,1,numparams)
         plt.plot(xaxis,ensemble[:,:,numparams-1])
+        plt.plot(xaxis[indxbest2d[0]],ensemble[indxbest2d[0],
+                                     indxbest2d[1],numparams-1],marker='*')
         plt.title(paramsList[numparams-1])
         plt.xlabel('Step')
         
@@ -103,11 +110,14 @@ def main():
                     +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
                     facecolor='w',pad_inches=0.1)
         
-        
+
         #log likelihood -------------------------------------------------------
         plt.figure()
         plt.plot(xaxis,logprob)
-        plt.title(label='mean acceptance ratio = '+ str(np.round(np.mean(newmcmc.accFraction),2)))
+        plt.plot(xaxis[indxbest2d[0]],logprob[indxbest2d[0],
+                                    indxbest2d[1]],marker="*")
+        plt.title(label='mean acceptance ratio = '+ 
+                  str(np.round(np.mean(newmcmc.accFraction),2)))
         plt.xlabel('Step')
         plt.ylabel('log prob')
         
@@ -160,36 +170,34 @@ def main():
                 tmpt[indxw,:,:]=tmpti.T
                 indxw=indxw+1
                 
+        #get errorbar 1d
+        errorbar1d=ensemble[:,:,0].reshape(nmodels*newmcmc.nwalkers,1)
+        #reshape log prob        
+        logprob1d=logprob.reshape(nmodels*newmcmc.nwalkers,1)
+        #best model indx
+        indxbest=np.argmax(logprob1d)
                 
-        plt.figure()
-        
         subsample=10
         timeaxis=newmcmc.tr.accuModel._times
         timesub=timeaxis[0::subsample]
         
+        
         #plot lagt
-        plt.subplot(4,1,1)
-        plt.plot(timesub,lagt[:,0::subsample].T)
+        plt.subplot(2,1,1)
+        plt.plot(timesub/1000000,lagt[:,0::subsample].T,c="gray",
+                                            alpha=0.1, zorder=-1)
+        plt.plot(timesub/1000000,lagt[indxbest,0::subsample],c="b")
         plt.xticks([], [])
         plt.title('Lag (mm)')
         
-        #plot lagt
-        plt.subplot(4,1,2)
-        plt.plot(timesub,acct[:,0::subsample].T)
-        plt.xticks([], [])
-        plt.title('acc rate (m/year)')
+        #plot acct
+        plt.subplot(2,1,2)
+        plt.plot(timesub/1000000,1000*acct[:,0::subsample].T,c="gray",
+                                            alpha=0.1, zorder=-1)
+        plt.plot(timesub/1000000,1000*acct[indxbest,0::subsample],c="b")
+        plt.title('A(t) (mm/year)')
+        plt.xlabel('Time (Myr)')
         
-        #plot yt
-        plt.subplot(4,1,3)
-        plt.plot(timesub,tmpt[:,0::subsample,1].T)
-        plt.title('Vertical distance (m)')
-        plt.xticks([], [])
-        
-        #plot xt
-        plt.subplot(4,1,4)
-        plt.plot(timesub,tmpt[:,0::subsample,0].T)
-        plt.xlabel('Time (years)')
-        plt.title('Horizontal distance (m)')
         
         #create folder for saving figure
         if not os.path.exists(args.plotdir+'figures/'+'lagaccdist/'):
@@ -200,18 +208,12 @@ def main():
                     facecolor='w',pad_inches=0.1)
         
         # tmp fit ---------------------------------------------------
-        #reshape logprob
         plt.figure()
-        
-        logprob1d=logprob.reshape(nmodels*newmcmc.nwalkers,1)
-        #best model params
-        bestTMPindx=np.argmax(logprob1d)
-        bestTMP=tmpt[bestTMPindx,:,:]
+        bestTMP=tmpt[indxbest,:,:]
         plt.plot(bestTMP[:,0],bestTMP[:,1],c='b',label='Best TMP')
         
         #get errorbar of best tmp
-        errorbar1d=ensemble[:,:,0].reshape(nmodels*newmcmc.nwalkers,1)
-        bestErrorbar=errorbar1d[bestTMPindx]
+        bestErrorbar=errorbar1d[indxbest]
         
         ratioyx=0.4;
         
@@ -233,8 +235,8 @@ def main():
         #plot tmp data and errorbar
         xerr, yerr = bestErrorbar*newmcmc.tr.meters_per_pixel
         
-        for i in range(nmodels):
-            indx=np.random.randint(0,nmodels*newmcmc.nwalkers)
+        for i in range(nmodels*newmcmc.nwalkers):
+            indx=i
             plt.plot(tmpt[indx,:,0],tmpt[indx,:,1],c="gray", alpha=0.1, zorder=-1)
         plt.plot(tmpt[indx,:,0],tmpt[indx,:,1],c="gray", alpha=0.1, zorder=-1,label='Ensemble models')
         plt.xlabel("Horizontal dist [m]")
@@ -268,6 +270,41 @@ def main():
     
             
         plt.savefig(args.plotdir+'figures/'+'tmp/'
+                    +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
+                    facecolor='w',pad_inches=0.1)
+        
+        
+        #plot variances-----------------------------------
+        varsx=np.zeros((nmodels*newmcmc.nwalkers,len(timesub)))
+        varsy=np.zeros((nmodels*newmcmc.nwalkers,len(timesub)))
+        
+        for i in range(0,nmodels*newmcmc.nwalkers):  
+            varsx[i]=errorbar1d[i]*newmcmc.tr.meters_per_pixel[0]*np.ones_like(timesub)
+            varsy[i]=errorbar1d[i]*newmcmc.tr.meters_per_pixel[1]*np.ones_like(timesub)
+        
+        plt.figure()
+        
+        #plot var x
+        plt.subplot(2,1,1)
+        plt.plot(timesub/1000000,varsx.T,c="gray",
+                                            alpha=0.1, zorder=-1)
+        plt.plot(timesub/1000000,varsx[indxbest,:],c="b")
+        plt.xticks([], [])
+        plt.title('Variance x (m^2)')
+        
+        plt.subplot(2,1,2)
+        plt.plot(timesub/1000000,varsy.T,c="gray",
+                                            alpha=0.1, zorder=-1)
+        plt.plot(timesub/1000000,varsy[indxbest,:],c="b")
+        plt.title('Variance y (m^2)')
+        plt.xlabel('Time (Myr)')
+        
+        #create folder for saving figure
+        if not os.path.exists(args.plotdir+'figures/'+'var/'):
+            os.makedirs(args.plotdir+'figures/'+'var/')
+    
+            
+        plt.savefig(args.plotdir+'figures/'+'var/'
                     +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
                     facecolor='w',pad_inches=0.1)
         
