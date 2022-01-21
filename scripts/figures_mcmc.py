@@ -124,10 +124,9 @@ def main():
         autoxaxis=(newmcmc.maxSteps/10)*np.arange(1,11)
         autoxaxis=autoxaxis[:len(newmcmc.autocorr)]
         
-        plt.plot(autoxaxis,autoxaxis/50,"--k",label=r'50*steps')
-        plt.plot(autoxaxis[np.nonzero(newmcmc.autocorr)],newmcmc.autocorr[np.nonzero(newmcmc.autocorr)],label=r'$\tau$ estimate')
-        plt.xlabel('Step')
-        plt.ylabel(r'mean $\tau$')
+        plt.plot(autoxaxis,autoxaxis,"--k",label=r'Length chain')
+        plt.plot(autoxaxis[np.nonzero(newmcmc.autocorr)],50*newmcmc.autocorr[np.nonzero(newmcmc.autocorr)],label=r'50 * $\tau$ estimate')
+        plt.xlabel('Iteration')
         ax=plt.gca()
         ax.legend()
         
