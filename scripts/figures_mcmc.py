@@ -27,16 +27,23 @@ def main():
                                                   plotting")
     args=p.parse_args()
     
-    if os.path.isfile(args.objpath):
+    #Check if path is file or directory
+    
+    if '_Obliquity_' in args.objpath:
         listObj=[args.objpath]
         numfiles=len(listObj)
         print('Input file path')
-    elif os.path.isdir(args.objpath):
+    elif '_Insolation_' in args.objpath:
+        listObj=[args.objpath]
+        numfiles=len(listObj)
+        print('Input file path')
+    else:
         listObj=glob.glob(args.objpath+'*obj')
         numfiles=len(listObj)
         print('Input directory path')
-        print(numfiles,' files')
+        print(numfiles,' files')  
         
+    #loop figures script over numfiles (1 if path is file) 
         
     for ifile in np.arange(0,numfiles):
             
@@ -44,7 +51,6 @@ def main():
         print(listObj[ifile])
         newmcmc=pickle.load(infile)
         infile.close()
-
         
         #create folder for saving figures
         if not os.path.exists(args.plotdir+'figures/'):
