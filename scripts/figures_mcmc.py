@@ -284,30 +284,28 @@ def main():
                     facecolor='w',pad_inches=0.1)
         
         
-        #plot variances-----------------------------------
-        varsx=np.zeros((nmodels*newmcmc.nwalkers,len(timesub)))
-        varsy=np.zeros((nmodels*newmcmc.nwalkers,len(timesub)))
-        
-        for i in range(0,nmodels*newmcmc.nwalkers):  
-            varsx[i]=errorbar1d[i]*newmcmc.tr.meters_per_pixel[0]*np.ones_like(timesub)
-            varsy[i]=errorbar1d[i]*newmcmc.tr.meters_per_pixel[1]*np.ones_like(timesub)
+        #plot variances as histograms-----------------------------------
+        stdsx=errorbar1d*newmcmc.tr.meters_per_pixel[0]
+        stdsy=errorbar1d*newmcmc.tr.meters_per_pixel[1]
         
         plt.figure()
+        plt.subplot(1,2,1)
+        plt.hist(stdsx,bins=100)
+        plt.axvline(x=stdsx[indxbest],color='k',label='std best model',
+                    linestyle='dashed')
+        plt.title('Horizontal loc')
+        plt.xlabel('std (m^2)')
+        plt.ylabel('# models')
+        plt.legend()
         
-        #plot var x
-        plt.subplot(2,1,1)
-        plt.plot(timesub/1000000,varsx.T,c="gray",
-                                            alpha=0.1, zorder=-1)
-        plt.plot(timesub/1000000,varsx[indxbest,:],c="b")
-        plt.xticks([], [])
-        plt.title('Variance x (m^2)')
-        
-        plt.subplot(2,1,2)
-        plt.plot(timesub/1000000,varsy.T,c="gray",
-                                            alpha=0.1, zorder=-1)
-        plt.plot(timesub/1000000,varsy[indxbest,:],c="b")
-        plt.title('Variance y (m^2)')
-        plt.xlabel('Time (Myr)')
+        plt.subplot(1,2,2)
+        plt.hist(stdsy,bins=100)
+        plt.axvline(x=stdsy[indxbest],color='k',label='std best model',
+                    linestyle='dashed')
+        plt.yticks([], [])
+        plt.title('Vertical loc')
+        plt.xlabel('std (m^2)')
+        plt.legend()
         
         #create folder for saving figure
         if not os.path.exists(args.plotdir+'figures/'+'var/'):
@@ -315,6 +313,36 @@ def main():
     
             
         plt.savefig(args.plotdir+'figures/'+'var/'
+                    +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
+                    facecolor='w',pad_inches=0.1)
+        
+        #plot hists of age-------------------------
+        
+        ndata=len(newmcmc.xdata)
+        lastxdata=newmcmc.xdata[ndata-1]
+        lastydata=newmcmc.ydata[ndata-1]
+        ages = np.zeros((nmodels*newmcmc.nwalkers,1))
+
+        for w in range(0,nmodels*newmcmc.nwalkers):
+            xi=tmpt[w,:,0]
+            yi=tmpt[w,:,1]
+            disti = newmcmc.tr._L2_distance(xi, lastxdata, yi, lastydata)
+            ind = np.argmin(disti)
+            ages[w] = newmcmc.tr.accuModel._times[ind]/1000000
+            
+        plt.figure()
+        plt.hist(ages,bins=100)
+        plt.axvline(x=ages[indxbest],color='k',label='Age best model',
+                    linestyle='dashed')
+        plt.xlabel('Age (Myr)')
+        plt.ylabel('# models')
+        plt.legend()
+        
+        #create folder for saving figure
+        if not os.path.exists(args.plotdir+'figures/'+'age/'):
+            os.makedirs(args.plotdir+'figures/'+'age/')
+    
+        plt.savefig(args.plotdir+'figures/'+'age/'
                     +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
                     facecolor='w',pad_inches=0.1)
         
