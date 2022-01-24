@@ -157,6 +157,8 @@ def main():
         
         #lag, acc rate and y per time for each model ----------------------------
         #indxlagparams=paramsList.index(lagparamsList[0])
+        
+        retreatt=np.zeros((nmodels*newmcmc.nwalkers,len(newmcmc.tr.accuModel._times)))
         lagt=np.zeros((nmodels*newmcmc.nwalkers,len(newmcmc.tr.accuModel._times)))
         acct=np.zeros((nmodels*newmcmc.nwalkers,len(newmcmc.tr.accuModel._times)))
         tmpt=np.zeros((nmodels*newmcmc.nwalkers,len(newmcmc.tr.accuModel._times),2))
@@ -167,10 +169,12 @@ def main():
                 iparams=dict(zip(newmcmc.tr.all_parameter_names,ensemble[i,w,:]))
                 newmcmc.tr.set_model(iparams)
                 
+                retreati=newmcmc.tr.retreat_model_t
                 lagti=newmcmc.tr.lagModel.get_lag_at_t(newmcmc.tr.accuModel._times)
                 accti=newmcmc.tr.accuModel.get_accumulation_at_t(newmcmc.tr.accuModel._times)
                 tmpti=np.array(newmcmc.tr.get_trajectory(newmcmc.tr.accuModel._times))
                 
+                retreatt[indxw]=retreati
                 lagt[indxw]=lagti
                 acct[indxw]=accti
                 tmpt[indxw,:,:]=tmpti.T
@@ -188,13 +192,13 @@ def main():
         timesub=timeaxis[0::subsample]
         
         
-        #plot lagt
+        #plot retreat rates
         plt.subplot(2,1,1)
-        plt.plot(timesub/1000000,lagt[:,0::subsample].T,c="gray",
+        plt.plot(timesub/1000000,retreatt[:,0::subsample].T*1000,c="gray",
                                             alpha=0.1, zorder=-1)
-        plt.plot(timesub/1000000,lagt[indxbest,0::subsample],c="b")
+        plt.plot(timesub/1000000,retreatt[indxbest,0::subsample]*1000,c="b")
         plt.xticks([], [])
-        plt.title('Lag (mm)')
+        plt.title('R(L(t),t) (mm/year)')
         
         #plot acct
         plt.subplot(2,1,2)
@@ -206,10 +210,10 @@ def main():
         
         
         #create folder for saving figure
-        if not os.path.exists(args.plotdir+'figures/'+'lagaccdist/'):
-            os.makedirs(args.plotdir+'figures/'+'lagaccdist/')
+        if not os.path.exists(args.plotdir+'figures/'+'ar_rates/'):
+            os.makedirs(args.plotdir+'figures/'+'ar_rates/')
             
-        plt.savefig(args.plotdir+'figures/'+'lagaccdist/'
+        plt.savefig(args.plotdir+'figures/'+'ar_rates/'
                     +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.png',
                     facecolor='w',pad_inches=0.1)
         
