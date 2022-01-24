@@ -61,7 +61,7 @@ mcmcobj=mt.MCMC(maxSteps,thin_by,directory,tmp,acc_model,lag_model, None, None, 
 
 filename=mcmcobj.filename
 
-outfile=open(filename+'obj','wb')
+outfile=open(filename,'wb')
 pickle.dump(mcmcobj,outfile)
 outfile.close()
 
