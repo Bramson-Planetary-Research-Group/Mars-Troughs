@@ -118,15 +118,38 @@ def main():
         
 
         #log likelihood -------------------------------------------------------
+        
+        #get likelihood of opt params, init params and best fit params
+        #opt params
+        optdict=dict(zip(newmcmc.tr.all_parameter_names,newmcmc.optParams))
+        optlike=newmcmc.ln_likelihood(optdict)
+        #init params
+        initlike=np.zeros((newmcmc.nwalkers,1))
+        for i in range(0,newmcmc.nwalkers):
+            initdict=dict(zip(newmcmc.tr.all_parameter_names,
+                              newmcmc.initParams[i,:]))
+            initlike[i]=newmcmc.ln_likelihood(initdict)
+        #best fit params
+        bestparams=ensemble[indxbest2d[0],indxbest2d[1],:]
+        bestdict=dict(zip(newmcmc.tr.all_parameter_names,bestparams))
+        bestlike=newmcmc.ln_likelihood(bestdict)
+        
+        #plot likelihood from step 1 to final step
+        xaxisLike=np.arange(0,newmcmc.totalSteps,newmcmc.thin_by)
+        
         plt.figure()
-        plt.plot(xaxis,logprob)
-        plt.plot(xaxis[indxbest2d[0]],logprob[indxbest2d[0],
-                                    indxbest2d[1]],marker="*")
+        plt.plot(xaxisLike,newmcmc.logprob)
+        plt.plot(0,initlike.T,marker='o',color='k')
+        plt.plot(0,initlike[0],label='Init params',marker='o',color='k')
+        plt.plot(-1,optlike,label='Opt params',marker='*',color='r')
+        plt.plot(xaxis[indxbest2d[0]],bestlike,label='Best fit params',
+                 marker='^',color='k')
         plt.title(label='mean acceptance ratio = '+ 
                   str(np.round(np.mean(newmcmc.accFraction),2)))
         plt.xlabel('Step')
         plt.ylabel('log prob')
-        
+        plt.legend()
+
         #create folder for saving figure
         if not os.path.exists(args.plotdir+'figures/'+'logprob/'):
             os.makedirs(args.plotdir+'figures/'+'logprob/')
@@ -134,6 +157,8 @@ def main():
         plt.savefig(args.plotdir+'figures/'+'logprob/'
                     +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
                     facecolor='w',pad_inches=0.1)
+        
+        breakpoint()
         
         #autocorrelation values-----------------------------------------------
         plt.figure()
@@ -348,6 +373,9 @@ def main():
         
         plt.close('all')
         print(ifile,file=sys.stderr)
+        
+        #plot optimal parameters versus best params------
+        
         
 def mainArgs(objpath,plotdir,init,step):
     sys.argv = ['maintest.py', 
