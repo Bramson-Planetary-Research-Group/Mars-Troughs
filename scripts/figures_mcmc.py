@@ -157,8 +157,7 @@ def main():
         plt.savefig(args.plotdir+'figures/'+'logprob/'
                     +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
                     facecolor='w',pad_inches=0.1)
-        
-        breakpoint()
+    
         
         #autocorrelation values-----------------------------------------------
         plt.figure()
