@@ -307,6 +307,25 @@ def main():
                     +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
                     facecolor='w',pad_inches=0.1)
         
+        #save tmp full range of model---------------------------------
+        plt.figure()
+        for i in range(nmodels*newmcmc.nwalkers):
+            indx=i
+            plt.plot(tmpt[indx,:,0],tmpt[indx,:,1],c="gray", 
+                     alpha=0.1, zorder=-1)
+        plt.xlabel("Horizontal dist [m]")
+        plt.ylabel("V. dist [m]")
+        plt.errorbar(x=newmcmc.xdata, xerr=xerr, y=newmcmc.ydata, yerr=yerr, 
+                 c='r', marker='.', ls='')
+        
+         #create folder for saving figure
+        if not os.path.exists(args.plotdir+'figures/'+'tmpFull/'):
+            os.makedirs(args.plotdir+'figures/'+'tmpFull/')
+    
+            
+        plt.savefig(args.plotdir+'figures/'+'tmpFull/'
+                    +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.png',
+                    facecolor='w',pad_inches=0.1)
         
         #plot variances as histograms-----------------------------------
         stdsx=errorbar1d*newmcmc.tr.meters_per_pixel[0]
