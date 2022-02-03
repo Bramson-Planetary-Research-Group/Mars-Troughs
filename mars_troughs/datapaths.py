@@ -87,7 +87,7 @@ def load_insolation_data(tmp) -> Tuple[np.ndarray, np.ndarray]:
     return ins, times
 
 
-def load_TMP_data() -> Tuple[np.ndarray, np.ndarray]:
+def load_TMP_data(tmp) -> Tuple[np.ndarray, np.ndarray]:
     """
     Loads the TMP data for the trough being investigated now.
 
@@ -95,4 +95,8 @@ def load_TMP_data() -> Tuple[np.ndarray, np.ndarray]:
       x (np.ndarray): x position in kilometers
       y (np.ndarray): y position in meters
     """
-    return np.loadtxt(DATAPATHS.TMP, skiprows=1).T
+    if tmp==1:
+        return np.loadtxt(DATAPATHS.TMP1, skiprows=1).T
+    else:
+        return np.loadtxt(DATAPATHS.TMP2, skiprows=1).T
+
