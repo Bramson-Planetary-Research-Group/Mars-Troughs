@@ -195,31 +195,33 @@ class MCMC():
         
         if errorbar < 0: #prior on the variance (i.e. the error bars)
             return -1e99
-    
+        
+        #set trough model with candidate parameters
         self.tr.set_model(params)
-        
-        lag_t=self.tr.lagModel.get_lag_at_t(self.tr.accuModel._times)
-    
-        if any(lag_t < 1e-15) or any(lag_t > 20):
-            return -1e99
-    
-        x,y = self.tr.get_nearest_points(self.xdata,self.ydata,self.tr.accuModel._times)
-        
-        if any(y < -2e3) or any(y > 0):
+        #compute likelihood of model 
+        likelihood_of_model=self.tr.lnlikelihood(self.xdata,self.ydata,
+                                                 self.tr.accuModel._times)
+        #prior lag with time
+        if any(self.tr.lag_at_t  < 1e-15) or any(self.tr.lag_at_t > 20):
             return -1e99
         
+        #prior nearest points to observed data
+        if any(self.tr.ynear < -2e3) or any(self.tr.ynear > 0):
+            return -1e99
+        
+        #get accumulation with time
         acc_t=self.tr.accuModel.get_accumulation_at_t(self.tr.accuModel._times)
-        
         if any(acc_t < 0):
             return -1e99
         
+        #get exponent of accumulation, if it exists
         if "acc_exponent" in params.keys():
             exponent: float = params["acc_exponent"]
             
             if exponent < -3:
                 return -1e99
         
-        return self.tr.lnlikelihood(self.xdata,self.ydata,self.tr.accuModel._times)
+        return likelihood_of_model
     
     #And the negative of the log likelihood
     def neg_ln_likelihood(self,paramsArray):
