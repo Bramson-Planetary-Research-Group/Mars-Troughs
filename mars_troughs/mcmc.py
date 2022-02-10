@@ -188,40 +188,49 @@ class MCMC():
         #delete sampler because it is very large
         del self.sampler
         
-
-    def ln_likelihood(self,params: Dict[str,float]):
+    def priors(self,params,times):
         
+        #errorbar has to be positive
         errorbar: float = params["errorbar"]
         
         if errorbar < 0: #prior on the variance (i.e. the error bars)
-            return -1e99
+            return False
+        
+        #lag thickness has to be larger than 1e-15 mm and less than 20 mm
+        if any(self.tr.lag_at_t  < 1e-15) or any(self.tr.lag_at_t > 20):
+            return False
+        
+        #depth of trough migration points should between 0 and -2 km
+        if any(self.tr.ynear < -2e3) or any(self.tr.ynear > 0):
+            return False
+        
+        #accumulation rate should >=0
+        acc_t=self.tr.accuModel.get_accumulation_at_t(
+                                                    self.tr.accuModel._times)
+        if any(acc_t <= 0):
+            return False
+        
+        #exponent of accumulation, if it exists, should be larger than -3
+        if "acc_exponent" in params.keys():
+            exponent: float = params["acc_exponent"]
+            
+            if exponent < -3:
+                return False
+        
+        return True
+        
+
+    def ln_likelihood(self,params: Dict[str,float]):
         
         #set trough model with candidate parameters
         self.tr.set_model(params)
         #compute likelihood of model 
         likelihood_of_model=self.tr.lnlikelihood(self.xdata,self.ydata,
                                                  self.tr.accuModel._times)
-        #prior lag with time
-        if any(self.tr.lag_at_t  < 1e-15) or any(self.tr.lag_at_t > 20):
+        if self.priors(params,self.tr.accuModel._times):
+            return likelihood_of_model
+        else:
             return -1e99
-        
-        #prior nearest points to observed data
-        if any(self.tr.ynear < -2e3) or any(self.tr.ynear > 0):
-            return -1e99
-        
-        #get accumulation with time
-        acc_t=self.tr.accuModel.get_accumulation_at_t(self.tr.accuModel._times)
-        if any(acc_t < 0):
-            return -1e99
-        
-        #get exponent of accumulation, if it exists
-        if "acc_exponent" in params.keys():
-            exponent: float = params["acc_exponent"]
-            
-            if exponent < -3:
-                return -1e99
-        
-        return likelihood_of_model
     
     #And the negative of the log likelihood
     def neg_ln_likelihood(self,paramsArray):
