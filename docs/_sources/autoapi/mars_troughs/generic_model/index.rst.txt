@@ -24,6 +24,8 @@ Classes
    mars_troughs.generic_model.ConstantModel
    mars_troughs.generic_model.LinearModel
    mars_troughs.generic_model.QuadModel
+   mars_troughs.generic_model.CubicModel
+   mars_troughs.generic_model.PowerLawModel
 
 
 
@@ -68,6 +70,26 @@ Classes
    .. py:method:: parameter_names(self) -> List[str]
       :property:
 
+      Names of the parameters for **this** object sorted alphabetically.
+      This method **must** be implemented for all subclasses, and the names
+      must consist of the names of the attributes that contain the
+      parameters.
+
+      Example:
+
+      .. code-block:: python
+
+         class MyModel(Model):
+             a = 3
+
+             @property
+             def parameter_names(self):
+                 return ["a"]
+
+             ...
+
+      :returns: names of parametes for **this** object
+
 
    .. py:method:: eval(self, x: Union[numbers.Number, numpy.ndarray]) -> Union[numbers.Number, numpy.ndarray]
 
@@ -89,6 +111,112 @@ Classes
 
    .. py:method:: parameter_names(self) -> List[str]
       :property:
+
+      Names of the parameters for **this** object sorted alphabetically.
+      This method **must** be implemented for all subclasses, and the names
+      must consist of the names of the attributes that contain the
+      parameters.
+
+      Example:
+
+      .. code-block:: python
+
+         class MyModel(Model):
+             a = 3
+
+             @property
+             def parameter_names(self):
+                 return ["a"]
+
+             ...
+
+      :returns: names of parametes for **this** object
+
+
+   .. py:method:: eval(self, x: Union[numbers.Number, numpy.ndarray]) -> Union[numbers.Number, numpy.ndarray]
+
+
+
+.. py:class:: CubicModel(constant: float = 1.0, slope: float = 1e-06, quad: float = 1e-06, cubic: float = 1e-06)
+
+   Bases: :py:obj:`mars_troughs.model.Model`
+
+   A model for a cubic function of the input
+
+   :param constant:
+   :type constant: float, optional
+   :param slope:
+   :type slope: float, optional
+   :param quad:
+   :type quad: float, optional
+   :param cubic:
+   :type cubic: float, optional
+
+   y = constant + slope * x + quad * x^2 + cubic * x^3
+
+   .. py:method:: parameter_names(self) -> List[str]
+      :property:
+
+      Names of the parameters for **this** object sorted alphabetically.
+      This method **must** be implemented for all subclasses, and the names
+      must consist of the names of the attributes that contain the
+      parameters.
+
+      Example:
+
+      .. code-block:: python
+
+         class MyModel(Model):
+             a = 3
+
+             @property
+             def parameter_names(self):
+                 return ["a"]
+
+             ...
+
+      :returns: names of parametes for **this** object
+
+
+   .. py:method:: eval(self, x: Union[numbers.Number, numpy.ndarray]) -> Union[numbers.Number, numpy.ndarray]
+
+
+
+.. py:class:: PowerLawModel(coeff: float = 1.0, exponent: float = 1.0)
+
+   Bases: :py:obj:`mars_troughs.model.Model`
+
+   A model for a power law function of the input
+
+   :param coeff:
+   :type coeff: float, optional
+   :param exponent:
+   :type exponent: float, optional
+
+   y = coeff * x^exponent
+
+   .. py:method:: parameter_names(self) -> List[str]
+      :property:
+
+      Names of the parameters for **this** object sorted alphabetically.
+      This method **must** be implemented for all subclasses, and the names
+      must consist of the names of the attributes that contain the
+      parameters.
+
+      Example:
+
+      .. code-block:: python
+
+         class MyModel(Model):
+             a = 3
+
+             @property
+             def parameter_names(self):
+                 return ["a"]
+
+             ...
+
+      :returns: names of parametes for **this** object
 
 
    .. py:method:: eval(self, x: Union[numbers.Number, numpy.ndarray]) -> Union[numbers.Number, numpy.ndarray]

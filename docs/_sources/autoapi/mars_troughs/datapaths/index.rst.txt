@@ -52,7 +52,12 @@ Attributes
 
       
 
-   .. py:attribute:: INSOLATION
+   .. py:attribute:: INSOLATION1
+      :annotation: :pathlib.Path
+
+      
+
+   .. py:attribute:: INSOLATION2
       :annotation: :pathlib.Path
 
       
@@ -62,7 +67,12 @@ Attributes
 
       
 
-   .. py:attribute:: TMP
+   .. py:attribute:: TMP1
+      :annotation: :pathlib.Path
+
+      
+
+   .. py:attribute:: TMP2
       :annotation: :pathlib.Path
 
       
@@ -101,7 +111,7 @@ Attributes
    :rtype: obliquity (np.ndarray)
 
 
-.. py:function:: load_insolation_data() -> Tuple[numpy.ndarray, numpy.ndarray]
+.. py:function:: load_insolation_data(tmp) -> Tuple[numpy.ndarray, numpy.ndarray]
 
    Unpack the insolation data.
 
@@ -110,7 +120,7 @@ Attributes
    :rtype: insolation (np.ndarray)
 
 
-.. py:function:: load_TMP_data() -> Tuple[numpy.ndarray, numpy.ndarray]
+.. py:function:: load_TMP_data(tmp) -> Tuple[numpy.ndarray, numpy.ndarray]
 
    Loads the TMP data for the trough being investigated now.
 

@@ -22,7 +22,7 @@ Classes
 
 
 
-.. py:class:: Trough(acc_model: Union[str, mars_troughs.model.Model], lag_model: Union[str, mars_troughs.model.Model], acc_params: Optional[List[float]] = None, lag_params: Optional[List[float]] = None, errorbar: float = 1.0, angle: float = 2.9)
+.. py:class:: Trough(acc_model: Union[str, mars_troughs.model.Model], lag_model: Union[str, mars_troughs.model.Model], acc_params: Optional[List[float]] = None, lag_params: Optional[List[float]] = None, tmp: Optional[int] = None, errorbar: float = 1.0, angle: float = 2.9)
 
    Bases: :py:obj:`mars_troughs.model.Model`
 
@@ -94,7 +94,7 @@ Classes
       Output: L2 distance (int or float)
 
 
-   .. py:method:: get_nearest_points(self, x_data: numpy.ndarray, y_data: numpy.ndarray, dist_func: Optional[Callable] = None) -> Tuple[numpy.ndarray, numpy.ndarray]
+   .. py:method:: get_nearest_points(self, x_data: numpy.ndarray, y_data: numpy.ndarray, times: Optional[numpy.ndarray] = None, dist_func: Optional[Callable] = None) -> Tuple[numpy.ndarray, numpy.ndarray]
 
       Finds the coordinates of the nearest points between the model TMP
       and the data TMP.
@@ -113,7 +113,7 @@ Classes
           (Tuple), size 2 x len(x_data)
 
 
-   .. py:method:: lnlikelihood(self, x_data: numpy.ndarray, y_data: numpy.ndarray) -> float
+   .. py:method:: lnlikelihood(self, x_data: numpy.ndarray, y_data: numpy.ndarray, times: Optional[numpy.ndarray] = None) -> float
 
       Calculates the log-likelihood of the data given the model.
       Note that this is the natural log (ln).

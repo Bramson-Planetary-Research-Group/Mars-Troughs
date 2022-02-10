@@ -1,70 +1,31 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>mars_troughs.accumulation_model &mdash; Mars-Troughs  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>mars_troughs.accumulation_model &mdash; Mars-Troughs  documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-
-    
+    <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../../index.html" class="icon icon-home"> Mars-Troughs
-          
-
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -72,27 +33,19 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">API Reference</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs</span></code></a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="../index.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.accumulation_model</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../custom_acc_models/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.custom_acc_models</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../custom_lag_models/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.custom_lag_models</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../datapaths/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.datapaths</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../generic_model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.generic_model</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../lag_model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.lag_model</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../mcmc/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.mcmc</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.model</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../trough/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.trough</span></code></a></li>
 </ul>
@@ -108,78 +61,37 @@
 </li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">Mars-Troughs</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.accumulation_model</span></code></li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../../_sources/autoapi/mars_troughs/accumulation_model/index.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <div class="section" id="module-mars_troughs.accumulation_model">
-<span id="mars-troughs-accumulation-model"></span><h1><a class="reference internal" href="#module-mars_troughs.accumulation_model" title="mars_troughs.accumulation_model"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.accumulation_model</span></code></a><a class="headerlink" href="#module-mars_troughs.accumulation_model" title="Permalink to this headline">¶</a></h1>
+<span id="mars-troughs-accumulation-model"></span><h1><a class="reference internal" href="#module-mars_troughs.accumulation_model" title="mars_troughs.accumulation_model"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.accumulation_model</span></code></a><a class="headerlink" href="#module-mars_troughs.accumulation_model" title="Permalink to this headline"></a></h1>
 <p>Model for the accumulation rates.</p>
 <div class="section" id="module-contents">
-<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
 <div class="section" id="classes">
-<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline"></a></h3>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -205,7 +117,7 @@
 </table>
 </div>
 <div class="section" id="attributes">
-<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline">¶</a></h3>
+<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline"></a></h3>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -219,25 +131,25 @@
 </table>
 <dl class="class">
 <dt id="mars_troughs.accumulation_model.AccumulationModel">
-<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.accumulation_model.</code><code class="sig-name descname">AccumulationModel</code><span class="sig-paren">(</span><em class="sig-param">sub_models: Optional[List[Model]] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.accumulation_model.AccumulationModel" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.accumulation_model.</code><code class="sig-name descname">AccumulationModel</code><span class="sig-paren">(</span><em class="sig-param">sub_models: Optional[List[Model]] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.accumulation_model.AccumulationModel" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="../model/index.html#mars_troughs.model.Model" title="mars_troughs.model.Model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mars_troughs.model.Model</span></code></a></p>
 <p>Abstract class for computing the amount of ice accumulation.</p>
 <dl class="attribute">
 <dt id="mars_troughs.accumulation_model.AccumulationModel.prefix">
-<code class="sig-name descname">prefix</code><em class="property"> :str = acc_</em><a class="headerlink" href="#mars_troughs.accumulation_model.AccumulationModel.prefix" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">prefix</code><em class="property"> :str = acc_</em><a class="headerlink" href="#mars_troughs.accumulation_model.AccumulationModel.prefix" title="Permalink to this definition"></a></dt>
 <dd><p>All parameters of accumulations models start with ‘acc’.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="mars_troughs.accumulation_model.AccumulationModel.get_accumulation_at_t">
-<em class="property">abstract </em><code class="sig-name descname">get_accumulation_at_t</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#mars_troughs.accumulation_model.AccumulationModel.get_accumulation_at_t" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract </em><code class="sig-name descname">get_accumulation_at_t</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#mars_troughs.accumulation_model.AccumulationModel.get_accumulation_at_t" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="mars_troughs.accumulation_model.TimeDependentAccumulationModel">
-<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.accumulation_model.</code><code class="sig-name descname">TimeDependentAccumulationModel</code><span class="sig-paren">(</span><em class="sig-param">times: numpy.ndarray</em>, <em class="sig-param">variable: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.accumulation_model.TimeDependentAccumulationModel" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.accumulation_model.</code><code class="sig-name descname">TimeDependentAccumulationModel</code><span class="sig-paren">(</span><em class="sig-param">times: numpy.ndarray</em>, <em class="sig-param">variable: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.accumulation_model.TimeDependentAccumulationModel" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#mars_troughs.accumulation_model.AccumulationModel" title="mars_troughs.accumulation_model.AccumulationModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AccumulationModel</span></code></a></p>
 <p>An accumulation rate model that depends on the time dependent parameter
 (likely solar insolation or obliquity), A(Var(t)).
@@ -255,7 +167,7 @@ a function of time for faster integration.</p>
 </dl>
 <dl class="method">
 <dt id="mars_troughs.accumulation_model.TimeDependentAccumulationModel.get_accumulation_at_t">
-<code class="sig-name descname">get_accumulation_at_t</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#mars_troughs.accumulation_model.TimeDependentAccumulationModel.get_accumulation_at_t" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_accumulation_at_t</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#mars_troughs.accumulation_model.TimeDependentAccumulationModel.get_accumulation_at_t" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates the accumulation rate at times “time”.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -271,7 +183,7 @@ accumulation rates A, in m/year</p>
 
 <dl class="method">
 <dt id="mars_troughs.accumulation_model.TimeDependentAccumulationModel.get_xt">
-<code class="sig-name descname">get_xt</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em>, <em class="sig-param">int_retreat_model_t_spline: numpy.ndarray</em>, <em class="sig-param">cot_angle</em>, <em class="sig-param">csc_angle</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.accumulation_model.TimeDependentAccumulationModel.get_xt" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_xt</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em>, <em class="sig-param">int_retreat_model_t_spline: numpy.ndarray</em>, <em class="sig-param">cot_angle</em>, <em class="sig-param">csc_angle</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.accumulation_model.TimeDependentAccumulationModel.get_xt" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates the horizontal distance x (in m) traveled by a point in the
 center of the high side of the trough. This distance x is a function of
 the accumulation rate A(ins(t)) and the retreat rate of ice R(l(t),t)
@@ -293,7 +205,7 @@ meters.</p>
 
 <dl class="class">
 <dt id="mars_troughs.accumulation_model.LinearInsolation">
-<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.accumulation_model.</code><code class="sig-name descname">LinearInsolation</code><span class="sig-paren">(</span><em class="sig-param">times: numpy.ndarray</em>, <em class="sig-param">insolations: numpy.ndarray</em>, <em class="sig-param">constant: float = 1e-06</em>, <em class="sig-param">slope: float = 1e-06</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.accumulation_model.LinearInsolation" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.accumulation_model.</code><code class="sig-name descname">LinearInsolation</code><span class="sig-paren">(</span><em class="sig-param">times: numpy.ndarray</em>, <em class="sig-param">insolations: numpy.ndarray</em>, <em class="sig-param">constant: float = 1e-06</em>, <em class="sig-param">slope: float = 1e-08</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.accumulation_model.LinearInsolation" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#mars_troughs.accumulation_model.TimeDependentAccumulationModel" title="mars_troughs.accumulation_model.TimeDependentAccumulationModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TimeDependentAccumulationModel</span></code></a>, <a class="reference internal" href="../generic_model/index.html#mars_troughs.generic_model.LinearModel" title="mars_troughs.generic_model.LinearModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mars_troughs.generic_model.LinearModel</span></code></a></p>
 <p>Accumulation is linear in solar insolation.
 A(ins(t)) = constant + slope*ins(t).
@@ -313,7 +225,7 @@ of solar insolation (m^3/(year*W)).</p></li>
 </dl>
 <dl class="method">
 <dt id="mars_troughs.accumulation_model.LinearInsolation.get_yt">
-<code class="sig-name descname">get_yt</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.accumulation_model.LinearInsolation.get_yt" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_yt</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.accumulation_model.LinearInsolation.get_yt" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates the vertical distance y (in m) traveled by a point
 in the center of the high side of the trough. This distance  is a
 function of the accumulation rate A as y(t)=integral(A(ins(t)), dt) or
@@ -334,7 +246,7 @@ the vertical distance y, in meters.</p>
 
 <dl class="class">
 <dt id="mars_troughs.accumulation_model.QuadraticInsolation">
-<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.accumulation_model.</code><code class="sig-name descname">QuadraticInsolation</code><span class="sig-paren">(</span><em class="sig-param">times</em>, <em class="sig-param">insolation</em>, <em class="sig-param">constant: float = 1.0</em>, <em class="sig-param">slope: float = 1e-06</em>, <em class="sig-param">quad: float = 1e-06</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.accumulation_model.QuadraticInsolation" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.accumulation_model.</code><code class="sig-name descname">QuadraticInsolation</code><span class="sig-paren">(</span><em class="sig-param">times</em>, <em class="sig-param">insolation</em>, <em class="sig-param">constant: float = 1e-06</em>, <em class="sig-param">slope: float = 1e-08</em>, <em class="sig-param">quad: float = 1e-20</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.accumulation_model.QuadraticInsolation" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#mars_troughs.accumulation_model.TimeDependentAccumulationModel" title="mars_troughs.accumulation_model.TimeDependentAccumulationModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TimeDependentAccumulationModel</span></code></a>, <a class="reference internal" href="../generic_model/index.html#mars_troughs.generic_model.QuadModel" title="mars_troughs.generic_model.QuadModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mars_troughs.generic_model.QuadModel</span></code></a></p>
 <p>Accumulation rate A (in m/year) as a  quadratic polynomial of insolation.
 A(ins(t)) = constant + slope*ins(t)+ quad*ins(t)^2.
@@ -355,7 +267,7 @@ of solar insolation squared (m^5/(year*W^2)).</p></li>
 </dl>
 <dl class="method">
 <dt id="mars_troughs.accumulation_model.QuadraticInsolation.get_yt">
-<code class="sig-name descname">get_yt</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.accumulation_model.QuadraticInsolation.get_yt" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_yt</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.accumulation_model.QuadraticInsolation.get_yt" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates the vertical distance y (in m) at traveled by a point
 in the center of the high side of the trough. This distance  is a
 function of the accumulation rate A as y(t)=integral(A(ins(t)), dt) or
@@ -376,7 +288,7 @@ the vertical distance y, in meters.</p>
 
 <dl class="class">
 <dt id="mars_troughs.accumulation_model.LinearObliquity">
-<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.accumulation_model.</code><code class="sig-name descname">LinearObliquity</code><span class="sig-paren">(</span><em class="sig-param">obl_times: numpy.ndarray</em>, <em class="sig-param">obliquity: numpy.ndarray</em>, <em class="sig-param">constant: float = 1.0</em>, <em class="sig-param">slope: float = 1.0</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.accumulation_model.LinearObliquity" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.accumulation_model.</code><code class="sig-name descname">LinearObliquity</code><span class="sig-paren">(</span><em class="sig-param">obl_times: numpy.ndarray</em>, <em class="sig-param">obliquity: numpy.ndarray</em>, <em class="sig-param">constant: float = 1e-06</em>, <em class="sig-param">slope: float = 1e-08</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.accumulation_model.LinearObliquity" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#mars_troughs.accumulation_model.TimeDependentAccumulationModel" title="mars_troughs.accumulation_model.TimeDependentAccumulationModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TimeDependentAccumulationModel</span></code></a>, <a class="reference internal" href="../generic_model/index.html#mars_troughs.generic_model.LinearModel" title="mars_troughs.generic_model.LinearModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mars_troughs.generic_model.LinearModel</span></code></a></p>
 <p>An accumulation rate model that depends on the time dependent parameter
 (likely solar insolation or obliquity), A(Var(t)).
@@ -394,7 +306,7 @@ a function of time for faster integration.</p>
 </dl>
 <dl class="method">
 <dt id="mars_troughs.accumulation_model.LinearObliquity.get_yt">
-<code class="sig-name descname">get_yt</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.accumulation_model.LinearObliquity.get_yt" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_yt</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.accumulation_model.LinearObliquity.get_yt" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates the vertical distance y (in m) traveled by a point
 in the center of the high side of the trough. This distance  is a
 function of the accumulation rate A as y(t)=integral(A(obl(t)), dt) or
@@ -415,7 +327,7 @@ the vertical distance y, in meters.</p>
 
 <dl class="data">
 <dt id="mars_troughs.accumulation_model.ACCUMULATION_MODEL_MAP">
-<code class="sig-prename descclassname">mars_troughs.accumulation_model.</code><code class="sig-name descname">ACCUMULATION_MODEL_MAP</code><em class="property"> :Dict[str, mars_troughs.model.Model]</em><a class="headerlink" href="#mars_troughs.accumulation_model.ACCUMULATION_MODEL_MAP" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">mars_troughs.accumulation_model.</code><code class="sig-name descname">ACCUMULATION_MODEL_MAP</code><em class="property"> :Dict[str, mars_troughs.model.Model]</em><a class="headerlink" href="#mars_troughs.accumulation_model.ACCUMULATION_MODEL_MAP" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </div>
@@ -424,46 +336,30 @@ the vertical distance y, in meters.</p>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, Tom McClintock, Kristel Izquierdo, Kris Laferriere, Ali Bramson.
-
-    </p>
+    <p>&#169; Copyright 2021, Tom McClintock, Kristel Izquierdo, Kris Laferriere, Ali Bramson.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

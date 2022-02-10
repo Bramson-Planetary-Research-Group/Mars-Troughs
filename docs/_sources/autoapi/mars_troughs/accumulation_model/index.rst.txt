@@ -97,7 +97,7 @@ Attributes
 
 
 
-.. py:class:: LinearInsolation(times: numpy.ndarray, insolations: numpy.ndarray, constant: float = 1e-06, slope: float = 1e-06)
+.. py:class:: LinearInsolation(times: numpy.ndarray, insolations: numpy.ndarray, constant: float = 1e-06, slope: float = 1e-08)
 
    Bases: :py:obj:`TimeDependentAccumulationModel`, :py:obj:`mars_troughs.generic_model.LinearModel`
 
@@ -134,7 +134,7 @@ Attributes
 
 
 
-.. py:class:: QuadraticInsolation(times, insolation, constant: float = 1.0, slope: float = 1e-06, quad: float = 1e-06)
+.. py:class:: QuadraticInsolation(times, insolation, constant: float = 1e-06, slope: float = 1e-08, quad: float = 1e-20)
 
    Bases: :py:obj:`TimeDependentAccumulationModel`, :py:obj:`mars_troughs.generic_model.QuadModel`
 
@@ -173,7 +173,7 @@ Attributes
 
 
 
-.. py:class:: LinearObliquity(obl_times: numpy.ndarray, obliquity: numpy.ndarray, constant: float = 1.0, slope: float = 1.0)
+.. py:class:: LinearObliquity(obl_times: numpy.ndarray, obliquity: numpy.ndarray, constant: float = 1e-06, slope: float = 1e-08)
 
    Bases: :py:obj:`TimeDependentAccumulationModel`, :py:obj:`mars_troughs.generic_model.LinearModel`
 

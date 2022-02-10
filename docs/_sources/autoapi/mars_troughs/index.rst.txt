@@ -11,9 +11,12 @@ Submodules
    :maxdepth: 1
 
    accumulation_model/index.rst
+   custom_acc_models/index.rst
+   custom_lag_models/index.rst
    datapaths/index.rst
    generic_model/index.rst
    lag_model/index.rst
+   mcmc/index.rst
    model/index.rst
    trough/index.rst
 
@@ -73,7 +76,7 @@ Attributes
 
 
 
-.. py:class:: LinearInsolation(times: numpy.ndarray, insolations: numpy.ndarray, constant: float = 1e-06, slope: float = 1e-06)
+.. py:class:: LinearInsolation(times: numpy.ndarray, insolations: numpy.ndarray, constant: float = 1e-06, slope: float = 1e-08)
 
    Bases: :py:obj:`TimeDependentAccumulationModel`, :py:obj:`mars_troughs.generic_model.LinearModel`
 
@@ -110,7 +113,7 @@ Attributes
 
 
 
-.. py:class:: LinearObliquity(obl_times: numpy.ndarray, obliquity: numpy.ndarray, constant: float = 1.0, slope: float = 1.0)
+.. py:class:: LinearObliquity(obl_times: numpy.ndarray, obliquity: numpy.ndarray, constant: float = 1e-06, slope: float = 1e-08)
 
    Bases: :py:obj:`TimeDependentAccumulationModel`, :py:obj:`mars_troughs.generic_model.LinearModel`
 
@@ -144,7 +147,7 @@ Attributes
 
 
 
-.. py:class:: QuadraticInsolation(times, insolation, constant: float = 1.0, slope: float = 1e-06, quad: float = 1e-06)
+.. py:class:: QuadraticInsolation(times, insolation, constant: float = 1e-06, slope: float = 1e-08, quad: float = 1e-20)
 
    Bases: :py:obj:`TimeDependentAccumulationModel`, :py:obj:`mars_troughs.generic_model.QuadModel`
 
@@ -204,7 +207,7 @@ Attributes
    :type constant: float, optional
 
 
-.. py:class:: LagModel(sub_models: Optional[List[Model]] = None)
+.. py:class:: LagModel
 
    Bases: :py:obj:`mars_troughs.model.Model`
 
@@ -229,7 +232,7 @@ Attributes
 
 
 
-.. py:class:: LinearLag(constant: float = 1e-06, slope: float = 1e-06)
+.. py:class:: LinearLag(constant: float = 1e-06, slope: float = 1e-08)
 
    Bases: :py:obj:`LagModel`, :py:obj:`mars_troughs.generic_model.LinearModel`
 
@@ -313,7 +316,7 @@ Attributes
 
 
 
-.. py:class:: Trough(acc_model: Union[str, mars_troughs.model.Model], lag_model: Union[str, mars_troughs.model.Model], acc_params: Optional[List[float]] = None, lag_params: Optional[List[float]] = None, errorbar: float = 1.0, angle: float = 2.9)
+.. py:class:: Trough(acc_model: Union[str, mars_troughs.model.Model], lag_model: Union[str, mars_troughs.model.Model], acc_params: Optional[List[float]] = None, lag_params: Optional[List[float]] = None, tmp: Optional[int] = None, errorbar: float = 1.0, angle: float = 2.9)
 
    Bases: :py:obj:`mars_troughs.model.Model`
 
@@ -385,7 +388,7 @@ Attributes
       Output: L2 distance (int or float)
 
 
-   .. py:method:: get_nearest_points(self, x_data: numpy.ndarray, y_data: numpy.ndarray, dist_func: Optional[Callable] = None) -> Tuple[numpy.ndarray, numpy.ndarray]
+   .. py:method:: get_nearest_points(self, x_data: numpy.ndarray, y_data: numpy.ndarray, times: Optional[numpy.ndarray] = None, dist_func: Optional[Callable] = None) -> Tuple[numpy.ndarray, numpy.ndarray]
 
       Finds the coordinates of the nearest points between the model TMP
       and the data TMP.
@@ -404,7 +407,7 @@ Attributes
           (Tuple), size 2 x len(x_data)
 
 
-   .. py:method:: lnlikelihood(self, x_data: numpy.ndarray, y_data: numpy.ndarray) -> float
+   .. py:method:: lnlikelihood(self, x_data: numpy.ndarray, y_data: numpy.ndarray, times: Optional[numpy.ndarray] = None) -> float
 
       Calculates the log-likelihood of the data given the model.
       Note that this is the natural log (ln).

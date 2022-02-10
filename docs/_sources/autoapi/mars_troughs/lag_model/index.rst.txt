@@ -32,7 +32,7 @@ Attributes
    mars_troughs.lag_model.LAG_MODEL_MAP
 
 
-.. py:class:: LagModel(sub_models: Optional[List[Model]] = None)
+.. py:class:: LagModel
 
    Bases: :py:obj:`mars_troughs.model.Model`
 
@@ -68,7 +68,7 @@ Attributes
    :type constant: float, optional
 
 
-.. py:class:: LinearLag(constant: float = 1e-06, slope: float = 1e-06)
+.. py:class:: LinearLag(constant: float = 1e-06, slope: float = 1e-08)
 
    Bases: :py:obj:`LagModel`, :py:obj:`mars_troughs.generic_model.LinearModel`
 

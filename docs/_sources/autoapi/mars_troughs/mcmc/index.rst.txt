@@ -1,0 +1,38 @@
+:py:mod:`mars_troughs.mcmc`
+===========================
+
+.. py:module:: mars_troughs.mcmc
+
+.. autoapi-nested-parse::
+
+   Created on Mon Jul 12 09:31:34 2021
+
+   @author: kris
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   mars_troughs.mcmc.MCMC
+
+
+
+
+.. py:class:: MCMC(maxSteps: int, thin_by: int, directory: str, tmp: int, acc_model=Union[str, Model], lag_model=Union[str, Model], acc_params: Optional[List[float]] = None, lag_params: Optional[List[float]] = None, errorbar=np.sqrt(1.6), angle=5.0)
+
+   Class for running MCMC chains to obtain a sample of climate parameters
+   of trough migration.
+
+   .. py:method:: ln_likelihood(self, params: Dict[str, float])
+
+
+   .. py:method:: neg_ln_likelihood(self, paramsArray)
+
+
+
