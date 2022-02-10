@@ -217,12 +217,14 @@ class Trough(Model):
         x_model, y_model = self.get_trajectory(times)
         x_out = np.zeros_like(x_data)
         y_out = np.zeros_like(y_data)
+        time_out = np.zeros_like(y_data)
         for i, (xdi, ydi) in enumerate(zip(x_data, y_data)):
             dist = dist_func(x_model, xdi, y_model, ydi)
             ind = np.argmin(dist)
             x_out[i] = x_model[ind]
             y_out[i] = y_model[ind]
-        return x_out, y_out
+            time_out[i] = times[ind]
+        return x_out, y_out, time_out
 
     def lnlikelihood(
             self, 
@@ -240,7 +242,8 @@ class Trough(Model):
         Output:
             log-likelihood value (float)
         """
-        self.xnear, self.ynear =self.get_nearest_points(x_data, y_data,times)
+        self.xnear, self.ynear, self.timesxy = self.get_nearest_points(
+                                                      x_data, y_data,times)
         # Variance in meters in both directions
         xvar, yvar = (self.errorbar * self.meters_per_pixel) ** 2
         chi2 = (x_data - self.xnear) ** 2 / xvar + (y_data - 
