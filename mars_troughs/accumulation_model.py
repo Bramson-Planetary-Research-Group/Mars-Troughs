@@ -109,7 +109,7 @@ class LinearInsolation(TimeDependentAccumulationModel, LinearModel):
         times: np.ndarray,
         insolations: np.ndarray,
         constant: float = 1e-6,
-        slope: float = 1e-6,
+        slope: float = 1e-8,
     ):
         super().__init__(times, insolations)
         LinearModel.__init__(self, constant=constant, slope=slope)
@@ -159,9 +159,9 @@ class QuadraticInsolation(TimeDependentAccumulationModel, QuadModel):
         self,
         times,
         insolation,
-        constant: float = 1.0,
-        slope: float = 1e-6,
-        quad: float = 1e-6,
+        constant: float = 1e-6,
+        slope: float = 1e-8,
+        quad: float = 1e-20,
     ):
         super().__init__(times, insolation)
         QuadModel.__init__(self, constant=constant, slope=slope, quad=quad)
@@ -192,8 +192,8 @@ class LinearObliquity(TimeDependentAccumulationModel, LinearModel):
         self,
         obl_times: np.ndarray,
         obliquity: np.ndarray,
-        constant: float = 1.0,
-        slope: float = 1.0,
+        constant: float = 1e-6,
+        slope: float = 1e-8,
     ):
         LinearModel.__init__(self, constant=constant, slope=slope)
         super().__init__(obl_times, obliquity)

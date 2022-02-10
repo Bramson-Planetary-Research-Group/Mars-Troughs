@@ -43,6 +43,7 @@ class Trough(Model):
         lag_model: Union[str, Model],
         acc_params: Optional[List[float]] = None,
         lag_params: Optional[List[float]] = None,
+        tmp: Optional[int] = None,
         errorbar: float = 1.0,
         angle: float = 2.9,
     ):
@@ -57,38 +58,35 @@ class Trough(Model):
           angle (float, optional): south-facing slope angle in degrees. Default is 2.9.
         """
 
-        # Load in all data
-        (
-            insolation,
-            ins_times,
-        ) = load_insolation_data()
-        times, retreats, lags = load_retreat_data()
-        obliquity, obl_times = load_obliquity_data()
-
-        # Trough angle
+        # Load all data
+        retreat_times, retreats, lags = load_retreat_data()
+        retreat_times=-retreat_times
         self.angle = angle
-
-        # Set up the trough model
         self.errorbar = errorbar
         self.meters_per_pixel = np.array([500.0, 20.0])  # meters per pixel
 
-        # Positive times are now in the past
-        # TODO: reverse this in the data files
-        ins_times = -ins_times
-        times = -times
-        obl_times = -obl_times
-
-        # Create data splines of retreat of ice (no dependency
-        # on model parameters)
-        self.times = times
-        self.ret_data_spline = RBS(lags, times, retreats)
-        self.re2_data_spline = RBS(lags, times, retreats ** 2)
-
         # Create submodels
-        if isinstance(acc_model, str):  # name of existing model is given
+        if isinstance(acc_model, str):  # name of existing model is given                  
             if "obliquity" in acc_model:
+                #load obliquity data and times
+                obliquity, obl_times = load_obliquity_data()
+                obl_times = -obl_times.astype(float)
+                #remove zeros from time array
+                condZero = obl_times==0
+                indx =np.array(range(len(condZero)))
+                indxZero=indx[condZero]
+                obl_times[indxZero]=1e-10
+                
                 acc_time, acc_y = obl_times, obliquity
             else:
+                insolation,ins_times = load_insolation_data(tmp)
+                ins_times = -ins_times.astype(float)
+                #remove zeros from time array
+                condZero = ins_times==0
+                indx =np.array(range(len(condZero)))
+                indxZero=indx[condZero]
+                ins_times[indxZero]=1e-10
+
                 acc_time, acc_y = ins_times, insolation
 
             self.accuModel = ACCUMULATION_MODEL_MAP[acc_model](
@@ -109,14 +107,20 @@ class Trough(Model):
         # Call super() with the acc and lag models. This
         # way their parameters are visible here.
         super().__init__(sub_models=[self.accuModel, self.lagModel])
+        
+        # Create data splines of retreat of ice (no dependency
+        # on model parameters)
+        self.ret_data_spline = RBS(lags, retreat_times, retreats)
+        self.re2_data_spline = RBS(lags, retreat_times, retreats ** 2)
 
         # Calculate the model of retreat of ice per time
-        self.retreat_model_t = self.ret_data_spline.ev(
-            self.lagModel.get_lag_at_t(times), times
-        )
+        self.lag_at_t=self.lagModel.get_lag_at_t(self.accuModel._times)
+        self.retreat_model_t = self.ret_data_spline.ev(self.lag_at_t, 
+                                                       self.accuModel._times)
 
         # Compute the Retreat(time) spline
-        self.retreat_model_t_spline = IUS(self.times, self.retreat_model_t)
+        self.retreat_model_t_spline = IUS(self.accuModel._times, 
+                                          self.retreat_model_t)
 
     @property
     def parameter_names(self) -> List[str]:
@@ -137,12 +141,13 @@ class Trough(Model):
         self.all_parameters = all_parameters
 
         # Update the model of retreat of ice per time
-        self.retreat_model_t = self.ret_data_spline.ev(
-            self.lagModel.get_lag_at_t(self.times), self.times
-        )
+        self.lag_at_t=self.lagModel.get_lag_at_t(self.accuModel._times)
+        self.retreat_model_t = self.ret_data_spline.ev(self.lag_at_t, 
+                                                       self.accuModel._times)
 
         # Update the Retreat(time) spline
-        self.retreat_model_t_spline = IUS(self.times, self.retreat_model_t)
+        self.retreat_model_t_spline = IUS(self.accuModel._times, 
+                                          self.retreat_model_t)
         return
 
     def get_trajectory(
@@ -159,8 +164,6 @@ class Trough(Model):
         Output:
             x and y coordinates (tuple) of size 2 x len(times) (in m).
         """
-        if np.all(times) is None:
-            times = self.times
 
         y = self.accuModel.get_yt(times)
         x = self.accuModel.get_xt(
@@ -191,6 +194,7 @@ class Trough(Model):
         self,
         x_data: np.ndarray,
         y_data: np.ndarray,
+        times: Optional[np.ndarray] = None,
         dist_func: Optional[Callable] = None,
     ) -> Tuple[np.ndarray, np.ndarray]:
         """
@@ -208,8 +212,9 @@ class Trough(Model):
             x and y coordinates of the model TMP that are closer to the data TMP.
             (Tuple), size 2 x len(x_data)
         """
+
         dist_func = dist_func or Trough._L2_distance
-        x_model, y_model = self.get_trajectory()
+        x_model, y_model = self.get_trajectory(times)
         x_out = np.zeros_like(x_data)
         y_out = np.zeros_like(y_data)
         for i, (xdi, ydi) in enumerate(zip(x_data, y_data)):
@@ -219,7 +224,11 @@ class Trough(Model):
             y_out[i] = y_model[ind]
         return x_out, y_out
 
-    def lnlikelihood(self, x_data: np.ndarray, y_data: np.ndarray) -> float:
+    def lnlikelihood(
+            self, 
+            x_data: np.ndarray, 
+            y_data: np.ndarray,
+            times: Optional[np.ndarray] = None,) -> float:
         """
         Calculates the log-likelihood of the data given the model.
         Note that this is the natural log (ln).
@@ -231,10 +240,11 @@ class Trough(Model):
         Output:
             log-likelihood value (float)
         """
-        x_model, y_model = self.get_nearest_points(x_data, y_data)
+        self.xnear, self.ynear =self.get_nearest_points(x_data, y_data,times)
         # Variance in meters in both directions
         xvar, yvar = (self.errorbar * self.meters_per_pixel) ** 2
-        chi2 = (x_data - x_model) ** 2 / xvar + (y_data - y_model) ** 2 / yvar
+        chi2 = (x_data - self.xnear) ** 2 / xvar + (y_data - 
+                                                      self.ynear) ** 2 / yvar
         return -0.5 * chi2.sum() - 0.5 * len(x_data) * np.log(xvar * yvar)
 
     @property

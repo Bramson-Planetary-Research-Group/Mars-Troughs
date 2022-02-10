@@ -32,7 +32,8 @@ class TestModel(TestCase):
         assert isinstance(model, Model)
         assert model.parameter_names == ["a", "b", "c"]
         assert model.sub_models == []
-        assert model.all_parameter_names == ["a", "b", "c"]
+        keysList = [key for key in model.all_parameters]
+        assert keysList == ["a", "b", "c"]
         assert model.parameters == {"a": 1.0, "b": 10.0, "c": 20.0}
         # test setting one parameter
         model.a = 30.0

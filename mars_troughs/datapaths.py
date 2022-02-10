@@ -16,10 +16,12 @@ class _DataPaths:
     """
 
     DATA: Path = (Path(__file__) / ".." / "data").resolve()
-    INSOLATION: Path = DATA / "Insolation.txt"
+    INSOLATION1: Path = DATA / "Insolation_5million_1.txt"
+    INSOLATION2: Path = DATA / "TMP2" / "Insolation_5million_2.txt"
     RETREAT: Path = DATA / "Retreat_data.txt"
-    TMP: Path = DATA / "TMP_xz.txt"
-    OBLIQUITY: Path = DATA / "Obliquity_new.txt"
+    TMP1: Path = DATA / "TMP_xz.txt"
+    TMP2: Path = DATA / "TMP2" / "TMP_xz.txt"
+    OBLIQUITY: Path = DATA / "Obliquity_5million.txt"
 
 
 DATAPATHS = _DataPaths()
@@ -56,14 +58,14 @@ def load_obliquity_data() -> Tuple[np.ndarray, np.ndarray]:
       times (np.ndarray): times the obliquity is measured at
     """
     df = pd.read_csv(
-        DATAPATHS.OBLIQUITY, names=["obliquity", "times"], skiprows=1, sep=" "
+        DATAPATHS.OBLIQUITY, names=["obliquity", "times"], skiprows=1, sep="\t"
     )
     times: np.ndarray = df["times"].values
     obl: np.ndarray = df["obliquity"].values
     return obl, times
 
 
-def load_insolation_data() -> Tuple[np.ndarray, np.ndarray]:
+def load_insolation_data(tmp) -> Tuple[np.ndarray, np.ndarray]:
     """
     Unpack the insolation data.
 
@@ -71,15 +73,21 @@ def load_insolation_data() -> Tuple[np.ndarray, np.ndarray]:
       insolation (np.ndarray): the insolation values
       times (np.ndarray): times the insolation is measured at
     """
-    df = pd.read_csv(
-        DATAPATHS.INSOLATION, names=["insolation", "times"], skiprows=1, sep="\t"
-    )
+    if tmp==1:
+        
+        df = pd.read_csv(
+        DATAPATHS.INSOLATION1, names=["insolation", "times"], skiprows=1, sep="\t"
+        )
+    else:
+        df = pd.read_csv(
+        DATAPATHS.INSOLATION2, names=["insolation", "times"], skiprows=1, sep="\t"
+        )
     times: np.ndarray = df["times"].values
     ins: np.ndarray = df["insolation"].values
     return ins, times
 
 
-def load_TMP_data() -> Tuple[np.ndarray, np.ndarray]:
+def load_TMP_data(tmp) -> Tuple[np.ndarray, np.ndarray]:
     """
     Loads the TMP data for the trough being investigated now.
 
@@ -87,4 +95,8 @@ def load_TMP_data() -> Tuple[np.ndarray, np.ndarray]:
       x (np.ndarray): x position in kilometers
       y (np.ndarray): y position in meters
     """
-    return np.loadtxt(DATAPATHS.TMP, skiprows=1).T
+    if tmp==1:
+        return np.loadtxt(DATAPATHS.TMP1, skiprows=1).T
+    else:
+        return np.loadtxt(DATAPATHS.TMP2, skiprows=1).T
+

@@ -99,3 +99,80 @@ class QuadModel(Model):
 
     def eval(self, x: Union[Number, np.ndarray]) -> Union[Number, np.ndarray]:
         return self.quad * x ** 2 + self.slope * x + self.constant
+
+class CubicModel(Model):
+    """
+    A model for a cubic function of the input
+    
+    Args:
+      constant (float, optional) default is 1.0
+      slope (float, optional) default is 1e-6
+      quad (float, optional) default is 1e-6 
+      cubic (float, optional) defatul is 1e-6
+   
+    y = constant + slope * x + quad * x^2 + cubic * x^3
+    """
+    
+    def __init__(
+        self,
+        constant: float = 1.0,
+        slope: float = 1e-6,
+        quad: float = 1e-6,
+        cubic: float = 1e-6,
+    ):
+        self.constant = constant
+        self.slope = slope
+        self.quad = quad
+        self.cubic = cubic
+        super().__init__()
+
+    @property
+    def parameter_names(self) -> List[str]:
+        return [
+            "constant",
+            "slope",
+            "quad",
+            "cubic"
+        ]
+    
+    def eval(self, x: Union[Number, np.ndarray]) -> Union[Number, np.ndarray]:
+        return self.cubic * x ** 3 + self.quad * x ** 2 + self.slope * x + self.constant
+    
+class PowerLawModel(Model):
+    """
+    A model for a power law function of the input
+    
+    Args:
+      coeff (float, optional) default is 1.0
+      exponent (float, optional) default is 1.0
+      
+    y = coeff * x^exponent
+    """
+    
+    def __init__(
+        self,
+        coeff: float = 1.0,
+        exponent: float = 1.0,
+    ):
+        self.coeff=coeff
+        self.exponent=exponent
+        super().__init__()
+
+    @property
+    def parameter_names(self) -> List[str]:
+        return [
+            "coeff",
+            "exponent",
+        ]
+    
+    def eval(self, x: Union[Number, np.ndarray]) -> Union[Number, np.ndarray]:
+        return self.coeff * x ** self.exponent
+
+      
+      
+      
+      
+      
+      
+      
+    
