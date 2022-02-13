@@ -252,7 +252,7 @@ class hardAgePriorMCMC(MCMC):
         
         return otherPriors*True
     
-class softdAgePriorMCMC(MCMC):
+class softAgePriorMCMC(MCMC):
     
     def priors(self,params,times):
         otherPriors=super().priors(params,times)
