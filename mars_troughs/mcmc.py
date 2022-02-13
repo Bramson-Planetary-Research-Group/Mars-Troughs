@@ -281,9 +281,12 @@ class softAgePriorMCMC(MCMC):
         #compute likelihood of model 
         likelihood_of_model=self.tr.lnlikelihood(self.xdata,self.ydata,
                                                  self.tr.accuModel._times)
-        if self.priors(params,self.tr.accuModel._times)==False:
+        
+        priorValue=self.priors(params,self.tr.accuModel._times)
+        
+        if priorValue==False:
             return -1e99
         else:
-            return self.priors*likelihood_of_model
+            return np.log(priorValue)+likelihood_of_model
         
         

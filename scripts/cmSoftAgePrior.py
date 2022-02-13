@@ -65,7 +65,7 @@ def main():
                                  acc_model,lag_model, None, None, 
                                  errorbar, angle)
     
-    filename=mcmcobj.filename
+    filename=mcmcobj.filename+'_soft'
     
     outfile=open(filename,'wb')
     pickle.dump(mcmcobj,outfile)
