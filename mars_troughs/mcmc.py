@@ -241,8 +241,49 @@ class MCMC():
 
     
 
-
-
+class hardAgePriorMCMC(MCMC):
+    
+    def priors(self,params,times):
+        otherPriors=super().priors(params,times)
         
-
+        #age of trough should be less than 3 Myr
+        if np.max(self.tr.timesxy)>3e6:
+            return False
+        
+        return otherPriors*True
+    
+class softdAgePriorMCMC(MCMC):
+    
+    def priors(self,params,times):
+        otherPriors=super().priors(params,times)
+        if otherPriors==False:
+            return False
+        else:
+            #age of trough is preferred to be 3 Myr 
+            import scipy.stats as stat
+            meanAge=3e6
+            stdAge=5e5
+            priorDistAge=stat.norm(meanAge,stdAge) #mean 3 Myr, std 5e5 y
+            
+            ageTrough=np.max(self.tr.timesxy)
+            
+            if ageTrough >= meanAge:
+                priorAge=priorDistAge.sf(ageTrough)
+            else:
+                priorAge=priorDistAge.cdf(ageTrough)
+                
+            return otherPriors*priorAge
+    
+    def ln_likelihood(self,params: Dict[str,float]):
+        
+        #set trough model with candidate parameters
+        self.tr.set_model(params)
+        #compute likelihood of model 
+        likelihood_of_model=self.tr.lnlikelihood(self.xdata,self.ydata,
+                                                 self.tr.accuModel._times)
+        if self.priors(params,self.tr.accuModel._times)==False:
+            return -1e99
+        else:
+            return self.priors*likelihood_of_model
+        
         
