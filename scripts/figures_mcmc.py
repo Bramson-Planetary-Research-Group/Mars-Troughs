@@ -15,6 +15,7 @@ import argparse
 import os
 import glob
 import sys
+from mars_troughs.datapaths import load_insolation_data, load_obliquity_data
 
 def main():
     p=argparse.ArgumentParser(description="filename for plotting")
@@ -218,7 +219,7 @@ def main():
         
         
         #plot retreat rates
-        plt.subplot(2,1,1)
+        plt.subplot(3,1,1)
         plt.plot(timesub/1000000,retreatt[:,0::subsample].T*1000,c="gray",
                                             alpha=0.1, zorder=-1)
         plt.plot(timesub/1000000,retreatt[indxbest,0::subsample]*1000,c="b")
@@ -226,13 +227,26 @@ def main():
         plt.title('R(L(t),t) (mm/year)')
         
         #plot acct
-        plt.subplot(2,1,2)
+        plt.subplot(3,1,2)
         plt.plot(timesub/1000000,1000*acct[:,0::subsample].T,c="gray",
                                             alpha=0.1, zorder=-1)
         plt.plot(timesub/1000000,1000*acct[indxbest,0::subsample],c="b")
         plt.title('A(t) (mm/year)')
         plt.xlabel('Time (Myr)')
         
+        if '_Obliquity_' in newmcmc.modelName:
+            #plot obliquity data
+            data,times =  load_obliquity_data()
+            titledata = 'Obliquity (deg)'
+        else:
+            #plot insolation data
+            data,times =  load_insolation_data()
+            titledata = 'Insolation (W/m^2)'
+        
+        plt.subplot(3,1,3)
+        plt.plot(-1*times/1000000,data)
+        plt.title(titledata)
+        plt.xlabel('Time (Myr)')
         
         #create folder for saving figure
         if not os.path.exists(args.plotdir+'figures/'+'ar_rates/'):
