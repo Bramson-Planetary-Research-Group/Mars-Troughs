@@ -7,12 +7,12 @@ from mars_troughs.custom_lag_models import ConstantLag,LinearLag,QuadraticLag,Cu
 from mars_troughs.custom_acc_models import Linear_Insolation, Quadratic_Insolation,Cubic_Insolation,PowerLaw_Insolation
 from mars_troughs.custom_acc_models import Linear_Obliquity, Quadratic_Obliquity,Cubic_Obliquity,PowerLaw_Obliquity
 from mars_troughs.datapaths import load_insolation_data, load_obliquity_data
-import cProfile
 import sys
 
 def main():
         
     p=argparse.ArgumentParser(description='Parse submodel numbers for MCMC')
+    p.add_argument("-meanAge",default=3,type=float,help="mean Age prior")
     p.add_argument("-acc",default=1,type=int,help="Number of the accumulation model")
     p.add_argument("-lag",default=1,type=int,help="Number of the lag model")
     p.add_argument("-steps",default=100,type=int,help="Number of steps for MCMC")
@@ -54,16 +54,17 @@ def main():
     
     
     lag_model=lagModel_dict[args.lag]()
-    
+    meanAge=args.meanAge
     maxSteps=args.steps
     directory= (args.dir + args.data + '/TMP' + str(tmp) + '/')
     
     errorbar=np.sqrt(1.6)
     angle=5.0
     thin_by=args.thin_by
-    mcmcobj=mt.softAgePriorMCMC(maxSteps,thin_by,directory,tmp,
+    mcmcobj=mt.softAgePriorMCMC(meanAge,maxSteps,thin_by,directory,tmp,
                                  acc_model,lag_model, None, None, 
                                  errorbar, angle)
+
     
     filename=mcmcobj.filename+'_soft'
     
@@ -73,8 +74,9 @@ def main():
     
     print(filename)
     
-def mainArgs(acc,lag,steps,thin_by,data,tmp,dir):
-    sys.argv = ['mainCustomModels.py', 
+def mainArgs(meanAge,acc,lag,steps,thin_by,data,tmp,dir):
+    sys.argv = ['mainSoftprior.py', 
+                '-meanAge', str(meanAge),
                 '-acc', str(acc),
                 '-lag', str(lag),
                 '-steps',str(steps),

@@ -253,6 +253,34 @@ class hardAgePriorMCMC(MCMC):
         return otherPriors*True
     
 class softAgePriorMCMC(MCMC):
+    def __init__(
+        self,
+        meanAge: float,
+        maxSteps: int,
+        thin_by: int,
+        directory: str,
+        tmp: int,
+        acc_model = Union[str, Model],
+        lag_model = Union[str, Model],
+        acc_params: Optional[List[float]] = None,
+        lag_params: Optional[List[float]] = None,
+        errorbar = np.sqrt(1.6), #errorbar in pixels on the datapoints
+        angle= 5.0
+    ):
+        self.meanAge=meanAge
+        
+        super().__init__(
+            maxSteps,
+            thin_by,
+            directory,
+            tmp,
+            acc_model,
+            lag_model,
+            acc_params,
+            lag_params,
+            errorbar,
+            angle)
+        
     
     def priors(self,params,times):
         otherPriors=super().priors(params,times)
@@ -261,13 +289,12 @@ class softAgePriorMCMC(MCMC):
         else:
             #age of trough is preferred to be 3 Myr 
             import scipy.stats as stat
-            meanAge=3e6
             stdAge=5e5
-            priorDistAge=stat.norm(meanAge,stdAge) #mean 3 Myr, std 5e5 y
+            priorDistAge=stat.norm(self.meanAge,stdAge) #mean 3 Myr, std 5e5 y
             
             ageTrough=np.max(self.tr.timesxy)
             
-            if ageTrough >= meanAge:
+            if ageTrough >= self.meanAge:
                 priorAge=priorDistAge.sf(ageTrough)
             else:
                 priorAge=priorDistAge.cdf(ageTrough)
