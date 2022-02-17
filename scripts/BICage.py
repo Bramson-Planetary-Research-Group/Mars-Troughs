@@ -88,7 +88,7 @@ def main():
     plt.close('all')
     plt.figure
     plt.plot(ages,BICs,marker='.',linestyle="None")
-    plt.xlabel('ages')
+    plt.xlabel('Age (Myr')
     plt.ylabel('BIC')
     plt.title(modelNames[maxBIC]+'_'+str(bestAge)+' Myr')
     plt.subplots_adjust(bottom=0.6)
