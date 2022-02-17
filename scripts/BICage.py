@@ -17,8 +17,6 @@ def main():
 
     p=argparse.ArgumentParser(description="TMP data")
     p.add_argument("-tmp",type=int,help="TMP 1 or 2")
-    p.add_argument("-initmodel",type=int,help="initial model for plotting")
-    p.add_argument("-stepEnsemble",type=int,help="skip models for plotting")
     args=p.parse_args()
     
     listObj_ins1=glob.glob("../../outputMCMC/insolation/TMP1/obj/*obj*")
@@ -88,9 +86,9 @@ def main():
     plt.close('all')
     plt.figure
     plt.plot(ages,BICs,marker='.',linestyle="None")
-    plt.xlabel('Age (Myr')
+    plt.xlabel('Age (Myr)')
     plt.ylabel('BIC')
-    plt.title(modelNames[maxBIC]+'_'+str(bestAge)+' Myr')
+    plt.title('TMP '+ str(args.tmp))
     plt.subplots_adjust(bottom=0.6)
     
     
@@ -104,11 +102,9 @@ def main():
     pickle.dump(modelNames,outfile)
     outfile.close()
     
-def mainArgs(tmp,initmodel,stepEnsemble):
+def mainArgs(tmp):
      sys.argv = ['bic.py',
-                 '-tmp', str(tmp),
-                 '-initmodel',str(initmodel),
-                 '-stepEnsemble',str(stepEnsemble)]
+                 '-tmp', str(tmp)]
      main()
      
 if __name__=="__main__":
