@@ -66,7 +66,7 @@ def main():
                                  errorbar, angle)
 
     
-    filename=mcmcobj.filename+'_soft'
+    filename=mcmcobj.filename+'_soft'+ str(int(args.meanAge))
     
     outfile=open(filename,'wb')
     pickle.dump(mcmcobj,outfile)
