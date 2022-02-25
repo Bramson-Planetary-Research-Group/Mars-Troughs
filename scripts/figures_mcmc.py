@@ -259,7 +259,7 @@ def main():
         # tmp fit ---------------------------------------------------
         plt.figure()
         bestTMP=tmpt[indxbest,:,:]
-        plt.plot(bestTMP[:,0],bestTMP[:,1],c='b',label='Best TMP')
+        plt.plot(bestTMP[:,0],bestTMP[:,1],c='b')
         
         #get errorbar of best tmp
         bestErrorbar=errorbar1d[indxbest]
@@ -288,6 +288,15 @@ def main():
             indx=i
             plt.plot(tmpt[indx,:,0],tmpt[indx,:,1],c="gray", alpha=0.1, zorder=-1)
         plt.plot(tmpt[indx,:,0],tmpt[indx,:,1],c="gray", alpha=0.1, zorder=-1,label='Ensemble models')
+        
+        plt.errorbar(x=xnear, xerr=xerr, y=ynear, yerr=yerr, 
+                 c='b', marker='.', ls='', label='Best model')
+        #plot observed data with errorbars
+        #sharad images error: 20 m per pixel vertically and 475 m per pixel
+        #horizontally
+        plt.errorbar(x=newmcmc.xdata, xerr=475, y=newmcmc.ydata, yerr=20, 
+                 c='r', marker='.', ls='',label='Observed TMP')
+        
         plt.xlabel("Horizontal dist [m]")
         plt.ylabel("V. dist [m]")
         ax=plt.gca()
@@ -303,10 +312,9 @@ def main():
         #plot times on upper axis
         ax2=ax.twiny()
         color='m'
-        ax2.set_xlabel('Time before present ( Million years)',color=color)
-        plt.scatter(xnear,ynear,marker="o",color='m')
-        plt.errorbar(x=newmcmc.xdata, xerr=xerr, y=newmcmc.ydata, yerr=yerr, 
-                 c='r', marker='.', ls='',label='Observed TMP')
+        ax2.set_xlabel('Time before present ( Myr)',color=color)
+        #plt.scatter(xnear,ynear,marker="o",color='b')
+        
         ax2.set_ylim(ymin,0)
         ax2.set_xlim(0,xmax)
         ax2.tick_params(axis='x',labelcolor=color)
