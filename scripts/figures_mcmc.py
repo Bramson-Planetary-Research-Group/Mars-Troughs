@@ -53,7 +53,6 @@ def main():
         newmcmc=pickle.load(infile)
         infile.close()
 
-        
         #create folder for saving figures
         if not os.path.exists(args.plotdir+'figures/'):
             os.makedirs(args.plotdir+'figures/')
@@ -232,7 +231,8 @@ def main():
                                             alpha=0.1, zorder=-1)
         plt.plot(timesub/1000000,1000*acct[indxbest,0::subsample],c="b")
         plt.title('A(t) (mm/year)')
-        plt.xlabel('Time (Myr)')
+        plt.xticks([], [])
+
         
         if '_Obliquity_' in newmcmc.modelName:
             #plot obliquity data
@@ -240,7 +240,7 @@ def main():
             titledata = 'Obliquity (deg)'
         else:
             #plot insolation data
-            data,times =  load_insolation_data()
+            data,times =  load_insolation_data(newmcmc.tmp)
             titledata = 'Insolation (W/m^2)'
         
         plt.subplot(3,1,3)
