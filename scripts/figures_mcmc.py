@@ -22,8 +22,7 @@ def main():
     p.add_argument("-objpath",type=str,help="name file or dir \
                                            for loading mcmc object")
     p.add_argument("-plotdir",type=str,help="name dir for saving plots")
-    p.add_argument("-initmodel",type=int,help="initial model for \
-                                                   plotting")
+    p.add_argument("-nmodels",type=int,help="nmodels for ensemble")
     p.add_argument("-stepEnsemble",type=int,help="skip models for \
                                                   plotting")
     args=p.parse_args()
@@ -62,17 +61,11 @@ def main():
         numparams=len(paramsList)
         
         #subsample ensemble
-        if newmcmc.totalSteps<= args.initmodel:
-            ensemble=newmcmc.samples[int((newmcmc.totalSteps/newmcmc.thin_by-1)/2)::args.stepEnsemble,:,:]
-            xaxis=np.arange(int(newmcmc.totalSteps/2),newmcmc.totalSteps+1,args.stepEnsemble*newmcmc.thin_by)
-            nmodels=len(xaxis)
-            logprob=newmcmc.logprob[int((newmcmc.totalSteps/newmcmc.thin_by-1)/2)::args.stepEnsemble,:]
-        else:
-            ensemble=newmcmc.samples[int(args.initmodel/newmcmc.thin_by-1)::args.stepEnsemble,:,:]
-            xaxis=np.arange(args.initmodel,newmcmc.totalSteps+1,args.stepEnsemble*newmcmc.thin_by)
-            nmodels=len(xaxis) 
-            logprob=newmcmc.logprob[int(args.initmodel/newmcmc.thin_by-1)::args.stepEnsemble,:]
-    
+        ensemble=newmcmc.samples[-1*args.nmodels::args.stepEnsemble,:,:]
+        xaxis=np.arange(newmcmc.totalSteps-(args.nmodels-1)*newmcmc.thin_by,newmcmc.totalSteps+1,args.stepEnsemble*newmcmc.thin_by)
+        nmodels=len(xaxis) 
+        logprob=newmcmc.logprob[-1*args.nmodels::args.stepEnsemble,:]
+
         #find model with highest likelihood
         indxbest2d=np.unravel_index(logprob.argmax(),logprob.shape)
         
@@ -166,7 +159,7 @@ def main():
         autoxaxis=autoxaxis[:len(newmcmc.autocorr)]
         
         plt.plot(autoxaxis,autoxaxis,"--k",label=r'Length chain')
-        plt.plot(autoxaxis[np.nonzero(newmcmc.autocorr)],50*newmcmc.autocorr[np.nonzero(newmcmc.autocorr)],label=r'50 * $\tau$ estimate')
+        plt.plot(autoxaxis[np.nonzero(newmcmc.autocorr)],newmcmc.autocorr[np.nonzero(newmcmc.autocorr)],label=r'50 * $\tau$ estimate')
         plt.xlabel('Iteration')
         ax=plt.gca()
         ax.legend()
@@ -418,11 +411,11 @@ def main():
         #plot optimal parameters versus best params------
         
         
-def mainArgs(objpath,plotdir,init,step):
+def mainArgs(objpath,plotdir,nmodels,step):
     sys.argv = ['maintest.py', 
                 '-objpath', str(objpath),
                 '-plotdir', str(plotdir),
-                '-initmodel',str(init),
+                '-nmodels',str(nmodels),
                 '-stepEnsemble', str(step)]
     main()
     
