@@ -163,7 +163,7 @@ def main():
         plt.xlabel('Iteration')
         ax=plt.gca()
         ax.legend()
-        
+        plt.yscale("log")        
         
         #create folder for saving figure
         if not os.path.exists(args.plotdir+'figures/'+'autocorr/'):
