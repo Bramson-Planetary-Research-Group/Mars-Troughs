@@ -159,7 +159,7 @@ def main():
         autoxaxis=autoxaxis[:len(newmcmc.autocorr)]
         
         plt.plot(autoxaxis,autoxaxis,"--k",label=r'Length chain')
-        plt.plot(autoxaxis[np.nonzero(newmcmc.autocorr)],newmcmc.autocorr[np.nonzero(newmcmc.autocorr)],label=r'50 * $\tau$ estimate')
+        plt.plot(autoxaxis[np.nonzero(newmcmc.autocorr)],newmcmc.autocorr[np.nonzero(newmcmc.autocorr)],label=r'$\tau$ estimate')
         plt.xlabel('Iteration')
         ax=plt.gca()
         ax.legend()
