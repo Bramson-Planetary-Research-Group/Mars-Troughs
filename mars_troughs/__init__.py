@@ -1,12 +1,19 @@
-from .accumulation_model import (
-    ACCUMULATION_MODEL_MAP,
-    AccumulationModel,
-    LinearInsolation,
-    LinearObliquity,
-    QuadraticInsolation,
-)
-from .datapaths import DATAPATHS
-from .lag_model import LAG_MODEL_MAP, ConstantLag, LagModel, LinearLag
+from .accumulation_model import (Linear_Obliquity, 
+                         Quadratic_Obliquity,
+                         Cubic_Obliquity,
+                         PowerLaw_Obliquity,
+                         Linear_Insolation, 
+                         Quadratic_Insolation,
+                         Cubic_Insolation,
+                         PowerLaw_Insolation)
+from .lag_model import (ConstantLag,
+                         QuadraticLag,
+                         LinearLag,
+                         CubicLag,
+                         PowerLawLag)
+from .datapaths import (DATAPATHS,
+                       load_insolation_data, 
+                       load_obliquity_data)
 from .model import Model
 from .trough import Trough
 from .mcmc import MCMC, softAgePriorMCMC, hardAgePriorMCMC

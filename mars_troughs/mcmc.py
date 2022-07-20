@@ -29,8 +29,6 @@ class MCMC():
         tmp: int,
         acc_model = Union[str, Model],
         lag_model = Union[str, Model],
-        acc_params: Optional[List[float]] = None,
-        lag_params: Optional[List[float]] = None,
         errorbar = np.sqrt(1.6), #errorbar in pixels on the datapoints
         angle= 5.0,
     ):
@@ -52,8 +50,7 @@ class MCMC():
         self.xdata=self.xdata*1000 #km to m 
         
         # Create  trough object 
-        self.tr = mt.Trough(self.acc_model,self.lag_model,acc_params,
-                       lag_params,tmp,errorbar,angle)
+        self.tr = mt.Trough(self.acc_model,self.lag_model,errorbar,angle)
         
         self.parameter_names = ([key for key in self.tr.all_parameters])
         
@@ -74,24 +71,15 @@ class MCMC():
         
         #aux for creating directories
         
-        if isinstance(self.acc_model, str):
-            #do nothing
-            self.acc_model_name=self.acc_model
-        else:
-            auxAcc=str(self.acc_model).split(' ')
-            auxAcc=auxAcc[0]
-            self.acc_model_name=auxAcc.split('.')
-            self.acc_model_name=self.acc_model_name[2]
+        auxAcc=str(self.acc_model).split(' ')
+        auxAcc=auxAcc[0]
+        self.acc_model_name=auxAcc.split('.')
+        self.acc_model_name=self.acc_model_name[2]
             
-        
-        if isinstance(self.lag_model, str):
-            #do nothing
-            self.lag_model_name=self.lag_model
-        else:
-            auxLag=str(self.lag_model).split(' ')
-            auxLag=auxLag[0]
-            self.lag_model_name=auxLag.split('.')
-            self.lag_model_name=self.lag_model_name[2]
+        auxLag=str(self.lag_model).split(' ')
+        auxLag=auxLag[0]
+        self.lag_model_name=auxLag.split('.')
+        self.lag_model_name=self.lag_model_name[2]
         
         #Create directory to save outputs
         if not os.path.exists(self.directory):
@@ -262,8 +250,6 @@ class softAgePriorMCMC(MCMC):
         tmp: int,
         acc_model = Union[str, Model],
         lag_model = Union[str, Model],
-        acc_params: Optional[List[float]] = None,
-        lag_params: Optional[List[float]] = None,
         errorbar = np.sqrt(1.6), #errorbar in pixels on the datapoints
         angle= 5.0
     ):
@@ -276,8 +262,6 @@ class softAgePriorMCMC(MCMC):
             tmp,
             acc_model,
             lag_model,
-            acc_params,
-            lag_params,
             errorbar,
             angle)
         

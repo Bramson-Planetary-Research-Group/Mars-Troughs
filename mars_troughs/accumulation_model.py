@@ -1,15 +1,18 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-Model for the accumulation rates.
+Created on Fri Jul 23 13:14:58 2021
+
+@author: kris
 """
 from abc import abstractmethod
-from typing import Dict
-
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
-
-from mars_troughs.generic_model import LinearModel, QuadModel
 from mars_troughs.model import Model
-
+from mars_troughs.generic_model import (LinearModel, 
+                                        QuadModel, 
+                                        CubicModel, 
+                                        PowerLawModel)
 
 class AccumulationModel(Model):
     """
@@ -22,8 +25,7 @@ class AccumulationModel(Model):
     @abstractmethod
     def get_accumulation_at_t(self, time: np.ndarray) -> np.ndarray:
         raise NotImplementedError  # pragma: no cover
-
-
+    
 class TimeDependentAccumulationModel(AccumulationModel):
     """
     An accumulation rate model that depends on the time dependent parameter
@@ -39,14 +41,14 @@ class TimeDependentAccumulationModel(AccumulationModel):
     """
 
     def __init__(self, times: np.ndarray, variable: np.ndarray):
-        dt = np.diff(times)
-        assert (dt > 0).all(), "times must be monotonically increasing"
         self._times = times
         self._variable = variable
         self._var_data_spline = IUS(self._times, self._variable)
         self._int_var_data_spline = self._var_data_spline.antiderivative()
         self._var2_data_spline = IUS(self._times, self._variable ** 2)
         self._int_var2_data_spline = self._var2_data_spline.antiderivative()
+        self._var3_data_spline = IUS(self._times, self._variable ** 3)
+        self._int_var3_data_spline = self._var3_data_spline.antiderivative()
 
     def get_accumulation_at_t(self, time: np.ndarray) -> np.ndarray:
         """
@@ -87,107 +89,7 @@ class TimeDependentAccumulationModel(AccumulationModel):
             int_retreat_model_t_spline(time) - int_retreat_model_t_spline(0)
         )
 
-
-class LinearInsolation(TimeDependentAccumulationModel, LinearModel):
-    """
-    Accumulation is linear in solar insolation.
-    A(ins(t)) = constant + slope*ins(t).
-    A is in m/year.
-
-    Args:
-        times (np.ndarray): times at which the solar insolation is known
-                            (in years)
-        insolation values (np.ndarray): values of solar insolation (in W/m^2)
-        constant (float, optional): accumulation rate at present time.
-                                     Default is 1e-6 m/year
-        slope (float, optional): default is 1e-6 m/year per unit
-                                 of solar insolation (m^3/(year*W)).
-    """
-
-    def __init__(
-        self,
-        times: np.ndarray,
-        insolations: np.ndarray,
-        constant: float = 1e-6,
-        slope: float = 1e-8,
-    ):
-        super().__init__(times, insolations)
-        LinearModel.__init__(self, constant=constant, slope=slope)
-
-    def get_yt(self, time: np.ndarray):
-        """
-        Calculates the vertical distance y (in m) traveled by a point
-        in the center of the high side of the trough. This distance  is a
-        function of the accumulation rate A as y(t)=integral(A(ins(t)), dt) or
-        dy/dt=A(ins(t))
-
-        Args:
-            time (np.ndarray): times at which we want to calculate y, in years.
-        Output:
-            np.ndarray of the same size as time input containing values of
-            the vertical distance y, in meters.
-
-        """
-
-        return -(
-            self.constant * time
-            + (
-                self.slope
-                * (self._int_var_data_spline(time) - self._int_var_data_spline(0))
-            )
-        )
-
-
-class QuadraticInsolation(TimeDependentAccumulationModel, QuadModel):
-    """
-    Accumulation rate A (in m/year) as a  quadratic polynomial of insolation.
-    A(ins(t)) = constant + slope*ins(t)+ quad*ins(t)^2.
-    A is in m/year.
-
-    Args:
-        times (np.ndarray): times at which the solar insolation is known, in
-                            years.
-        insolations (np.ndarray): value of the solar insolations (in W/m^2)
-        constant (float, optional): default is 1 m/year
-        slope (float, optional): default is 1e-6 m/year per unit
-            of solar insolation (m^3/(year*W)).
-        quad (float, optional): default is 1e-6 m/year per unit
-            of solar insolation squared (m^5/(year*W^2)).
-    """
-
-    def __init__(
-        self,
-        times,
-        insolation,
-        constant: float = 1e-6,
-        slope: float = 1e-8,
-        quad: float = 1e-20,
-    ):
-        super().__init__(times, insolation)
-        QuadModel.__init__(self, constant=constant, slope=slope, quad=quad)
-
-    def get_yt(self, time: np.ndarray):
-        """
-        Calculates the vertical distance y (in m) at traveled by a point
-        in the center of the high side of the trough. This distance  is a
-        function of the accumulation rate A as y(t)=integral(A(ins(t)), dt) or
-        dy/dt=A(ins(t))
-
-        Args:
-            time (np.ndarray): times at which we want to calculate y, in years.
-        Output:
-            np.ndarray of the same size as time input containing values of
-            the vertical distance y, in meters.
-
-        """
-        delta = self._int_var_data_spline(time) - self._int_var_data_spline(0)
-        delta2 = self._int_var2_data_spline(time) - self._int_var2_data_spline(0)
-        return -(
-            self.constant * time + (self.slope * (delta) + self.quad * (delta2))
-        )
-
-
-class LinearObliquity(TimeDependentAccumulationModel, LinearModel):
+class Linear_Obliquity(TimeDependentAccumulationModel, LinearModel):
     def __init__(
         self,
         obl_times: np.ndarray,
@@ -195,7 +97,7 @@ class LinearObliquity(TimeDependentAccumulationModel, LinearModel):
         constant: float = 1e-6,
         slope: float = 1e-8,
     ):
-        LinearModel.__init__(self, constant=constant, slope=slope)
+        LinearModel.__init__(self, constant, slope)
         super().__init__(obl_times, obliquity)
 
     def get_yt(self, time: np.ndarray):
@@ -221,9 +123,294 @@ class LinearObliquity(TimeDependentAccumulationModel, LinearModel):
             )
         )
 
+    
+class Quadratic_Obliquity(TimeDependentAccumulationModel, QuadModel):
+    def __init__(
+        self,
+        obl_times: np.ndarray,
+        obliquity: np.ndarray,
+        constant: float = 1e-6,
+        slope: float = 1e-8,
+        quad: float = 1e-20,
+        ):
+        
+        QuadModel.__init__(self, constant, slope, quad)
+        super().__init__(obl_times, obliquity)
+        
+    def get_yt(self, time: np.ndarray):
+        """
+        Calculates the vertical distance y (in m) at traveled by a point
+        in the center of the high side of the trough. This distance  is a
+        function of the accumulation rate A as y(t)=integral(A(ins(t)), dt) or
+        dy/dt=A(ins(t))
 
-ACCUMULATION_MODEL_MAP: Dict[str, Model] = {
-    "linear": LinearInsolation,
-    "quadratic": QuadraticInsolation,
-    "obliquity": LinearObliquity,
-}
+        Args:
+            time (np.ndarray): times at which we want to calculate y, in years.
+        Output:
+            np.ndarray of the same size as time input containing values of
+            the vertical distance y, in meters.
+
+        """
+        return -(
+            self.constant * time
+            + (
+                self.slope
+                * (self._int_var_data_spline(time) - self._int_var_data_spline(0))
+                
+                + self.quad
+                * (
+                    self._int_var2_data_spline(time)
+                    - self._int_var2_data_spline(0)
+                )
+            )
+        )
+    
+class Cubic_Obliquity(TimeDependentAccumulationModel, CubicModel):
+    def __init__(
+        self,
+        obl_times: np.ndarray,
+        obliquity: np.ndarray,
+        constant: float = 1e-6,
+        slope: float = 1e-8,
+        quad: float = 1e-20,
+        cubic: float =1e-30,
+        ):
+        
+        CubicModel.__init__(self, constant, slope, quad, cubic)
+        super().__init__(obl_times, obliquity)
+        
+    def get_yt(self, time: np.ndarray):
+        """
+        Calculates the vertical distance y (in m) at traveled by a point
+        in the center of the high side of the trough. This distance  is a
+        function of the accumulation rate A as y(t)=integral(A(ins(t)), dt) or
+        dy/dt=A(ins(t))
+
+        Args:
+            time (np.ndarray): times at which we want to calculate y, in years.
+        Output:
+            np.ndarray of the same size as time input containing values of
+            the vertical distance y, in meters.
+
+        """
+        return -(self.constant * time
+                + 
+                  (
+                    self.slope
+                    * (self._int_var_data_spline(time) 
+                       - self._int_var_data_spline(0))
+                    
+                    + self.quad
+                    * (self._int_var2_data_spline(time)
+                        - self._int_var2_data_spline(0))
+                    
+                    + self.cubic
+                    * (self._int_var3_data_spline(time)
+                        - self._int_var3_data_spline(0))
+                  )
+               )
+
+class PowerLaw_Obliquity(TimeDependentAccumulationModel, PowerLawModel):
+    def __init__(
+        self,
+        obl_times: np.ndarray,
+        obliquity: np.ndarray,
+        coeff: float = 0.1,
+        exponent: float = -2,
+        ):
+        
+        PowerLawModel.__init__(self, coeff, exponent)
+        super().__init__(obl_times, obliquity)
+        
+
+    def get_yt(self, time: np.ndarray):
+        """
+        Calculates the vertical distance y (in m) at traveled by a point
+        in the center of the high side of the trough. This distance  is a
+        function of the accumulation rate A as y(t)=integral(A(ins(t)), dt) or
+        dy/dt=A(ins(t))
+
+        Args:
+            time (np.ndarray): times at which we want to calculate y, in years.
+        Output:
+            np.ndarray of the same size as time input containing values of
+            the vertical distance y, in meters.
+
+        """
+        self._variable_exp = self._variable**self.exponent
+        self._var_exp_data_spline = IUS(self._times, self._variable_exp )
+        self._int_var_exp_data_spline = self._var_exp_data_spline.antiderivative()
+        
+        return -(self.coeff*
+                     (self._int_var_exp_data_spline(time)
+                     -self._int_var_exp_data_spline(0)
+                     )
+                )
+class Linear_Insolation(TimeDependentAccumulationModel, LinearModel):
+    def __init__(
+        self,
+        ins_times: np.ndarray,
+        insolations: np.ndarray,
+        constant: float = 1e-6,
+        slope: float = 1e-8,
+    ):
+        LinearModel.__init__(self, constant, slope)
+        super().__init__(ins_times, 1/insolations)
+
+    def get_yt(self, time: np.ndarray):
+        """
+        Calculates the vertical distance y (in m) traveled by a point
+        in the center of the high side of the trough. This distance  is a
+        function of the accumulation rate A as y(t)=integral(A(obl(t)), dt) or
+        dy/dt=A(obl(t))
+
+        Args:
+            time (np.ndarray): times at which we want to calculate y, in years.
+        Output:
+            np.ndarray of the same size as time input containing values of
+            the vertical distance y, in meters.
+
+        """
+
+        return -(
+            self.constant * time
+            + (
+                self.slope
+                * (self._int_var_data_spline(time) - self._int_var_data_spline(0))
+            )
+        )
+
+    
+class Quadratic_Insolation(TimeDependentAccumulationModel, QuadModel):
+    def __init__(
+        self,
+        ins_times: np.ndarray,
+        insolations: np.ndarray,
+        constant: float = 1e-6,
+        slope: float = 1e-8,
+        quad: float = 1e-20,
+        ):
+        
+        QuadModel.__init__(self, constant, slope, quad)
+        super().__init__(ins_times, 1/insolations)
+        
+    def get_yt(self, time: np.ndarray):
+        """
+        Calculates the vertical distance y (in m) at traveled by a point
+        in the center of the high side of the trough. This distance  is a
+        function of the accumulation rate A as y(t)=integral(A(ins(t)), dt) or
+        dy/dt=A(ins(t))
+
+        Args:
+            time (np.ndarray): times at which we want to calculate y, in years.
+        Output:
+            np.ndarray of the same size as time input containing values of
+            the vertical distance y, in meters.
+
+        """
+        return -(
+            self.constant * time
+            + (
+                self.slope
+                * (self._int_var_data_spline(time) - self._int_var_data_spline(0))
+                
+                + self.quad
+                * (
+                    self._int_var2_data_spline(time)
+                    - self._int_var2_data_spline(0)
+                )
+            )
+        )    
+    
+    
+class Cubic_Insolation(TimeDependentAccumulationModel, CubicModel):
+    def __init__(
+        self,
+        ins_times: np.ndarray,
+        insolations: np.ndarray,
+        constant: float = 1e-6,
+        slope: float = 1e-8,
+        quad: float = 1e-20,
+        cubic: float =1e-30,
+        ):
+        
+        CubicModel.__init__(self, constant, slope, quad, cubic)
+        super().__init__(ins_times, 1/insolations)
+        
+    def get_yt(self, time: np.ndarray):
+        """
+        Calculates the vertical distance y (in m) at traveled by a point
+        in the center of the high side of the trough. This distance  is a
+        function of the accumulation rate A as y(t)=integral(A(ins(t)), dt) or
+        dy/dt=A(ins(t))
+
+        Args:
+            time (np.ndarray): times at which we want to calculate y, in years.
+        Output:
+            np.ndarray of the same size as time input containing values of
+            the vertical distance y, in meters.
+
+        """
+        return -(self.constant * time
+                + 
+                  (
+                    self.slope
+                    * (self._int_var_data_spline(time) 
+                       - self._int_var_data_spline(0))
+                    
+                    + self.quad
+                    * (self._int_var2_data_spline(time)
+                        - self._int_var2_data_spline(0))
+                    
+                    + self.cubic
+                    * (self._int_var3_data_spline(time)
+                        - self._int_var3_data_spline(0))
+                  )
+               )
+ 
+class PowerLaw_Insolation(TimeDependentAccumulationModel, PowerLawModel):
+    def __init__(
+        self,
+        ins_times: np.ndarray,
+        insolations: np.ndarray,
+        coeff: float = 0.1,
+        exponent: float = -1,
+        ):
+        
+        PowerLawModel.__init__(self, coeff, exponent)
+        super().__init__(ins_times, insolations)
+        
+
+    def get_yt(self, time: np.ndarray):
+        """
+        Calculates the vertical distance y (in m) at traveled by a point
+        in the center of the high side of the trough. This distance  is a
+        function of the accumulation rate A as y(t)=integral(A(ins(t)), dt) or
+        dy/dt=A(ins(t))
+
+        Args:
+            time (np.ndarray): times at which we want to calculate y, in years.
+        Output:
+            np.ndarray of the same size as time input containing values of
+            the vertical distance y, in meters.
+
+        """
+        self._variable_exp = self._variable**self.exponent
+        self._var_exp_data_spline = IUS(self._times, self._variable_exp )
+        self._int_var_exp_data_spline = self._var_exp_data_spline.antiderivative()
+        
+        return -(self.coeff*
+                     (self._int_var_exp_data_spline(time)
+                     -self._int_var_exp_data_spline(0)
+                     )
+                )  
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

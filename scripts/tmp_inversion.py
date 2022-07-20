@@ -3,11 +3,21 @@ import argparse
 import pickle
 import numpy as np
 import mars_troughs as mt
-from mars_troughs.custom_lag_models import ConstantLag,LinearLag,QuadraticLag,CubicLag,PowerLawLag
-from mars_troughs.custom_acc_models import Linear_Insolation, Quadratic_Insolation,Cubic_Insolation,PowerLaw_Insolation
-from mars_troughs.custom_acc_models import Linear_Obliquity, Quadratic_Obliquity,Cubic_Obliquity,PowerLaw_Obliquity
-from mars_troughs.datapaths import load_insolation_data, load_obliquity_data
-import cProfile
+from mars_troughs import (ConstantLag,
+                          LinearLag,
+                          QuadraticLag,
+                          CubicLag,
+                          PowerLawLag)
+from mars_troughs import (Linear_Insolation, 
+                          Quadratic_Insolation,
+                          Cubic_Insolation,
+                          PowerLaw_Insolation)
+from mars_troughs import (Linear_Obliquity, 
+                          Quadratic_Obliquity,
+                          Cubic_Obliquity,
+                          PowerLaw_Obliquity)
+from mars_troughs import (load_insolation_data, 
+                          load_obliquity_data)
 import sys
 
 def main():
@@ -61,11 +71,10 @@ def main():
     errorbar=np.sqrt(1.6)
     angle=5.0
     thin_by=args.thin_by
-    mcmcobj=mt.hardAgePriorMCMC(maxSteps,thin_by,directory,tmp,
-                                 acc_model,lag_model, None, None, 
-                                 errorbar, angle)
+    mcmcobj=mt.MCMC(maxSteps,thin_by,directory,tmp,acc_model,lag_model,
+                    errorbar, angle)
     
-    filename=mcmcobj.filename+'_hard'
+    filename=mcmcobj.filename
     
     outfile=open(filename,'wb')
     pickle.dump(mcmcobj,outfile)
@@ -74,7 +83,7 @@ def main():
     print(filename)
     
 def mainArgs(acc,lag,steps,thin_by,data,tmp,dir):
-    sys.argv = ['mainCustomModels.py', 
+    sys.argv = ['mainInv.py', 
                 '-acc', str(acc),
                 '-lag', str(lag),
                 '-steps',str(steps),
