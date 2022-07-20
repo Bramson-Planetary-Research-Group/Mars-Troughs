@@ -1,24 +1,27 @@
 from unittest import TestCase
 
 import numpy as np
-
 from mars_troughs import Trough
+from mars_troughs import (Linear_Insolation,
+                         Quadratic_Insolation, 
+                         LinearLag,
+                         ConstantLag)
 
 
 class TroughTest(TestCase):
     def setUp(self):
-        self.acc_params = [1e-6, 1e-11, 1e-11]
-        self.acc_model_name = "quadratic"
-        self.lag_params = [1, 1e-7]
-        self.lag_model_name = "linear"
+        time = np.linspace(0, 1e6, 1000)
+        insolation = np.sin(np.radians(np.linspace(0.1, 360, 1000)))
+        self.acc_model= Quadratic_Insolation(time,insolation,
+                                             1e-6, 1e-11, 1e-11)
+        self.lag_model= LinearLag(1,1e-7)
         self.errorbar = 100.0
+
 
     def get_trough_object(self, **kwargs):
         return Trough(
-            self.acc_model_name,
-            self.lag_model_name,
-            self.acc_params,
-            self.lag_params,
+            self.acc_model,
+            self.lag_model,
             self.errorbar,
             **kwargs,
         )
@@ -36,8 +39,9 @@ class TroughTest(TestCase):
 
     def test_set_model(self):
         # Test that we can update the trough object
-        self.acc_params = [1e-6, 1e-11]
-        self.acc_model_name = "linear"
+        time = np.linspace(0, 1e6, 1000)
+        insolation = np.sin(np.radians(np.linspace(0.1, 360, 1000)))
+        self.acc_model= Linear_Insolation(time,insolation,1e-6, 1e-11)
         tr = self.get_trough_object()
         # Save a pointer to the old spline so we can compare
         old_spline = tr.retreat_model_t_spline
@@ -60,10 +64,11 @@ class TroughTest(TestCase):
         assert np.any(old_model_retreat != tr.retreat_model_t)
 
     def test_get_trajectory(self):
+        time = np.linspace(0, 1e6, 1000)
         tr = self.get_trough_object()
-        x, y = tr.get_trajectory()
+        x, y = tr.get_trajectory(time)
         assert len(x) == len(y)
-        assert len(x) == len(tr.times)
+        assert len(x) == len(time)
 
     def test_get_trajectory_input_times(self):
         tr = self.get_trough_object()
@@ -83,15 +88,17 @@ class TroughTest(TestCase):
         tr = self.get_trough_object()
         # Junk data
         x = y = -np.arange(10) * 100
-        xo, yo = tr.get_nearest_points(x, y)
+        time = np.linspace(0, 1e6, 1000)
+        xo, yo, timeOut = tr.get_nearest_points(x, y,time)
         assert xo.shape == x.shape
         assert yo.shape == y.shape
 
     def test_lnlikelihood(self):
         tr = self.get_trough_object()
+        time = np.linspace(0, 1e6, 1000)
         # Junk data
         x = y = -np.arange(10) * 100
-        LL = tr.lnlikelihood(x, y)
+        LL = tr.lnlikelihood(x, y,time)
         assert LL < 0
 
     def test__L2_distance(self):
@@ -106,10 +113,10 @@ class TroughTest(TestCase):
             assert np.argmin(dist) in [N // 2, N // 2 + 1]
 
     def test_obliquity(self):
-        self.acc_params = [1e-6, 1e-11]
-        self.acc_model_name = "obliquity"
-        self.lag_params = [1]
-        self.lag_model_name = "constant"
+        time = np.linspace(0, 1e6, 1000)
+        insolation = np.sin(np.radians(np.linspace(0.1, 360, 1000)))
+        self.acc_model= Linear_Insolation(time,insolation,1e-11, 1e-11)
+        self.lag_model= ConstantLag(1e-7)
         tr = self.get_trough_object()
         # Save a pointer to the old spline so we can compare
         old_spline = tr.retreat_model_t_spline
