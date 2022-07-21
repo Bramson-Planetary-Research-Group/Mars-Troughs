@@ -6,14 +6,11 @@ from typing import Callable, Dict, List, Optional, Tuple, Union
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
 from scipy.interpolate import RectBivariateSpline as RBS
-
-from mars_troughs.accumulation_model import ACCUMULATION_MODEL_MAP
 from mars_troughs.datapaths import (
     load_insolation_data,
     load_obliquity_data,
     load_retreat_data,
 )
-from mars_troughs.lag_model import LAG_MODEL_MAP
 from mars_troughs.model import Model
 
 
@@ -41,19 +38,13 @@ class Trough(Model):
         self,
         acc_model: Union[str, Model],
         lag_model: Union[str, Model],
-        acc_params: Optional[List[float]] = None,
-        lag_params: Optional[List[float]] = None,
-        tmp: Optional[int] = None,
         errorbar: float = 1.0,
         angle: float = 2.9,
     ):
         """Constructor for the trough object.
         Args:
-          acc_params (array like): model parameters for accumulation
-          acc_model_name (str): name of the accumulation model
-                                (linear, quadratic, etc)
-          lag_params (array like): model parameters for lag(t)
-          lag_model_name (str): name of the lag(t) model (constant, linear, etc)
+          acc_model (Model): accumulation submodel
+          lag_model (Model): lag submodel
           errorbar (float, optional): errorbar of the datapoints in pixels; default=1
           angle (float, optional): south-facing slope angle in degrees. Default is 2.9.
         """
@@ -65,44 +56,11 @@ class Trough(Model):
         self.errorbar = errorbar
         self.meters_per_pixel = np.array([500.0, 20.0])  # meters per pixel
 
-        # Create submodels
-        if isinstance(acc_model, str):  # name of existing model is given                  
-            if "obliquity" in acc_model:
-                #load obliquity data and times
-                obliquity, obl_times = load_obliquity_data()
-                obl_times = -obl_times.astype(float)
-                #remove zeros from time array
-                condZero = obl_times==0
-                indx =np.array(range(len(condZero)))
-                indxZero=indx[condZero]
-                obl_times[indxZero]=1e-10
-                
-                acc_time, acc_y = obl_times, obliquity
-            else:
-                insolation,ins_times = load_insolation_data(tmp)
-                ins_times = -ins_times.astype(float)
-                #remove zeros from time array
-                condZero = ins_times==0
-                indx =np.array(range(len(condZero)))
-                indxZero=indx[condZero]
-                ins_times[indxZero]=1e-10
-
-                acc_time, acc_y = ins_times, insolation
-
-            self.accuModel = ACCUMULATION_MODEL_MAP[acc_model](
-                acc_time, acc_y, *acc_params
-            )
-        else:  # custom model is given
-            self.accuModel = acc_model
+        # Acc submodel
+        self.accuModel = acc_model
 
         # Lag submodel
-        assert isinstance(
-            lag_model, (str, Model)
-        ), "lag_model must be a string or Model"
-        if isinstance(lag_model, str):  # name of existing model is given
-            self.lagModel = LAG_MODEL_MAP[lag_model](*lag_params)
-        else:  # custom model was given
-            self.lagModel = lag_model
+        self.lagModel = lag_model
 
         # Call super() with the acc and lag models. This
         # way their parameters are visible here.
@@ -217,12 +175,14 @@ class Trough(Model):
         x_model, y_model = self.get_trajectory(times)
         x_out = np.zeros_like(x_data)
         y_out = np.zeros_like(y_data)
+        time_out = np.zeros_like(y_data)
         for i, (xdi, ydi) in enumerate(zip(x_data, y_data)):
             dist = dist_func(x_model, xdi, y_model, ydi)
             ind = np.argmin(dist)
             x_out[i] = x_model[ind]
             y_out[i] = y_model[ind]
-        return x_out, y_out
+            time_out[i] = times[ind]
+        return x_out, y_out, time_out
 
     def lnlikelihood(
             self, 
@@ -240,7 +200,8 @@ class Trough(Model):
         Output:
             log-likelihood value (float)
         """
-        self.xnear, self.ynear =self.get_nearest_points(x_data, y_data,times)
+        self.xnear, self.ynear, self.timesxy = self.get_nearest_points(
+                                                      x_data, y_data,times)
         # Variance in meters in both directions
         xvar, yvar = (self.errorbar * self.meters_per_pixel) ** 2
         chi2 = (x_data - self.xnear) ** 2 / xvar + (y_data - 

@@ -29,8 +29,6 @@ class MCMC():
         tmp: int,
         acc_model = Union[str, Model],
         lag_model = Union[str, Model],
-        acc_params: Optional[List[float]] = None,
-        lag_params: Optional[List[float]] = None,
         errorbar = np.sqrt(1.6), #errorbar in pixels on the datapoints
         angle= 5.0,
     ):
@@ -52,8 +50,7 @@ class MCMC():
         self.xdata=self.xdata*1000 #km to m 
         
         # Create  trough object 
-        self.tr = mt.Trough(self.acc_model,self.lag_model,acc_params,
-                       lag_params,tmp,errorbar,angle)
+        self.tr = mt.Trough(self.acc_model,self.lag_model,errorbar,angle)
         
         self.parameter_names = ([key for key in self.tr.all_parameters])
         
@@ -74,24 +71,15 @@ class MCMC():
         
         #aux for creating directories
         
-        if isinstance(self.acc_model, str):
-            #do nothing
-            self.acc_model_name=self.acc_model
-        else:
-            auxAcc=str(self.acc_model).split(' ')
-            auxAcc=auxAcc[0]
-            self.acc_model_name=auxAcc.split('.')
-            self.acc_model_name=self.acc_model_name[2]
+        auxAcc=str(self.acc_model).split(' ')
+        auxAcc=auxAcc[0]
+        self.acc_model_name=auxAcc.split('.')
+        self.acc_model_name=self.acc_model_name[2]
             
-        
-        if isinstance(self.lag_model, str):
-            #do nothing
-            self.lag_model_name=self.lag_model
-        else:
-            auxLag=str(self.lag_model).split(' ')
-            auxLag=auxLag[0]
-            self.lag_model_name=auxLag.split('.')
-            self.lag_model_name=self.lag_model_name[2]
+        auxLag=str(self.lag_model).split(' ')
+        auxLag=auxLag[0]
+        self.lag_model_name=auxLag.split('.')
+        self.lag_model_name=self.lag_model_name[2]
         
         #Create directory to save outputs
         if not os.path.exists(self.directory):
@@ -188,40 +176,49 @@ class MCMC():
         #delete sampler because it is very large
         del self.sampler
         
-
-    def ln_likelihood(self,params: Dict[str,float]):
+    def priors(self,params,times):
         
+        #errorbar has to be positive
         errorbar: float = params["errorbar"]
         
         if errorbar < 0: #prior on the variance (i.e. the error bars)
-            return -1e99
+            return False
+        
+        #lag thickness has to be larger than 1e-15 mm and less than 20 mm
+        if any(self.tr.lag_at_t  < 1e-15) or any(self.tr.lag_at_t > 20):
+            return False
+        
+        #depth of trough migration points should between 0 and -2 km
+        if any(self.tr.ynear < -2e3) or any(self.tr.ynear > 0):
+            return False
+        
+        #accumulation rate should >=0
+        acc_t=self.tr.accuModel.get_accumulation_at_t(
+                                                    self.tr.accuModel._times)
+        if any(acc_t <= 0):
+            return False
+        
+        #exponent of accumulation, if it exists, should be larger than -3
+        if "acc_exponent" in params.keys():
+            exponent: float = params["acc_exponent"]
+            
+            if exponent < -3:
+                return False
+        
+        return True
+        
+
+    def ln_likelihood(self,params: Dict[str,float]):
         
         #set trough model with candidate parameters
         self.tr.set_model(params)
         #compute likelihood of model 
         likelihood_of_model=self.tr.lnlikelihood(self.xdata,self.ydata,
                                                  self.tr.accuModel._times)
-        #prior lag with time
-        if any(self.tr.lag_at_t  < 1e-15) or any(self.tr.lag_at_t > 20):
+        if self.priors(params,self.tr.accuModel._times):
+            return likelihood_of_model
+        else:
             return -1e99
-        
-        #prior nearest points to observed data
-        if any(self.tr.ynear < -2e3) or any(self.tr.ynear > 0):
-            return -1e99
-        
-        #get accumulation with time
-        acc_t=self.tr.accuModel.get_accumulation_at_t(self.tr.accuModel._times)
-        if any(acc_t < 0):
-            return -1e99
-        
-        #get exponent of accumulation, if it exists
-        if "acc_exponent" in params.keys():
-            exponent: float = params["acc_exponent"]
-            
-            if exponent < -3:
-                return -1e99
-        
-        return likelihood_of_model
     
     #And the negative of the log likelihood
     def neg_ln_likelihood(self,paramsArray):
@@ -232,8 +229,75 @@ class MCMC():
 
     
 
-
-
+class hardAgePriorMCMC(MCMC):
+    
+    def priors(self,params,times):
+        otherPriors=super().priors(params,times)
         
-
+        #age of trough should be less than 3 Myr
+        if np.max(self.tr.timesxy)>3e6:
+            return False
+        
+        return otherPriors*True
+    
+class softAgePriorMCMC(MCMC):
+    def __init__(
+        self,
+        meanAge: float,
+        maxSteps: int,
+        thin_by: int,
+        directory: str,
+        tmp: int,
+        acc_model = Union[str, Model],
+        lag_model = Union[str, Model],
+        errorbar = np.sqrt(1.6), #errorbar in pixels on the datapoints
+        angle= 5.0
+    ):
+        self.meanAge=meanAge
+        
+        super().__init__(
+            maxSteps,
+            thin_by,
+            directory,
+            tmp,
+            acc_model,
+            lag_model,
+            errorbar,
+            angle)
+        
+    
+    def priors(self,params,times):
+        otherPriors=super().priors(params,times)
+        if otherPriors==False:
+            return False
+        else:
+            #age of trough is preferred to be 3 Myr 
+            import scipy.stats as stat
+            stdAge=5e5
+            priorDistAge=stat.norm(self.meanAge,stdAge) #mean 3 Myr, std 5e5 y
+            
+            ageTrough=np.max(self.tr.timesxy)
+            
+            if ageTrough >= self.meanAge:
+                priorAge=priorDistAge.sf(ageTrough)
+            else:
+                priorAge=priorDistAge.cdf(ageTrough)
+                
+            return otherPriors*priorAge
+    
+    def ln_likelihood(self,params: Dict[str,float]):
+        
+        #set trough model with candidate parameters
+        self.tr.set_model(params)
+        #compute likelihood of model 
+        likelihood_of_model=self.tr.lnlikelihood(self.xdata,self.ydata,
+                                                 self.tr.accuModel._times)
+        
+        priorValue=self.priors(params,self.tr.accuModel._times)
+        
+        if priorValue==False:
+            return -1e99
+        else:
+            return np.log(priorValue)+likelihood_of_model
+        
         

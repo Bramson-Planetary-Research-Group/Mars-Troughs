@@ -15,14 +15,14 @@ import argparse
 import os
 import glob
 import sys
+from mars_troughs.datapaths import load_insolation_data, load_obliquity_data
 
 def main():
     p=argparse.ArgumentParser(description="filename for plotting")
     p.add_argument("-objpath",type=str,help="name file or dir \
                                            for loading mcmc object")
     p.add_argument("-plotdir",type=str,help="name dir for saving plots")
-    p.add_argument("-initmodel",type=int,help="initial model for \
-                                                   plotting")
+    p.add_argument("-nmodels",type=int,help="nmodels for ensemble")
     p.add_argument("-stepEnsemble",type=int,help="skip models for \
                                                   plotting")
     args=p.parse_args()
@@ -38,7 +38,7 @@ def main():
         numfiles=len(listObj)
         print('Input file path')
     else:
-        listObj=glob.glob(args.objpath+'*obj')
+        listObj=glob.glob(args.objpath+'*obj*')
         numfiles=len(listObj)
         print('Input directory path')
         print(numfiles,' files')  
@@ -51,7 +51,7 @@ def main():
         print(listObj[ifile])
         newmcmc=pickle.load(infile)
         infile.close()
-        
+
         #create folder for saving figures
         if not os.path.exists(args.plotdir+'figures/'):
             os.makedirs(args.plotdir+'figures/')
@@ -61,17 +61,11 @@ def main():
         numparams=len(paramsList)
         
         #subsample ensemble
-        if newmcmc.totalSteps<= args.initmodel:
-            ensemble=newmcmc.samples[int((newmcmc.totalSteps/newmcmc.thin_by-1)/2)::args.stepEnsemble,:,:]
-            xaxis=np.arange(int(newmcmc.totalSteps/2),newmcmc.totalSteps+1,args.stepEnsemble*newmcmc.thin_by)
-            nmodels=len(xaxis)
-            logprob=newmcmc.logprob[int((newmcmc.totalSteps/newmcmc.thin_by-1)/2)::args.stepEnsemble,:]
-        else:
-            ensemble=newmcmc.samples[int(args.initmodel/newmcmc.thin_by-1)::args.stepEnsemble,:,:]
-            xaxis=np.arange(args.initmodel,newmcmc.totalSteps+1,args.stepEnsemble*newmcmc.thin_by)
-            nmodels=len(xaxis) 
-            logprob=newmcmc.logprob[int(args.initmodel/newmcmc.thin_by-1)::args.stepEnsemble,:]
-    
+        ensemble=newmcmc.samples[-1*args.nmodels::args.stepEnsemble,:,:]
+        xaxis=np.arange(newmcmc.totalSteps-(args.nmodels-1)*newmcmc.thin_by,newmcmc.totalSteps+1,args.stepEnsemble*newmcmc.thin_by)
+        nmodels=len(xaxis) 
+        logprob=newmcmc.logprob[-1*args.nmodels::args.stepEnsemble,:]
+
         #find model with highest likelihood
         indxbest2d=np.unravel_index(logprob.argmax(),logprob.shape)
         
@@ -165,11 +159,11 @@ def main():
         autoxaxis=autoxaxis[:len(newmcmc.autocorr)]
         
         plt.plot(autoxaxis,autoxaxis,"--k",label=r'Length chain')
-        plt.plot(autoxaxis[np.nonzero(newmcmc.autocorr)],50*newmcmc.autocorr[np.nonzero(newmcmc.autocorr)],label=r'50 * $\tau$ estimate')
+        plt.plot(autoxaxis[np.nonzero(newmcmc.autocorr)],newmcmc.autocorr[np.nonzero(newmcmc.autocorr)],label=r'$\tau$ estimate')
         plt.xlabel('Iteration')
         ax=plt.gca()
         ax.legend()
-        
+        plt.yscale("log")        
         
         #create folder for saving figure
         if not os.path.exists(args.plotdir+'figures/'+'autocorr/'):
@@ -217,7 +211,7 @@ def main():
         
         
         #plot retreat rates
-        plt.subplot(2,1,1)
+        plt.subplot(3,1,1)
         plt.plot(timesub/1000000,retreatt[:,0::subsample].T*1000,c="gray",
                                             alpha=0.1, zorder=-1)
         plt.plot(timesub/1000000,retreatt[indxbest,0::subsample]*1000,c="b")
@@ -225,13 +219,27 @@ def main():
         plt.title('R(L(t),t) (mm/year)')
         
         #plot acct
-        plt.subplot(2,1,2)
+        plt.subplot(3,1,2)
         plt.plot(timesub/1000000,1000*acct[:,0::subsample].T,c="gray",
                                             alpha=0.1, zorder=-1)
         plt.plot(timesub/1000000,1000*acct[indxbest,0::subsample],c="b")
         plt.title('A(t) (mm/year)')
-        plt.xlabel('Time (Myr)')
+        plt.xticks([], [])
+
         
+        if '_Obliquity_' in newmcmc.modelName:
+            #plot obliquity data
+            data,times =  load_obliquity_data()
+            titledata = 'Obliquity (deg)'
+        else:
+            #plot insolation data
+            data,times =  load_insolation_data(newmcmc.tmp)
+            titledata = 'Insolation (W/m^2)'
+        
+        plt.subplot(3,1,3)
+        plt.plot(-1*times/1000000,data)
+        plt.title(titledata)
+        plt.xlabel('Time (Myr)')
         
         #create folder for saving figure
         if not os.path.exists(args.plotdir+'figures/'+'ar_rates/'):
@@ -244,7 +252,7 @@ def main():
         # tmp fit ---------------------------------------------------
         plt.figure()
         bestTMP=tmpt[indxbest,:,:]
-        plt.plot(bestTMP[:,0],bestTMP[:,1],c='b',label='Best TMP')
+        plt.plot(bestTMP[:,0],bestTMP[:,1],c='b')
         
         #get errorbar of best tmp
         bestErrorbar=errorbar1d[indxbest]
@@ -273,6 +281,15 @@ def main():
             indx=i
             plt.plot(tmpt[indx,:,0],tmpt[indx,:,1],c="gray", alpha=0.1, zorder=-1)
         plt.plot(tmpt[indx,:,0],tmpt[indx,:,1],c="gray", alpha=0.1, zorder=-1,label='Ensemble models')
+        
+        plt.errorbar(x=xnear, xerr=xerr, y=ynear, yerr=yerr, 
+                 c='b', marker='.', ls='', label='Best model')
+        #plot observed data with errorbars
+        #sharad images error: 20 m per pixel vertically and 475 m per pixel
+        #horizontally
+        plt.errorbar(x=newmcmc.xdata, xerr=475, y=newmcmc.ydata, yerr=20, 
+                 c='r', marker='.', ls='',label='Observed TMP')
+        
         plt.xlabel("Horizontal dist [m]")
         plt.ylabel("V. dist [m]")
         ax=plt.gca()
@@ -288,10 +305,9 @@ def main():
         #plot times on upper axis
         ax2=ax.twiny()
         color='m'
-        ax2.set_xlabel('Time before present ( Million years)',color=color)
-        plt.scatter(xnear,ynear,marker="o",color='m')
-        plt.errorbar(x=newmcmc.xdata, xerr=xerr, y=newmcmc.ydata, yerr=yerr, 
-                 c='r', marker='.', ls='',label='Observed TMP')
+        ax2.set_xlabel('Time before present ( Myr)',color=color)
+        #plt.scatter(xnear,ynear,marker="o",color='b')
+        
         ax2.set_ylim(ymin,0)
         ax2.set_xlim(0,xmax)
         ax2.tick_params(axis='x',labelcolor=color)
@@ -395,11 +411,11 @@ def main():
         #plot optimal parameters versus best params------
         
         
-def mainArgs(objpath,plotdir,init,step):
+def mainArgs(objpath,plotdir,nmodels,step):
     sys.argv = ['maintest.py', 
                 '-objpath', str(objpath),
                 '-plotdir', str(plotdir),
-                '-initmodel',str(init),
+                '-nmodels',str(nmodels),
                 '-stepEnsemble', str(step)]
     main()
     
