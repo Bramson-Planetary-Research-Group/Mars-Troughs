@@ -40,8 +40,6 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs</span></code></a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="../index.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="../accumulation_model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.accumulation_model</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../custom_acc_models/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.custom_acc_models</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../custom_lag_models/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.custom_lag_models</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../datapaths/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.datapaths</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../generic_model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.generic_model</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../lag_model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.lag_model</span></code></a></li>
@@ -52,6 +50,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../index.html#package-contents">Package Contents</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../index.html#classes">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../index.html#functions">Functions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../index.html#attributes">Attributes</a></li>
 </ul>
 </li>
@@ -102,13 +101,24 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#mars_troughs.mcmc.MCMC" title="mars_troughs.mcmc.MCMC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MCMC</span></code></a></p></td>
 <td><p>Class for running MCMC chains to obtain a sample of climate parameters</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mars_troughs.mcmc.hardAgePriorMCMC" title="mars_troughs.mcmc.hardAgePriorMCMC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hardAgePriorMCMC</span></code></a></p></td>
+<td><p>Class for running MCMC chains to obtain a sample of climate parameters</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mars_troughs.mcmc.softAgePriorMCMC" title="mars_troughs.mcmc.softAgePriorMCMC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">softAgePriorMCMC</span></code></a></p></td>
+<td><p>Class for running MCMC chains to obtain a sample of climate parameters</p></td>
+</tr>
 </tbody>
 </table>
 <dl class="class">
 <dt id="mars_troughs.mcmc.MCMC">
-<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.mcmc.</code><code class="sig-name descname">MCMC</code><span class="sig-paren">(</span><em class="sig-param">maxSteps: int, thin_by: int, directory: str, tmp: int, acc_model=Union[str, Model], lag_model=Union[str, Model], acc_params: Optional[List[float]] = None, lag_params: Optional[List[float]] = None, errorbar=np.sqrt(1.6), angle=5.0</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.mcmc.MCMC" title="Permalink to this definition"></a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.mcmc.</code><code class="sig-name descname">MCMC</code><span class="sig-paren">(</span><em class="sig-param">maxSteps: int, thin_by: int, directory: str, tmp: int, acc_model=Union[str, Model], lag_model=Union[str, Model], errorbar=np.sqrt(1.6), angle=5.0</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.mcmc.MCMC" title="Permalink to this definition"></a></dt>
 <dd><p>Class for running MCMC chains to obtain a sample of climate parameters
 of trough migration.</p>
+<dl class="method">
+<dt id="mars_troughs.mcmc.MCMC.priors">
+<code class="sig-name descname">priors</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">params</em>, <em class="sig-param">times</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.mcmc.MCMC.priors" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="mars_troughs.mcmc.MCMC.ln_likelihood">
 <code class="sig-name descname">ln_likelihood</code><span class="sig-paren">(</span><em class="sig-param">self, params: Dict[str, float]</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.mcmc.MCMC.ln_likelihood" title="Permalink to this definition"></a></dt>
@@ -117,6 +127,37 @@ of trough migration.</p>
 <dl class="method">
 <dt id="mars_troughs.mcmc.MCMC.neg_ln_likelihood">
 <code class="sig-name descname">neg_ln_likelihood</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">paramsArray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.mcmc.MCMC.neg_ln_likelihood" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="mars_troughs.mcmc.hardAgePriorMCMC">
+<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.mcmc.</code><code class="sig-name descname">hardAgePriorMCMC</code><span class="sig-paren">(</span><em class="sig-param">maxSteps: int, thin_by: int, directory: str, tmp: int, acc_model=Union[str, Model], lag_model=Union[str, Model], errorbar=np.sqrt(1.6), angle=5.0</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.mcmc.hardAgePriorMCMC" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mars_troughs.mcmc.MCMC" title="mars_troughs.mcmc.MCMC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MCMC</span></code></a></p>
+<p>Class for running MCMC chains to obtain a sample of climate parameters
+of trough migration.</p>
+<dl class="method">
+<dt id="mars_troughs.mcmc.hardAgePriorMCMC.priors">
+<code class="sig-name descname">priors</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">params</em>, <em class="sig-param">times</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.mcmc.hardAgePriorMCMC.priors" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="mars_troughs.mcmc.softAgePriorMCMC">
+<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.mcmc.</code><code class="sig-name descname">softAgePriorMCMC</code><span class="sig-paren">(</span><em class="sig-param">meanAge: float, maxSteps: int, thin_by: int, directory: str, tmp: int, acc_model=Union[str, Model], lag_model=Union[str, Model], errorbar=np.sqrt(1.6), angle=5.0</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.mcmc.softAgePriorMCMC" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mars_troughs.mcmc.MCMC" title="mars_troughs.mcmc.MCMC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MCMC</span></code></a></p>
+<p>Class for running MCMC chains to obtain a sample of climate parameters
+of trough migration.</p>
+<dl class="method">
+<dt id="mars_troughs.mcmc.softAgePriorMCMC.priors">
+<code class="sig-name descname">priors</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">params</em>, <em class="sig-param">times</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.mcmc.softAgePriorMCMC.priors" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mars_troughs.mcmc.softAgePriorMCMC.ln_likelihood">
+<code class="sig-name descname">ln_likelihood</code><span class="sig-paren">(</span><em class="sig-param">self, params: Dict[str, float]</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.mcmc.softAgePriorMCMC.ln_likelihood" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

@@ -20,19 +20,49 @@ Classes
 .. autoapisummary::
 
    mars_troughs.mcmc.MCMC
+   mars_troughs.mcmc.hardAgePriorMCMC
+   mars_troughs.mcmc.softAgePriorMCMC
 
 
 
 
-.. py:class:: MCMC(maxSteps: int, thin_by: int, directory: str, tmp: int, acc_model=Union[str, Model], lag_model=Union[str, Model], acc_params: Optional[List[float]] = None, lag_params: Optional[List[float]] = None, errorbar=np.sqrt(1.6), angle=5.0)
+.. py:class:: MCMC(maxSteps: int, thin_by: int, directory: str, tmp: int, acc_model=Union[str, Model], lag_model=Union[str, Model], errorbar=np.sqrt(1.6), angle=5.0)
 
    Class for running MCMC chains to obtain a sample of climate parameters
    of trough migration.
+
+   .. py:method:: priors(self, params, times)
+
 
    .. py:method:: ln_likelihood(self, params: Dict[str, float])
 
 
    .. py:method:: neg_ln_likelihood(self, paramsArray)
+
+
+
+.. py:class:: hardAgePriorMCMC(maxSteps: int, thin_by: int, directory: str, tmp: int, acc_model=Union[str, Model], lag_model=Union[str, Model], errorbar=np.sqrt(1.6), angle=5.0)
+
+   Bases: :py:obj:`MCMC`
+
+   Class for running MCMC chains to obtain a sample of climate parameters
+   of trough migration.
+
+   .. py:method:: priors(self, params, times)
+
+
+
+.. py:class:: softAgePriorMCMC(meanAge: float, maxSteps: int, thin_by: int, directory: str, tmp: int, acc_model=Union[str, Model], lag_model=Union[str, Model], errorbar=np.sqrt(1.6), angle=5.0)
+
+   Bases: :py:obj:`MCMC`
+
+   Class for running MCMC chains to obtain a sample of climate parameters
+   of trough migration.
+
+   .. py:method:: priors(self, params, times)
+
+
+   .. py:method:: ln_likelihood(self, params: Dict[str, float])
 
 
 

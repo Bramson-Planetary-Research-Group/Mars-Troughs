@@ -41,8 +41,6 @@
 <li class="toctree-l2"><a class="reference internal" href="autoapi/mars_troughs/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="autoapi/mars_troughs/index.html#submodules">Submodules</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="autoapi/mars_troughs/accumulation_model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.accumulation_model</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="autoapi/mars_troughs/custom_acc_models/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.custom_acc_models</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="autoapi/mars_troughs/custom_lag_models/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.custom_lag_models</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="autoapi/mars_troughs/datapaths/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.datapaths</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="autoapi/mars_troughs/generic_model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.generic_model</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="autoapi/mars_troughs/lag_model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.lag_model</span></code></a></li>
@@ -53,6 +51,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="autoapi/mars_troughs/index.html#package-contents">Package Contents</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="autoapi/mars_troughs/index.html#classes">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/mars_troughs/index.html#functions">Functions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="autoapi/mars_troughs/index.html#attributes">Attributes</a></li>
 </ul>
 </li>
@@ -95,6 +94,7 @@
  | <a href="#D"><strong>D</strong></a>
  | <a href="#E"><strong>E</strong></a>
  | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
@@ -132,18 +132,8 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/mars_troughs/index.html#mars_troughs.ACCUMULATION_MODEL_MAP">ACCUMULATION_MODEL_MAP (in module mars_troughs)</a>
-
-      <ul>
-        <li><a href="autoapi/mars_troughs/accumulation_model/index.html#mars_troughs.accumulation_model.ACCUMULATION_MODEL_MAP">(in module mars_troughs.accumulation_model)</a>
+      <li><a href="autoapi/mars_troughs/accumulation_model/index.html#mars_troughs.accumulation_model.AccumulationModel">AccumulationModel (class in mars_troughs.accumulation_model)</a>
 </li>
-      </ul></li>
-      <li><a href="autoapi/mars_troughs/index.html#mars_troughs.AccumulationModel">AccumulationModel (class in mars_troughs)</a>
-
-      <ul>
-        <li><a href="autoapi/mars_troughs/accumulation_model/index.html#mars_troughs.accumulation_model.AccumulationModel">(class in mars_troughs.accumulation_model)</a>
-</li>
-      </ul></li>
       <li><a href="autoapi/mars_troughs/index.html#mars_troughs.Model.all_parameter_names">all_parameter_names() (mars_troughs.Model property)</a>
 
       <ul>
@@ -173,8 +163,6 @@
       <li><a href="autoapi/mars_troughs/index.html#mars_troughs.ConstantLag">ConstantLag (class in mars_troughs)</a>
 
       <ul>
-        <li><a href="autoapi/mars_troughs/custom_lag_models/index.html#mars_troughs.custom_lag_models.ConstantLag">(class in mars_troughs.custom_lag_models)</a>
-</li>
         <li><a href="autoapi/mars_troughs/lag_model/index.html#mars_troughs.lag_model.ConstantLag">(class in mars_troughs.lag_model)</a>
 </li>
       </ul></li>
@@ -194,17 +182,25 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/mars_troughs/custom_acc_models/index.html#mars_troughs.custom_acc_models.Cubic_Insolation">Cubic_Insolation (class in mars_troughs.custom_acc_models)</a>
+      <li><a href="autoapi/mars_troughs/index.html#mars_troughs.Cubic_Insolation">Cubic_Insolation (class in mars_troughs)</a>
+
+      <ul>
+        <li><a href="autoapi/mars_troughs/accumulation_model/index.html#mars_troughs.accumulation_model.Cubic_Insolation">(class in mars_troughs.accumulation_model)</a>
 </li>
-      <li><a href="autoapi/mars_troughs/custom_acc_models/index.html#mars_troughs.custom_acc_models.Cubic_Obliquity">Cubic_Obliquity (class in mars_troughs.custom_acc_models)</a>
+      </ul></li>
+      <li><a href="autoapi/mars_troughs/index.html#mars_troughs.Cubic_Obliquity">Cubic_Obliquity (class in mars_troughs)</a>
+
+      <ul>
+        <li><a href="autoapi/mars_troughs/accumulation_model/index.html#mars_troughs.accumulation_model.Cubic_Obliquity">(class in mars_troughs.accumulation_model)</a>
 </li>
-      <li><a href="autoapi/mars_troughs/custom_lag_models/index.html#mars_troughs.custom_lag_models.CubicLag">CubicLag (class in mars_troughs.custom_lag_models)</a>
+      </ul></li>
+      <li><a href="autoapi/mars_troughs/index.html#mars_troughs.CubicLag">CubicLag (class in mars_troughs)</a>
+
+      <ul>
+        <li><a href="autoapi/mars_troughs/lag_model/index.html#mars_troughs.lag_model.CubicLag">(class in mars_troughs.lag_model)</a>
 </li>
+      </ul></li>
       <li><a href="autoapi/mars_troughs/generic_model/index.html#mars_troughs.generic_model.CubicModel">CubicModel (class in mars_troughs.generic_model)</a>
-</li>
-      <li><a href="autoapi/mars_troughs/custom_acc_models/index.html#mars_troughs.custom_acc_models.CustomAccumulationModel">CustomAccumulationModel (class in mars_troughs.custom_acc_models)</a>
-</li>
-      <li><a href="autoapi/mars_troughs/custom_lag_models/index.html#mars_troughs.custom_lag_models.CustomLagModel">CustomLagModel (class in mars_troughs.custom_lag_models)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -251,21 +247,9 @@
       <ul>
         <li><a href="autoapi/mars_troughs/accumulation_model/index.html#mars_troughs.accumulation_model.TimeDependentAccumulationModel.get_accumulation_at_t">(mars_troughs.accumulation_model.TimeDependentAccumulationModel method)</a>
 </li>
-        <li><a href="autoapi/mars_troughs/index.html#mars_troughs.AccumulationModel.get_accumulation_at_t">(mars_troughs.AccumulationModel method)</a>
-</li>
-        <li><a href="autoapi/mars_troughs/custom_acc_models/index.html#mars_troughs.custom_acc_models.CustomAccumulationModel.get_accumulation_at_t">(mars_troughs.custom_acc_models.CustomAccumulationModel method)</a>
-</li>
-        <li><a href="autoapi/mars_troughs/custom_acc_models/index.html#mars_troughs.custom_acc_models.TimeDependentAccumulationModel.get_accumulation_at_t">(mars_troughs.custom_acc_models.TimeDependentAccumulationModel method)</a>
-</li>
       </ul></li>
-      <li><a href="autoapi/mars_troughs/custom_lag_models/index.html#mars_troughs.custom_lag_models.CustomLagModel.get_lag_at_t">get_lag_at_t() (mars_troughs.custom_lag_models.CustomLagModel method)</a>
-
-      <ul>
-        <li><a href="autoapi/mars_troughs/lag_model/index.html#mars_troughs.lag_model.LagModel.get_lag_at_t">(mars_troughs.lag_model.LagModel method)</a>
+      <li><a href="autoapi/mars_troughs/lag_model/index.html#mars_troughs.lag_model.LagModel.get_lag_at_t">get_lag_at_t() (mars_troughs.lag_model.LagModel method)</a>
 </li>
-        <li><a href="autoapi/mars_troughs/index.html#mars_troughs.LagModel.get_lag_at_t">(mars_troughs.LagModel method)</a>
-</li>
-      </ul></li>
       <li><a href="autoapi/mars_troughs/index.html#mars_troughs.Trough.get_nearest_points">get_nearest_points() (mars_troughs.Trough method)</a>
 
       <ul>
@@ -279,43 +263,49 @@
 </li>
       </ul></li>
       <li><a href="autoapi/mars_troughs/accumulation_model/index.html#mars_troughs.accumulation_model.TimeDependentAccumulationModel.get_xt">get_xt() (mars_troughs.accumulation_model.TimeDependentAccumulationModel method)</a>
+</li>
+      <li><a href="autoapi/mars_troughs/accumulation_model/index.html#mars_troughs.accumulation_model.Cubic_Insolation.get_yt">get_yt() (mars_troughs.accumulation_model.Cubic_Insolation method)</a>
 
       <ul>
-        <li><a href="autoapi/mars_troughs/custom_acc_models/index.html#mars_troughs.custom_acc_models.TimeDependentAccumulationModel.get_xt">(mars_troughs.custom_acc_models.TimeDependentAccumulationModel method)</a>
+        <li><a href="autoapi/mars_troughs/accumulation_model/index.html#mars_troughs.accumulation_model.Cubic_Obliquity.get_yt">(mars_troughs.accumulation_model.Cubic_Obliquity method)</a>
+</li>
+        <li><a href="autoapi/mars_troughs/accumulation_model/index.html#mars_troughs.accumulation_model.Linear_Insolation.get_yt">(mars_troughs.accumulation_model.Linear_Insolation method)</a>
+</li>
+        <li><a href="autoapi/mars_troughs/accumulation_model/index.html#mars_troughs.accumulation_model.Linear_Obliquity.get_yt">(mars_troughs.accumulation_model.Linear_Obliquity method)</a>
+</li>
+        <li><a href="autoapi/mars_troughs/accumulation_model/index.html#mars_troughs.accumulation_model.PowerLaw_Insolation.get_yt">(mars_troughs.accumulation_model.PowerLaw_Insolation method)</a>
+</li>
+        <li><a href="autoapi/mars_troughs/accumulation_model/index.html#mars_troughs.accumulation_model.PowerLaw_Obliquity.get_yt">(mars_troughs.accumulation_model.PowerLaw_Obliquity method)</a>
+</li>
+        <li><a href="autoapi/mars_troughs/accumulation_model/index.html#mars_troughs.accumulation_model.Quadratic_Insolation.get_yt">(mars_troughs.accumulation_model.Quadratic_Insolation method)</a>
+</li>
+        <li><a href="autoapi/mars_troughs/accumulation_model/index.html#mars_troughs.accumulation_model.Quadratic_Obliquity.get_yt">(mars_troughs.accumulation_model.Quadratic_Obliquity method)</a>
+</li>
+        <li><a href="autoapi/mars_troughs/index.html#mars_troughs.Cubic_Insolation.get_yt">(mars_troughs.Cubic_Insolation method)</a>
+</li>
+        <li><a href="autoapi/mars_troughs/index.html#mars_troughs.Cubic_Obliquity.get_yt">(mars_troughs.Cubic_Obliquity method)</a>
+</li>
+        <li><a href="autoapi/mars_troughs/index.html#mars_troughs.Linear_Insolation.get_yt">(mars_troughs.Linear_Insolation method)</a>
+</li>
+        <li><a href="autoapi/mars_troughs/index.html#mars_troughs.Linear_Obliquity.get_yt">(mars_troughs.Linear_Obliquity method)</a>
+</li>
+        <li><a href="autoapi/mars_troughs/index.html#mars_troughs.PowerLaw_Insolation.get_yt">(mars_troughs.PowerLaw_Insolation method)</a>
+</li>
+        <li><a href="autoapi/mars_troughs/index.html#mars_troughs.PowerLaw_Obliquity.get_yt">(mars_troughs.PowerLaw_Obliquity method)</a>
+</li>
+        <li><a href="autoapi/mars_troughs/index.html#mars_troughs.Quadratic_Insolation.get_yt">(mars_troughs.Quadratic_Insolation method)</a>
+</li>
+        <li><a href="autoapi/mars_troughs/index.html#mars_troughs.Quadratic_Obliquity.get_yt">(mars_troughs.Quadratic_Obliquity method)</a>
 </li>
       </ul></li>
   </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/mars_troughs/accumulation_model/index.html#mars_troughs.accumulation_model.LinearInsolation.get_yt">get_yt() (mars_troughs.accumulation_model.LinearInsolation method)</a>
+</tr></table>
 
-      <ul>
-        <li><a href="autoapi/mars_troughs/accumulation_model/index.html#mars_troughs.accumulation_model.LinearObliquity.get_yt">(mars_troughs.accumulation_model.LinearObliquity method)</a>
+<h2 id="H">H</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/mars_troughs/mcmc/index.html#mars_troughs.mcmc.hardAgePriorMCMC">hardAgePriorMCMC (class in mars_troughs.mcmc)</a>
 </li>
-        <li><a href="autoapi/mars_troughs/accumulation_model/index.html#mars_troughs.accumulation_model.QuadraticInsolation.get_yt">(mars_troughs.accumulation_model.QuadraticInsolation method)</a>
-</li>
-        <li><a href="autoapi/mars_troughs/custom_acc_models/index.html#mars_troughs.custom_acc_models.Cubic_Insolation.get_yt">(mars_troughs.custom_acc_models.Cubic_Insolation method)</a>
-</li>
-        <li><a href="autoapi/mars_troughs/custom_acc_models/index.html#mars_troughs.custom_acc_models.Cubic_Obliquity.get_yt">(mars_troughs.custom_acc_models.Cubic_Obliquity method)</a>
-</li>
-        <li><a href="autoapi/mars_troughs/custom_acc_models/index.html#mars_troughs.custom_acc_models.Linear_Insolation.get_yt">(mars_troughs.custom_acc_models.Linear_Insolation method)</a>
-</li>
-        <li><a href="autoapi/mars_troughs/custom_acc_models/index.html#mars_troughs.custom_acc_models.Linear_Obliquity.get_yt">(mars_troughs.custom_acc_models.Linear_Obliquity method)</a>
-</li>
-        <li><a href="autoapi/mars_troughs/custom_acc_models/index.html#mars_troughs.custom_acc_models.PowerLaw_Insolation.get_yt">(mars_troughs.custom_acc_models.PowerLaw_Insolation method)</a>
-</li>
-        <li><a href="autoapi/mars_troughs/custom_acc_models/index.html#mars_troughs.custom_acc_models.PowerLaw_Obliquity.get_yt">(mars_troughs.custom_acc_models.PowerLaw_Obliquity method)</a>
-</li>
-        <li><a href="autoapi/mars_troughs/custom_acc_models/index.html#mars_troughs.custom_acc_models.Quadratic_Insolation.get_yt">(mars_troughs.custom_acc_models.Quadratic_Insolation method)</a>
-</li>
-        <li><a href="autoapi/mars_troughs/custom_acc_models/index.html#mars_troughs.custom_acc_models.Quadratic_Obliquity.get_yt">(mars_troughs.custom_acc_models.Quadratic_Obliquity method)</a>
-</li>
-        <li><a href="autoapi/mars_troughs/index.html#mars_troughs.LinearInsolation.get_yt">(mars_troughs.LinearInsolation method)</a>
-</li>
-        <li><a href="autoapi/mars_troughs/index.html#mars_troughs.LinearObliquity.get_yt">(mars_troughs.LinearObliquity method)</a>
-</li>
-        <li><a href="autoapi/mars_troughs/index.html#mars_troughs.QuadraticInsolation.get_yt">(mars_troughs.QuadraticInsolation method)</a>
-</li>
-      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -334,58 +324,54 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/mars_troughs/index.html#mars_troughs.LAG_MODEL_MAP">LAG_MODEL_MAP (in module mars_troughs)</a>
+      <li><a href="autoapi/mars_troughs/lag_model/index.html#mars_troughs.lag_model.LagModel">LagModel (class in mars_troughs.lag_model)</a>
+</li>
+      <li><a href="autoapi/mars_troughs/index.html#mars_troughs.Linear_Insolation">Linear_Insolation (class in mars_troughs)</a>
 
       <ul>
-        <li><a href="autoapi/mars_troughs/lag_model/index.html#mars_troughs.lag_model.LAG_MODEL_MAP">(in module mars_troughs.lag_model)</a>
+        <li><a href="autoapi/mars_troughs/accumulation_model/index.html#mars_troughs.accumulation_model.Linear_Insolation">(class in mars_troughs.accumulation_model)</a>
 </li>
       </ul></li>
-      <li><a href="autoapi/mars_troughs/index.html#mars_troughs.LagModel">LagModel (class in mars_troughs)</a>
+      <li><a href="autoapi/mars_troughs/index.html#mars_troughs.Linear_Obliquity">Linear_Obliquity (class in mars_troughs)</a>
 
       <ul>
-        <li><a href="autoapi/mars_troughs/lag_model/index.html#mars_troughs.lag_model.LagModel">(class in mars_troughs.lag_model)</a>
-</li>
-      </ul></li>
-      <li><a href="autoapi/mars_troughs/custom_acc_models/index.html#mars_troughs.custom_acc_models.Linear_Insolation">Linear_Insolation (class in mars_troughs.custom_acc_models)</a>
-</li>
-      <li><a href="autoapi/mars_troughs/custom_acc_models/index.html#mars_troughs.custom_acc_models.Linear_Obliquity">Linear_Obliquity (class in mars_troughs.custom_acc_models)</a>
-</li>
-      <li><a href="autoapi/mars_troughs/index.html#mars_troughs.LinearInsolation">LinearInsolation (class in mars_troughs)</a>
-
-      <ul>
-        <li><a href="autoapi/mars_troughs/accumulation_model/index.html#mars_troughs.accumulation_model.LinearInsolation">(class in mars_troughs.accumulation_model)</a>
+        <li><a href="autoapi/mars_troughs/accumulation_model/index.html#mars_troughs.accumulation_model.Linear_Obliquity">(class in mars_troughs.accumulation_model)</a>
 </li>
       </ul></li>
       <li><a href="autoapi/mars_troughs/index.html#mars_troughs.LinearLag">LinearLag (class in mars_troughs)</a>
 
       <ul>
-        <li><a href="autoapi/mars_troughs/custom_lag_models/index.html#mars_troughs.custom_lag_models.LinearLag">(class in mars_troughs.custom_lag_models)</a>
-</li>
         <li><a href="autoapi/mars_troughs/lag_model/index.html#mars_troughs.lag_model.LinearLag">(class in mars_troughs.lag_model)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/mars_troughs/generic_model/index.html#mars_troughs.generic_model.LinearModel">LinearModel (class in mars_troughs.generic_model)</a>
+</li>
+      <li><a href="autoapi/mars_troughs/mcmc/index.html#mars_troughs.mcmc.MCMC.ln_likelihood">ln_likelihood() (mars_troughs.mcmc.MCMC method)</a>
+
+      <ul>
+        <li><a href="autoapi/mars_troughs/mcmc/index.html#mars_troughs.mcmc.softAgePriorMCMC.ln_likelihood">(mars_troughs.mcmc.softAgePriorMCMC method)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/mars_troughs/generic_model/index.html#mars_troughs.generic_model.LinearModel">LinearModel (class in mars_troughs.generic_model)</a>
-</li>
-      <li><a href="autoapi/mars_troughs/index.html#mars_troughs.LinearObliquity">LinearObliquity (class in mars_troughs)</a>
-
-      <ul>
-        <li><a href="autoapi/mars_troughs/accumulation_model/index.html#mars_troughs.accumulation_model.LinearObliquity">(class in mars_troughs.accumulation_model)</a>
-</li>
-      </ul></li>
-      <li><a href="autoapi/mars_troughs/mcmc/index.html#mars_troughs.mcmc.MCMC.ln_likelihood">ln_likelihood() (mars_troughs.mcmc.MCMC method)</a>
-</li>
       <li><a href="autoapi/mars_troughs/index.html#mars_troughs.Trough.lnlikelihood">lnlikelihood() (mars_troughs.Trough method)</a>
 
       <ul>
         <li><a href="autoapi/mars_troughs/trough/index.html#mars_troughs.trough.Trough.lnlikelihood">(mars_troughs.trough.Trough method)</a>
 </li>
       </ul></li>
-      <li><a href="autoapi/mars_troughs/datapaths/index.html#mars_troughs.datapaths.load_insolation_data">load_insolation_data() (in module mars_troughs.datapaths)</a>
+      <li><a href="autoapi/mars_troughs/index.html#mars_troughs.load_insolation_data">load_insolation_data() (in module mars_troughs)</a>
+
+      <ul>
+        <li><a href="autoapi/mars_troughs/datapaths/index.html#mars_troughs.datapaths.load_insolation_data">(in module mars_troughs.datapaths)</a>
 </li>
-      <li><a href="autoapi/mars_troughs/datapaths/index.html#mars_troughs.datapaths.load_obliquity_data">load_obliquity_data() (in module mars_troughs.datapaths)</a>
+      </ul></li>
+      <li><a href="autoapi/mars_troughs/index.html#mars_troughs.load_obliquity_data">load_obliquity_data() (in module mars_troughs)</a>
+
+      <ul>
+        <li><a href="autoapi/mars_troughs/datapaths/index.html#mars_troughs.datapaths.load_obliquity_data">(in module mars_troughs.datapaths)</a>
 </li>
+      </ul></li>
       <li><a href="autoapi/mars_troughs/datapaths/index.html#mars_troughs.datapaths.load_retreat_data">load_retreat_data() (in module mars_troughs.datapaths)</a>
 </li>
       <li><a href="autoapi/mars_troughs/datapaths/index.html#mars_troughs.datapaths.load_TMP_data">load_TMP_data() (in module mars_troughs.datapaths)</a>
@@ -400,18 +386,14 @@
 </li>
       <li><a href="autoapi/mars_troughs/accumulation_model/index.html#module-mars_troughs.accumulation_model">mars_troughs.accumulation_model (module)</a>
 </li>
-      <li><a href="autoapi/mars_troughs/custom_acc_models/index.html#module-mars_troughs.custom_acc_models">mars_troughs.custom_acc_models (module)</a>
-</li>
-      <li><a href="autoapi/mars_troughs/custom_lag_models/index.html#module-mars_troughs.custom_lag_models">mars_troughs.custom_lag_models (module)</a>
-</li>
       <li><a href="autoapi/mars_troughs/datapaths/index.html#module-mars_troughs.datapaths">mars_troughs.datapaths (module)</a>
 </li>
       <li><a href="autoapi/mars_troughs/generic_model/index.html#module-mars_troughs.generic_model">mars_troughs.generic_model (module)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/mars_troughs/lag_model/index.html#module-mars_troughs.lag_model">mars_troughs.lag_model (module)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/mars_troughs/mcmc/index.html#module-mars_troughs.mcmc">mars_troughs.mcmc (module)</a>
 </li>
       <li><a href="autoapi/mars_troughs/model/index.html#module-mars_troughs.model">mars_troughs.model (module)</a>
@@ -474,32 +456,44 @@
         <li><a href="autoapi/mars_troughs/model/index.html#mars_troughs.model.Model.parameters">(mars_troughs.model.Model property)</a>
 </li>
       </ul></li>
+      <li><a href="autoapi/mars_troughs/index.html#mars_troughs.PowerLaw_Insolation">PowerLaw_Insolation (class in mars_troughs)</a>
+
+      <ul>
+        <li><a href="autoapi/mars_troughs/accumulation_model/index.html#mars_troughs.accumulation_model.PowerLaw_Insolation">(class in mars_troughs.accumulation_model)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/mars_troughs/custom_acc_models/index.html#mars_troughs.custom_acc_models.PowerLaw_Insolation">PowerLaw_Insolation (class in mars_troughs.custom_acc_models)</a>
+      <li><a href="autoapi/mars_troughs/index.html#mars_troughs.PowerLaw_Obliquity">PowerLaw_Obliquity (class in mars_troughs)</a>
+
+      <ul>
+        <li><a href="autoapi/mars_troughs/accumulation_model/index.html#mars_troughs.accumulation_model.PowerLaw_Obliquity">(class in mars_troughs.accumulation_model)</a>
 </li>
-      <li><a href="autoapi/mars_troughs/custom_acc_models/index.html#mars_troughs.custom_acc_models.PowerLaw_Obliquity">PowerLaw_Obliquity (class in mars_troughs.custom_acc_models)</a>
+      </ul></li>
+      <li><a href="autoapi/mars_troughs/index.html#mars_troughs.PowerLawLag">PowerLawLag (class in mars_troughs)</a>
+
+      <ul>
+        <li><a href="autoapi/mars_troughs/lag_model/index.html#mars_troughs.lag_model.PowerLawLag">(class in mars_troughs.lag_model)</a>
 </li>
-      <li><a href="autoapi/mars_troughs/custom_lag_models/index.html#mars_troughs.custom_lag_models.PowerLawLag">PowerLawLag (class in mars_troughs.custom_lag_models)</a>
-</li>
+      </ul></li>
       <li><a href="autoapi/mars_troughs/generic_model/index.html#mars_troughs.generic_model.PowerLawModel">PowerLawModel (class in mars_troughs.generic_model)</a>
 </li>
       <li><a href="autoapi/mars_troughs/accumulation_model/index.html#mars_troughs.accumulation_model.AccumulationModel.prefix">prefix (mars_troughs.accumulation_model.AccumulationModel attribute)</a>
 
       <ul>
-        <li><a href="autoapi/mars_troughs/index.html#mars_troughs.AccumulationModel.prefix">(mars_troughs.AccumulationModel attribute)</a>
-</li>
-        <li><a href="autoapi/mars_troughs/custom_acc_models/index.html#mars_troughs.custom_acc_models.CustomAccumulationModel.prefix">(mars_troughs.custom_acc_models.CustomAccumulationModel attribute)</a>
-</li>
-        <li><a href="autoapi/mars_troughs/custom_lag_models/index.html#mars_troughs.custom_lag_models.CustomLagModel.prefix">(mars_troughs.custom_lag_models.CustomLagModel attribute)</a>
-</li>
         <li><a href="autoapi/mars_troughs/lag_model/index.html#mars_troughs.lag_model.LagModel.prefix">(mars_troughs.lag_model.LagModel attribute)</a>
-</li>
-        <li><a href="autoapi/mars_troughs/index.html#mars_troughs.LagModel.prefix">(mars_troughs.LagModel attribute)</a>
 </li>
         <li><a href="autoapi/mars_troughs/index.html#mars_troughs.Model.prefix">(mars_troughs.Model attribute)</a>
 </li>
         <li><a href="autoapi/mars_troughs/model/index.html#mars_troughs.model.Model.prefix">(mars_troughs.model.Model attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/mars_troughs/mcmc/index.html#mars_troughs.mcmc.hardAgePriorMCMC.priors">priors() (mars_troughs.mcmc.hardAgePriorMCMC method)</a>
+
+      <ul>
+        <li><a href="autoapi/mars_troughs/mcmc/index.html#mars_troughs.mcmc.MCMC.priors">(mars_troughs.mcmc.MCMC method)</a>
+</li>
+        <li><a href="autoapi/mars_troughs/mcmc/index.html#mars_troughs.mcmc.softAgePriorMCMC.priors">(mars_troughs.mcmc.softAgePriorMCMC method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -510,20 +504,26 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/mars_troughs/generic_model/index.html#mars_troughs.generic_model.QuadModel">QuadModel (class in mars_troughs.generic_model)</a>
 </li>
-      <li><a href="autoapi/mars_troughs/custom_acc_models/index.html#mars_troughs.custom_acc_models.Quadratic_Insolation">Quadratic_Insolation (class in mars_troughs.custom_acc_models)</a>
-</li>
-      <li><a href="autoapi/mars_troughs/custom_acc_models/index.html#mars_troughs.custom_acc_models.Quadratic_Obliquity">Quadratic_Obliquity (class in mars_troughs.custom_acc_models)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/mars_troughs/index.html#mars_troughs.QuadraticInsolation">QuadraticInsolation (class in mars_troughs)</a>
+      <li><a href="autoapi/mars_troughs/index.html#mars_troughs.Quadratic_Insolation">Quadratic_Insolation (class in mars_troughs)</a>
 
       <ul>
-        <li><a href="autoapi/mars_troughs/accumulation_model/index.html#mars_troughs.accumulation_model.QuadraticInsolation">(class in mars_troughs.accumulation_model)</a>
+        <li><a href="autoapi/mars_troughs/accumulation_model/index.html#mars_troughs.accumulation_model.Quadratic_Insolation">(class in mars_troughs.accumulation_model)</a>
 </li>
       </ul></li>
-      <li><a href="autoapi/mars_troughs/custom_lag_models/index.html#mars_troughs.custom_lag_models.QuadraticLag">QuadraticLag (class in mars_troughs.custom_lag_models)</a>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/mars_troughs/index.html#mars_troughs.Quadratic_Obliquity">Quadratic_Obliquity (class in mars_troughs)</a>
+
+      <ul>
+        <li><a href="autoapi/mars_troughs/accumulation_model/index.html#mars_troughs.accumulation_model.Quadratic_Obliquity">(class in mars_troughs.accumulation_model)</a>
 </li>
+      </ul></li>
+      <li><a href="autoapi/mars_troughs/index.html#mars_troughs.QuadraticLag">QuadraticLag (class in mars_troughs)</a>
+
+      <ul>
+        <li><a href="autoapi/mars_troughs/lag_model/index.html#mars_troughs.lag_model.QuadraticLag">(class in mars_troughs.lag_model)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -545,17 +545,17 @@
 </li>
       </ul></li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/mars_troughs/mcmc/index.html#mars_troughs.mcmc.softAgePriorMCMC">softAgePriorMCMC (class in mars_troughs.mcmc)</a>
+</li>
+  </ul></td>
 </tr></table>
 
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/mars_troughs/accumulation_model/index.html#mars_troughs.accumulation_model.TimeDependentAccumulationModel">TimeDependentAccumulationModel (class in mars_troughs.accumulation_model)</a>
-
-      <ul>
-        <li><a href="autoapi/mars_troughs/custom_acc_models/index.html#mars_troughs.custom_acc_models.TimeDependentAccumulationModel">(class in mars_troughs.custom_acc_models)</a>
 </li>
-      </ul></li>
       <li><a href="autoapi/mars_troughs/datapaths/index.html#mars_troughs.datapaths._DataPaths.TMP1">TMP1 (mars_troughs.datapaths._DataPaths attribute)</a>
 </li>
   </ul></td>

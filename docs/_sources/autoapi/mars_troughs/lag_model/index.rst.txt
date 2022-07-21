@@ -5,7 +5,7 @@
 
 .. autoapi-nested-parse::
 
-   Models for the lag as a function of time.
+   Custom lag models
 
 
 
@@ -20,16 +20,11 @@ Classes
    mars_troughs.lag_model.LagModel
    mars_troughs.lag_model.ConstantLag
    mars_troughs.lag_model.LinearLag
+   mars_troughs.lag_model.QuadraticLag
+   mars_troughs.lag_model.CubicLag
+   mars_troughs.lag_model.PowerLawLag
 
 
-
-
-Attributes
-~~~~~~~~~~
-
-.. autoapisummary::
-
-   mars_troughs.lag_model.LAG_MODEL_MAP
 
 
 .. py:class:: LagModel
@@ -73,18 +68,34 @@ Attributes
    Bases: :py:obj:`LagModel`, :py:obj:`mars_troughs.generic_model.LinearModel`
 
    The lag thickness is linear in time. Lag changes as
-   lag(t) = constant + slope*t.
+   lag(t) = intercept + slope*t.
 
-   :param constant: default is 1 millimeter. The lag
-                    thickness at time t=0 (present day).
-   :type constant: float, optional
+   :param intercept: default is 1 millimeter. The lag
+                     thickness at time t=0 (present day).
+   :type intercept: float, optional
    :param slope: default is 1e-6 mm per year. The rate
                  of change of the lag per time.
    :type slope: float, optional
 
 
-.. py:data:: LAG_MODEL_MAP
-   :annotation: :Dict[str, mars_troughs.model.Model]
+.. py:class:: QuadraticLag(constant: float = 1e-06, slope: float = 1e-08, quad: float = 1e-20)
 
-   
+   Bases: :py:obj:`LagModel`, :py:obj:`mars_troughs.generic_model.QuadModel`
+
+   Lag is quadratic with time
+
+
+.. py:class:: CubicLag(constant: float = 1e-06, slope: float = 1e-08, quad: float = 1e-20, cubic: float = 1e-30)
+
+   Bases: :py:obj:`LagModel`, :py:obj:`mars_troughs.generic_model.CubicModel`
+
+   Lag is cubic with time
+
+
+.. py:class:: PowerLawLag(coeff: float = 5, exponent: float = 0.01)
+
+   Bases: :py:obj:`LagModel`, :py:obj:`mars_troughs.generic_model.PowerLawModel`
+
+   Lag follows a power law function with time
+
 
