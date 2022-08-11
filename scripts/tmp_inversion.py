@@ -69,7 +69,12 @@ def main():
     directory= (args.dir + args.data + '/TMP' + str(tmp) + '/')
     
     errorbar=np.sqrt(1.6)
-    angle=5.0
+    
+    if tmp==1:
+        angle=2.9
+    elif tmp==2:
+        angle=1.9
+    
     thin_by=args.thin_by
     mcmcobj=mt.MCMC(maxSteps,thin_by,directory,tmp,acc_model,lag_model,
                     errorbar, angle)
