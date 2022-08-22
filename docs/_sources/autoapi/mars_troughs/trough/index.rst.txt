@@ -49,13 +49,13 @@ Classes
                            insolation data.
    :type insolation_path: Union[str, Path], optional
 
-   .. py:method:: parameter_names(self) -> List[str]
+   .. py:method:: parameter_names() -> List[str]
       :property:
 
       Just the errorbar
 
 
-   .. py:method:: set_model(self, all_parameters: Dict[str, float]) -> None
+   .. py:method:: set_model(all_parameters: Dict[str, float]) -> None
 
       Updates trough model with new accumulation and lag parameters.
       Then updates all splines.
@@ -64,7 +64,7 @@ Classes
       :type all_parameter: Dict[str, float]
 
 
-   .. py:method:: get_trajectory(self, times: Optional[numpy.ndarray] = None) -> Tuple[numpy.ndarray, numpy.ndarray]
+   .. py:method:: get_trajectory(times: Optional[numpy.ndarray] = None) -> Tuple[numpy.ndarray, numpy.ndarray]
 
       Obtains the x and y coordinates (in m) of the trough model as a
       function of time.
@@ -94,7 +94,7 @@ Classes
       Output: L2 distance (int or float)
 
 
-   .. py:method:: get_nearest_points(self, x_data: numpy.ndarray, y_data: numpy.ndarray, times: Optional[numpy.ndarray] = None, dist_func: Optional[Callable] = None) -> Tuple[numpy.ndarray, numpy.ndarray]
+   .. py:method:: get_nearest_points(x_data: numpy.ndarray, y_data: numpy.ndarray, times: Optional[numpy.ndarray] = None, dist_func: Optional[Callable] = None) -> Tuple[numpy.ndarray, numpy.ndarray]
 
       Finds the coordinates of the nearest points between the model TMP
       and the data TMP.
@@ -113,7 +113,7 @@ Classes
           (Tuple), size 2 x len(x_data)
 
 
-   .. py:method:: lnlikelihood(self, x_data: numpy.ndarray, y_data: numpy.ndarray, times: Optional[numpy.ndarray] = None) -> float
+   .. py:method:: lnlikelihood(x_data: numpy.ndarray, y_data: numpy.ndarray, times: Optional[numpy.ndarray] = None) -> float
 
       Calculates the log-likelihood of the data given the model.
       Note that this is the natural log (ln).
@@ -127,19 +127,19 @@ Classes
           log-likelihood value (float)
 
 
-   .. py:method:: angle(self) -> float
+   .. py:method:: angle() -> float
       :property:
 
       Slope angle in degrees.
 
 
-   .. py:method:: csc_angle(self) -> float
+   .. py:method:: csc_angle() -> float
       :property:
 
       Cosecant of the slope angle.
 
 
-   .. py:method:: cot_angle(self) -> float
+   .. py:method:: cot_angle() -> float
       :property:
 
       Cotangent of the slope angle.

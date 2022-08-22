@@ -31,13 +31,13 @@ Classes
    Class for running MCMC chains to obtain a sample of climate parameters
    of trough migration.
 
-   .. py:method:: priors(self, params, times)
+   .. py:method:: priors(params, times)
 
 
-   .. py:method:: ln_likelihood(self, params: Dict[str, float])
+   .. py:method:: ln_likelihood(params: Dict[str, float])
 
 
-   .. py:method:: neg_ln_likelihood(self, paramsArray)
+   .. py:method:: neg_ln_likelihood(paramsArray)
 
 
 
@@ -48,7 +48,7 @@ Classes
    Class for running MCMC chains to obtain a sample of climate parameters
    of trough migration.
 
-   .. py:method:: priors(self, params, times)
+   .. py:method:: priors(params, times)
 
 
 
@@ -59,10 +59,10 @@ Classes
    Class for running MCMC chains to obtain a sample of climate parameters
    of trough migration.
 
-   .. py:method:: priors(self, params, times)
+   .. py:method:: priors(params, times)
 
 
-   .. py:method:: ln_likelihood(self, params: Dict[str, float])
+   .. py:method:: ln_likelihood(params: Dict[str, float])
 
 
 

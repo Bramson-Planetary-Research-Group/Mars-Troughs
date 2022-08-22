@@ -41,7 +41,7 @@ Classes
 
       A prefix to prepend to parameter naems when supplying them.
 
-   .. py:method:: parameter_names(self) -> List[str]
+   .. py:method:: parameter_names() -> List[str]
       :property:
 
       Names of the parameters for **this** object sorted alphabetically.
@@ -65,7 +65,7 @@ Classes
       :returns: names of parametes for **this** object
 
 
-   .. py:method:: parameters(self) -> Dict[str, Any]
+   .. py:method:: parameters() -> Dict[str, Any]
       :property:
 
       The parameters for **this** object, but not any of its sub-models.
@@ -74,7 +74,7 @@ Classes
       :returns: name/value pairs where values can be numbers or arrays of numbers
 
 
-   .. py:method:: all_parameter_names(self) -> List[str]
+   .. py:method:: all_parameter_names() -> List[str]
       :property:
 
       Names of the parameters for this object and all sub-models.
@@ -82,7 +82,7 @@ Classes
       :returns: names of parametes for this object and all sub-models
 
 
-   .. py:method:: all_parameters(self) -> Dict[str, Any]
+   .. py:method:: all_parameters() -> Dict[str, Any]
       :property:
 
       The parameters for this model and all sub-models.

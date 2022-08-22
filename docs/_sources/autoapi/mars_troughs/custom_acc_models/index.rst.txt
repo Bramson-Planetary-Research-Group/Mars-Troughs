@@ -19,7 +19,7 @@ Classes
 
 .. autoapisummary::
 
-   mars_troughs.custom_acc_models.CustomAccumulationModel
+   mars_troughs.custom_acc_models.AccumulationModel
    mars_troughs.custom_acc_models.TimeDependentAccumulationModel
    mars_troughs.custom_acc_models.Linear_Obliquity
    mars_troughs.custom_acc_models.Quadratic_Obliquity
@@ -33,7 +33,7 @@ Classes
 
 
 
-.. py:class:: CustomAccumulationModel(sub_models: Optional[List[Model]] = None)
+.. py:class:: AccumulationModel
 
    Bases: :py:obj:`mars_troughs.model.Model`
 
@@ -44,14 +44,14 @@ Classes
 
       All parameters of accumulations models start with 'acc'.
 
-   .. py:method:: get_accumulation_at_t(self, time: numpy.ndarray) -> numpy.ndarray
+   .. py:method:: get_accumulation_at_t(time: numpy.ndarray) -> numpy.ndarray
       :abstractmethod:
 
 
 
 .. py:class:: TimeDependentAccumulationModel(times: numpy.ndarray, variable: numpy.ndarray)
 
-   Bases: :py:obj:`CustomAccumulationModel`
+   Bases: :py:obj:`AccumulationModel`
 
    An accumulation rate model that depends on the time dependent parameter
    (likely solar insolation or obliquity), A(Var(t)).
@@ -66,7 +66,7 @@ Classes
    :param (solar insolation:
    :type (solar insolation: in W/m^2), obliquity (in degrees)
 
-   .. py:method:: get_accumulation_at_t(self, time: numpy.ndarray) -> numpy.ndarray
+   .. py:method:: get_accumulation_at_t(time: numpy.ndarray) -> numpy.ndarray
 
       Calculates the accumulation rate at times "time".
 
@@ -79,7 +79,7 @@ Classes
 
 
 
-   .. py:method:: get_xt(self, time: numpy.ndarray, int_retreat_model_t_spline: numpy.ndarray, cot_angle, csc_angle)
+   .. py:method:: get_xt(time: numpy.ndarray, int_retreat_model_t_spline: numpy.ndarray, cot_angle, csc_angle)
 
       Calculates the horizontal distance x (in m) traveled by a point in the
       center of the high side of the trough. This distance x is a function of
@@ -113,7 +113,7 @@ Classes
    :param (solar insolation:
    :type (solar insolation: in W/m^2), obliquity (in degrees)
 
-   .. py:method:: get_yt(self, time: numpy.ndarray)
+   .. py:method:: get_yt(time: numpy.ndarray)
 
       Calculates the vertical distance y (in m) traveled by a point
       in the center of the high side of the trough. This distance  is a
@@ -147,7 +147,7 @@ Classes
    :param (solar insolation:
    :type (solar insolation: in W/m^2), obliquity (in degrees)
 
-   .. py:method:: get_yt(self, time: numpy.ndarray)
+   .. py:method:: get_yt(time: numpy.ndarray)
 
       Calculates the vertical distance y (in m) at traveled by a point
       in the center of the high side of the trough. This distance  is a
@@ -181,7 +181,7 @@ Classes
    :param (solar insolation:
    :type (solar insolation: in W/m^2), obliquity (in degrees)
 
-   .. py:method:: get_yt(self, time: numpy.ndarray)
+   .. py:method:: get_yt(time: numpy.ndarray)
 
       Calculates the vertical distance y (in m) at traveled by a point
       in the center of the high side of the trough. This distance  is a
@@ -215,7 +215,7 @@ Classes
    :param (solar insolation:
    :type (solar insolation: in W/m^2), obliquity (in degrees)
 
-   .. py:method:: get_yt(self, time: numpy.ndarray)
+   .. py:method:: get_yt(time: numpy.ndarray)
 
       Calculates the vertical distance y (in m) at traveled by a point
       in the center of the high side of the trough. This distance  is a
@@ -249,7 +249,7 @@ Classes
    :param (solar insolation:
    :type (solar insolation: in W/m^2), obliquity (in degrees)
 
-   .. py:method:: get_yt(self, time: numpy.ndarray)
+   .. py:method:: get_yt(time: numpy.ndarray)
 
       Calculates the vertical distance y (in m) traveled by a point
       in the center of the high side of the trough. This distance  is a
@@ -283,7 +283,7 @@ Classes
    :param (solar insolation:
    :type (solar insolation: in W/m^2), obliquity (in degrees)
 
-   .. py:method:: get_yt(self, time: numpy.ndarray)
+   .. py:method:: get_yt(time: numpy.ndarray)
 
       Calculates the vertical distance y (in m) at traveled by a point
       in the center of the high side of the trough. This distance  is a
@@ -317,7 +317,7 @@ Classes
    :param (solar insolation:
    :type (solar insolation: in W/m^2), obliquity (in degrees)
 
-   .. py:method:: get_yt(self, time: numpy.ndarray)
+   .. py:method:: get_yt(time: numpy.ndarray)
 
       Calculates the vertical distance y (in m) at traveled by a point
       in the center of the high side of the trough. This distance  is a
@@ -351,7 +351,7 @@ Classes
    :param (solar insolation:
    :type (solar insolation: in W/m^2), obliquity (in degrees)
 
-   .. py:method:: get_yt(self, time: numpy.ndarray)
+   .. py:method:: get_yt(time: numpy.ndarray)
 
       Calculates the vertical distance y (in m) at traveled by a point
       in the center of the high side of the trough. This distance  is a

@@ -10,10 +10,10 @@ Submodules
    :titlesonly:
    :maxdepth: 1
 
-   accumulation_model/index.rst
+   custom_acc_models/index.rst
+   custom_lag_models/index.rst
    datapaths/index.rst
    generic_model/index.rst
-   lag_model/index.rst
    mcmc/index.rst
    model/index.rst
    trough/index.rst
@@ -42,6 +42,9 @@ Classes
    mars_troughs.PowerLawLag
    mars_troughs.Model
    mars_troughs.Trough
+   mars_troughs.MCMC
+   mars_troughs.softAgePriorMCMC
+   mars_troughs.hardAgePriorMCMC
 
 
 
@@ -83,7 +86,7 @@ Attributes
    :param (solar insolation:
    :type (solar insolation: in W/m^2), obliquity (in degrees)
 
-   .. py:method:: get_yt(self, time: numpy.ndarray)
+   .. py:method:: get_yt(time: numpy.ndarray)
 
       Calculates the vertical distance y (in m) traveled by a point
       in the center of the high side of the trough. This distance  is a
@@ -117,7 +120,7 @@ Attributes
    :param (solar insolation:
    :type (solar insolation: in W/m^2), obliquity (in degrees)
 
-   .. py:method:: get_yt(self, time: numpy.ndarray)
+   .. py:method:: get_yt(time: numpy.ndarray)
 
       Calculates the vertical distance y (in m) at traveled by a point
       in the center of the high side of the trough. This distance  is a
@@ -151,7 +154,7 @@ Attributes
    :param (solar insolation:
    :type (solar insolation: in W/m^2), obliquity (in degrees)
 
-   .. py:method:: get_yt(self, time: numpy.ndarray)
+   .. py:method:: get_yt(time: numpy.ndarray)
 
       Calculates the vertical distance y (in m) at traveled by a point
       in the center of the high side of the trough. This distance  is a
@@ -185,7 +188,7 @@ Attributes
    :param (solar insolation:
    :type (solar insolation: in W/m^2), obliquity (in degrees)
 
-   .. py:method:: get_yt(self, time: numpy.ndarray)
+   .. py:method:: get_yt(time: numpy.ndarray)
 
       Calculates the vertical distance y (in m) at traveled by a point
       in the center of the high side of the trough. This distance  is a
@@ -219,7 +222,7 @@ Attributes
    :param (solar insolation:
    :type (solar insolation: in W/m^2), obliquity (in degrees)
 
-   .. py:method:: get_yt(self, time: numpy.ndarray)
+   .. py:method:: get_yt(time: numpy.ndarray)
 
       Calculates the vertical distance y (in m) traveled by a point
       in the center of the high side of the trough. This distance  is a
@@ -253,7 +256,7 @@ Attributes
    :param (solar insolation:
    :type (solar insolation: in W/m^2), obliquity (in degrees)
 
-   .. py:method:: get_yt(self, time: numpy.ndarray)
+   .. py:method:: get_yt(time: numpy.ndarray)
 
       Calculates the vertical distance y (in m) at traveled by a point
       in the center of the high side of the trough. This distance  is a
@@ -287,7 +290,7 @@ Attributes
    :param (solar insolation:
    :type (solar insolation: in W/m^2), obliquity (in degrees)
 
-   .. py:method:: get_yt(self, time: numpy.ndarray)
+   .. py:method:: get_yt(time: numpy.ndarray)
 
       Calculates the vertical distance y (in m) at traveled by a point
       in the center of the high side of the trough. This distance  is a
@@ -321,7 +324,7 @@ Attributes
    :param (solar insolation:
    :type (solar insolation: in W/m^2), obliquity (in degrees)
 
-   .. py:method:: get_yt(self, time: numpy.ndarray)
+   .. py:method:: get_yt(time: numpy.ndarray)
 
       Calculates the vertical distance y (in m) at traveled by a point
       in the center of the high side of the trough. This distance  is a
@@ -427,7 +430,7 @@ Attributes
 
       A prefix to prepend to parameter naems when supplying them.
 
-   .. py:method:: parameter_names(self) -> List[str]
+   .. py:method:: parameter_names() -> List[str]
       :property:
 
       Names of the parameters for **this** object sorted alphabetically.
@@ -451,7 +454,7 @@ Attributes
       :returns: names of parametes for **this** object
 
 
-   .. py:method:: parameters(self) -> Dict[str, Any]
+   .. py:method:: parameters() -> Dict[str, Any]
       :property:
 
       The parameters for **this** object, but not any of its sub-models.
@@ -460,7 +463,7 @@ Attributes
       :returns: name/value pairs where values can be numbers or arrays of numbers
 
 
-   .. py:method:: all_parameter_names(self) -> List[str]
+   .. py:method:: all_parameter_names() -> List[str]
       :property:
 
       Names of the parameters for this object and all sub-models.
@@ -468,7 +471,7 @@ Attributes
       :returns: names of parametes for this object and all sub-models
 
 
-   .. py:method:: all_parameters(self) -> Dict[str, Any]
+   .. py:method:: all_parameters() -> Dict[str, Any]
       :property:
 
       The parameters for this model and all sub-models.
@@ -504,13 +507,13 @@ Attributes
                            insolation data.
    :type insolation_path: Union[str, Path], optional
 
-   .. py:method:: parameter_names(self) -> List[str]
+   .. py:method:: parameter_names() -> List[str]
       :property:
 
       Just the errorbar
 
 
-   .. py:method:: set_model(self, all_parameters: Dict[str, float]) -> None
+   .. py:method:: set_model(all_parameters: Dict[str, float]) -> None
 
       Updates trough model with new accumulation and lag parameters.
       Then updates all splines.
@@ -519,7 +522,7 @@ Attributes
       :type all_parameter: Dict[str, float]
 
 
-   .. py:method:: get_trajectory(self, times: Optional[numpy.ndarray] = None) -> Tuple[numpy.ndarray, numpy.ndarray]
+   .. py:method:: get_trajectory(times: Optional[numpy.ndarray] = None) -> Tuple[numpy.ndarray, numpy.ndarray]
 
       Obtains the x and y coordinates (in m) of the trough model as a
       function of time.
@@ -549,7 +552,7 @@ Attributes
       Output: L2 distance (int or float)
 
 
-   .. py:method:: get_nearest_points(self, x_data: numpy.ndarray, y_data: numpy.ndarray, times: Optional[numpy.ndarray] = None, dist_func: Optional[Callable] = None) -> Tuple[numpy.ndarray, numpy.ndarray]
+   .. py:method:: get_nearest_points(x_data: numpy.ndarray, y_data: numpy.ndarray, times: Optional[numpy.ndarray] = None, dist_func: Optional[Callable] = None) -> Tuple[numpy.ndarray, numpy.ndarray]
 
       Finds the coordinates of the nearest points between the model TMP
       and the data TMP.
@@ -568,7 +571,7 @@ Attributes
           (Tuple), size 2 x len(x_data)
 
 
-   .. py:method:: lnlikelihood(self, x_data: numpy.ndarray, y_data: numpy.ndarray, times: Optional[numpy.ndarray] = None) -> float
+   .. py:method:: lnlikelihood(x_data: numpy.ndarray, y_data: numpy.ndarray, times: Optional[numpy.ndarray] = None) -> float
 
       Calculates the log-likelihood of the data given the model.
       Note that this is the natural log (ln).
@@ -582,22 +585,62 @@ Attributes
           log-likelihood value (float)
 
 
-   .. py:method:: angle(self) -> float
+   .. py:method:: angle() -> float
       :property:
 
       Slope angle in degrees.
 
 
-   .. py:method:: csc_angle(self) -> float
+   .. py:method:: csc_angle() -> float
       :property:
 
       Cosecant of the slope angle.
 
 
-   .. py:method:: cot_angle(self) -> float
+   .. py:method:: cot_angle() -> float
       :property:
 
       Cotangent of the slope angle.
+
+
+
+.. py:class:: MCMC(maxSteps: int, thin_by: int, directory: str, tmp: int, acc_model=Union[str, Model], lag_model=Union[str, Model], errorbar=np.sqrt(1.6), angle=5.0)
+
+   Class for running MCMC chains to obtain a sample of climate parameters
+   of trough migration.
+
+   .. py:method:: priors(params, times)
+
+
+   .. py:method:: ln_likelihood(params: Dict[str, float])
+
+
+   .. py:method:: neg_ln_likelihood(paramsArray)
+
+
+
+.. py:class:: softAgePriorMCMC(meanAge: float, maxSteps: int, thin_by: int, directory: str, tmp: int, acc_model=Union[str, Model], lag_model=Union[str, Model], errorbar=np.sqrt(1.6), angle=5.0)
+
+   Bases: :py:obj:`MCMC`
+
+   Class for running MCMC chains to obtain a sample of climate parameters
+   of trough migration.
+
+   .. py:method:: priors(params, times)
+
+
+   .. py:method:: ln_likelihood(params: Dict[str, float])
+
+
+
+.. py:class:: hardAgePriorMCMC(maxSteps: int, thin_by: int, directory: str, tmp: int, acc_model=Union[str, Model], lag_model=Union[str, Model], errorbar=np.sqrt(1.6), angle=5.0)
+
+   Bases: :py:obj:`MCMC`
+
+   Class for running MCMC chains to obtain a sample of climate parameters
+   of trough migration.
+
+   .. py:method:: priors(params, times)
 
 
 

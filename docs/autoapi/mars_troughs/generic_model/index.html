@@ -39,10 +39,10 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">API Reference</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs</span></code></a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="../index.html#submodules">Submodules</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="../accumulation_model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.accumulation_model</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../custom_acc_models/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.custom_acc_models</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../custom_lag_models/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.custom_lag_models</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../datapaths/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.datapaths</span></code></a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.generic_model</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../lag_model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.lag_model</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../mcmc/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.mcmc</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.model</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../trough/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.trough</span></code></a></li>
@@ -132,13 +132,13 @@ parameter.</p>
 </dl>
 <dl class="method">
 <dt id="mars_troughs.generic_model.ConstantModel.parameter_names">
-<em class="property">property </em><code class="sig-name descname">parameter_names</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span> &#x2192; List[str]<a class="headerlink" href="#mars_troughs.generic_model.ConstantModel.parameter_names" title="Permalink to this definition"></a></dt>
+<em class="property">property </em><code class="sig-name descname">parameter_names</code> &#x2192; List[str]<a class="headerlink" href="#mars_troughs.generic_model.ConstantModel.parameter_names" title="Permalink to this definition"></a></dt>
 <dd><p>Returns <code class="docutils literal notranslate"><span class="pre">[&quot;constant&quot;]</span></code></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="mars_troughs.generic_model.ConstantModel.eval">
-<code class="sig-name descname">eval</code><span class="sig-paren">(</span><em class="sig-param">self, x: Union[numbers.Number, numpy.ndarray]</em><span class="sig-paren">)</span> &#x2192; Union[numbers.Number, numpy.ndarray]<a class="headerlink" href="#mars_troughs.generic_model.ConstantModel.eval" title="Permalink to this definition"></a></dt>
+<code class="sig-name descname">eval</code><span class="sig-paren">(</span><em class="sig-param">x: Union[numbers.Number, numpy.ndarray]</em><span class="sig-paren">)</span> &#x2192; Union[numbers.Number, numpy.ndarray]<a class="headerlink" href="#mars_troughs.generic_model.ConstantModel.eval" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the value of <code class="xref py py-attr docutils literal notranslate"><span class="pre">constant</span></code>.</p>
 </dd></dl>
 
@@ -160,7 +160,7 @@ parameter.</p>
 </dl>
 <dl class="method">
 <dt id="mars_troughs.generic_model.LinearModel.parameter_names">
-<em class="property">property </em><code class="sig-name descname">parameter_names</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span> &#x2192; List[str]<a class="headerlink" href="#mars_troughs.generic_model.LinearModel.parameter_names" title="Permalink to this definition"></a></dt>
+<em class="property">property </em><code class="sig-name descname">parameter_names</code> &#x2192; List[str]<a class="headerlink" href="#mars_troughs.generic_model.LinearModel.parameter_names" title="Permalink to this definition"></a></dt>
 <dd><p>Names of the parameters for <strong>this</strong> object sorted alphabetically.
 This method <strong>must</strong> be implemented for all subclasses, and the names
 must consist of the names of the attributes that contain the
@@ -185,7 +185,7 @@ parameters.</p>
 
 <dl class="method">
 <dt id="mars_troughs.generic_model.LinearModel.eval">
-<code class="sig-name descname">eval</code><span class="sig-paren">(</span><em class="sig-param">self, x: Union[numbers.Number, numpy.ndarray]</em><span class="sig-paren">)</span> &#x2192; Union[numbers.Number, numpy.ndarray]<a class="headerlink" href="#mars_troughs.generic_model.LinearModel.eval" title="Permalink to this definition"></a></dt>
+<code class="sig-name descname">eval</code><span class="sig-paren">(</span><em class="sig-param">x: Union[numbers.Number, numpy.ndarray]</em><span class="sig-paren">)</span> &#x2192; Union[numbers.Number, numpy.ndarray]<a class="headerlink" href="#mars_troughs.generic_model.LinearModel.eval" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -207,7 +207,7 @@ parameters.</p>
 </dl>
 <dl class="method">
 <dt id="mars_troughs.generic_model.QuadModel.parameter_names">
-<em class="property">property </em><code class="sig-name descname">parameter_names</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span> &#x2192; List[str]<a class="headerlink" href="#mars_troughs.generic_model.QuadModel.parameter_names" title="Permalink to this definition"></a></dt>
+<em class="property">property </em><code class="sig-name descname">parameter_names</code> &#x2192; List[str]<a class="headerlink" href="#mars_troughs.generic_model.QuadModel.parameter_names" title="Permalink to this definition"></a></dt>
 <dd><p>Names of the parameters for <strong>this</strong> object sorted alphabetically.
 This method <strong>must</strong> be implemented for all subclasses, and the names
 must consist of the names of the attributes that contain the
@@ -232,7 +232,7 @@ parameters.</p>
 
 <dl class="method">
 <dt id="mars_troughs.generic_model.QuadModel.eval">
-<code class="sig-name descname">eval</code><span class="sig-paren">(</span><em class="sig-param">self, x: Union[numbers.Number, numpy.ndarray]</em><span class="sig-paren">)</span> &#x2192; Union[numbers.Number, numpy.ndarray]<a class="headerlink" href="#mars_troughs.generic_model.QuadModel.eval" title="Permalink to this definition"></a></dt>
+<code class="sig-name descname">eval</code><span class="sig-paren">(</span><em class="sig-param">x: Union[numbers.Number, numpy.ndarray]</em><span class="sig-paren">)</span> &#x2192; Union[numbers.Number, numpy.ndarray]<a class="headerlink" href="#mars_troughs.generic_model.QuadModel.eval" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -255,7 +255,7 @@ parameters.</p>
 <p>y = constant + slope * x + quad * x^2 + cubic * x^3</p>
 <dl class="method">
 <dt id="mars_troughs.generic_model.CubicModel.parameter_names">
-<em class="property">property </em><code class="sig-name descname">parameter_names</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span> &#x2192; List[str]<a class="headerlink" href="#mars_troughs.generic_model.CubicModel.parameter_names" title="Permalink to this definition"></a></dt>
+<em class="property">property </em><code class="sig-name descname">parameter_names</code> &#x2192; List[str]<a class="headerlink" href="#mars_troughs.generic_model.CubicModel.parameter_names" title="Permalink to this definition"></a></dt>
 <dd><p>Names of the parameters for <strong>this</strong> object sorted alphabetically.
 This method <strong>must</strong> be implemented for all subclasses, and the names
 must consist of the names of the attributes that contain the
@@ -280,7 +280,7 @@ parameters.</p>
 
 <dl class="method">
 <dt id="mars_troughs.generic_model.CubicModel.eval">
-<code class="sig-name descname">eval</code><span class="sig-paren">(</span><em class="sig-param">self, x: Union[numbers.Number, numpy.ndarray]</em><span class="sig-paren">)</span> &#x2192; Union[numbers.Number, numpy.ndarray]<a class="headerlink" href="#mars_troughs.generic_model.CubicModel.eval" title="Permalink to this definition"></a></dt>
+<code class="sig-name descname">eval</code><span class="sig-paren">(</span><em class="sig-param">x: Union[numbers.Number, numpy.ndarray]</em><span class="sig-paren">)</span> &#x2192; Union[numbers.Number, numpy.ndarray]<a class="headerlink" href="#mars_troughs.generic_model.CubicModel.eval" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -301,7 +301,7 @@ parameters.</p>
 <p>y = coeff * x^exponent</p>
 <dl class="method">
 <dt id="mars_troughs.generic_model.PowerLawModel.parameter_names">
-<em class="property">property </em><code class="sig-name descname">parameter_names</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span> &#x2192; List[str]<a class="headerlink" href="#mars_troughs.generic_model.PowerLawModel.parameter_names" title="Permalink to this definition"></a></dt>
+<em class="property">property </em><code class="sig-name descname">parameter_names</code> &#x2192; List[str]<a class="headerlink" href="#mars_troughs.generic_model.PowerLawModel.parameter_names" title="Permalink to this definition"></a></dt>
 <dd><p>Names of the parameters for <strong>this</strong> object sorted alphabetically.
 This method <strong>must</strong> be implemented for all subclasses, and the names
 must consist of the names of the attributes that contain the
@@ -326,7 +326,7 @@ parameters.</p>
 
 <dl class="method">
 <dt id="mars_troughs.generic_model.PowerLawModel.eval">
-<code class="sig-name descname">eval</code><span class="sig-paren">(</span><em class="sig-param">self, x: Union[numbers.Number, numpy.ndarray]</em><span class="sig-paren">)</span> &#x2192; Union[numbers.Number, numpy.ndarray]<a class="headerlink" href="#mars_troughs.generic_model.PowerLawModel.eval" title="Permalink to this definition"></a></dt>
+<code class="sig-name descname">eval</code><span class="sig-paren">(</span><em class="sig-param">x: Union[numbers.Number, numpy.ndarray]</em><span class="sig-paren">)</span> &#x2192; Union[numbers.Number, numpy.ndarray]<a class="headerlink" href="#mars_troughs.generic_model.PowerLawModel.eval" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

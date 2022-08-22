@@ -43,13 +43,13 @@ Classes
                     parameter.
    :type constant: float, optional
 
-   .. py:method:: parameter_names(self) -> List[str]
+   .. py:method:: parameter_names() -> List[str]
       :property:
 
       Returns ``["constant"]``
 
 
-   .. py:method:: eval(self, x: Union[numbers.Number, numpy.ndarray]) -> Union[numbers.Number, numpy.ndarray]
+   .. py:method:: eval(x: Union[numbers.Number, numpy.ndarray]) -> Union[numbers.Number, numpy.ndarray]
 
       Returns the value of :attr:`constant`.
 
@@ -67,7 +67,7 @@ Classes
    :type slope: float, optional
    :param y = slope*x + constant:
 
-   .. py:method:: parameter_names(self) -> List[str]
+   .. py:method:: parameter_names() -> List[str]
       :property:
 
       Names of the parameters for **this** object sorted alphabetically.
@@ -91,7 +91,7 @@ Classes
       :returns: names of parametes for **this** object
 
 
-   .. py:method:: eval(self, x: Union[numbers.Number, numpy.ndarray]) -> Union[numbers.Number, numpy.ndarray]
+   .. py:method:: eval(x: Union[numbers.Number, numpy.ndarray]) -> Union[numbers.Number, numpy.ndarray]
 
 
 
@@ -109,7 +109,7 @@ Classes
    :type quadcoeff: float, optional
    :param y = constant + linearcoeff*x + quadcoeff*x^2:
 
-   .. py:method:: parameter_names(self) -> List[str]
+   .. py:method:: parameter_names() -> List[str]
       :property:
 
       Names of the parameters for **this** object sorted alphabetically.
@@ -133,7 +133,7 @@ Classes
       :returns: names of parametes for **this** object
 
 
-   .. py:method:: eval(self, x: Union[numbers.Number, numpy.ndarray]) -> Union[numbers.Number, numpy.ndarray]
+   .. py:method:: eval(x: Union[numbers.Number, numpy.ndarray]) -> Union[numbers.Number, numpy.ndarray]
 
 
 
@@ -154,7 +154,7 @@ Classes
 
    y = constant + slope * x + quad * x^2 + cubic * x^3
 
-   .. py:method:: parameter_names(self) -> List[str]
+   .. py:method:: parameter_names() -> List[str]
       :property:
 
       Names of the parameters for **this** object sorted alphabetically.
@@ -178,7 +178,7 @@ Classes
       :returns: names of parametes for **this** object
 
 
-   .. py:method:: eval(self, x: Union[numbers.Number, numpy.ndarray]) -> Union[numbers.Number, numpy.ndarray]
+   .. py:method:: eval(x: Union[numbers.Number, numpy.ndarray]) -> Union[numbers.Number, numpy.ndarray]
 
 
 
@@ -195,7 +195,7 @@ Classes
 
    y = coeff * x^exponent
 
-   .. py:method:: parameter_names(self) -> List[str]
+   .. py:method:: parameter_names() -> List[str]
       :property:
 
       Names of the parameters for **this** object sorted alphabetically.
@@ -219,7 +219,7 @@ Classes
       :returns: names of parametes for **this** object
 
 
-   .. py:method:: eval(self, x: Union[numbers.Number, numpy.ndarray]) -> Union[numbers.Number, numpy.ndarray]
+   .. py:method:: eval(x: Union[numbers.Number, numpy.ndarray]) -> Union[numbers.Number, numpy.ndarray]
 
 
 

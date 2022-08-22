@@ -39,10 +39,10 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">API Reference</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs</span></code></a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="../index.html#submodules">Submodules</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="../accumulation_model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.accumulation_model</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../custom_acc_models/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.custom_acc_models</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../custom_lag_models/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.custom_lag_models</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../datapaths/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.datapaths</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../generic_model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.generic_model</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../lag_model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.lag_model</span></code></a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.mcmc</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.model</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../trough/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.trough</span></code></a></li>
@@ -116,17 +116,17 @@
 of trough migration.</p>
 <dl class="method">
 <dt id="mars_troughs.mcmc.MCMC.priors">
-<code class="sig-name descname">priors</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">params</em>, <em class="sig-param">times</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.mcmc.MCMC.priors" title="Permalink to this definition"></a></dt>
+<code class="sig-name descname">priors</code><span class="sig-paren">(</span><em class="sig-param">params</em>, <em class="sig-param">times</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.mcmc.MCMC.priors" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="mars_troughs.mcmc.MCMC.ln_likelihood">
-<code class="sig-name descname">ln_likelihood</code><span class="sig-paren">(</span><em class="sig-param">self, params: Dict[str, float]</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.mcmc.MCMC.ln_likelihood" title="Permalink to this definition"></a></dt>
+<code class="sig-name descname">ln_likelihood</code><span class="sig-paren">(</span><em class="sig-param">params: Dict[str, float]</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.mcmc.MCMC.ln_likelihood" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="mars_troughs.mcmc.MCMC.neg_ln_likelihood">
-<code class="sig-name descname">neg_ln_likelihood</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">paramsArray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.mcmc.MCMC.neg_ln_likelihood" title="Permalink to this definition"></a></dt>
+<code class="sig-name descname">neg_ln_likelihood</code><span class="sig-paren">(</span><em class="sig-param">paramsArray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.mcmc.MCMC.neg_ln_likelihood" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -139,7 +139,7 @@ of trough migration.</p>
 of trough migration.</p>
 <dl class="method">
 <dt id="mars_troughs.mcmc.hardAgePriorMCMC.priors">
-<code class="sig-name descname">priors</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">params</em>, <em class="sig-param">times</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.mcmc.hardAgePriorMCMC.priors" title="Permalink to this definition"></a></dt>
+<code class="sig-name descname">priors</code><span class="sig-paren">(</span><em class="sig-param">params</em>, <em class="sig-param">times</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.mcmc.hardAgePriorMCMC.priors" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -152,12 +152,12 @@ of trough migration.</p>
 of trough migration.</p>
 <dl class="method">
 <dt id="mars_troughs.mcmc.softAgePriorMCMC.priors">
-<code class="sig-name descname">priors</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">params</em>, <em class="sig-param">times</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.mcmc.softAgePriorMCMC.priors" title="Permalink to this definition"></a></dt>
+<code class="sig-name descname">priors</code><span class="sig-paren">(</span><em class="sig-param">params</em>, <em class="sig-param">times</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.mcmc.softAgePriorMCMC.priors" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="mars_troughs.mcmc.softAgePriorMCMC.ln_likelihood">
-<code class="sig-name descname">ln_likelihood</code><span class="sig-paren">(</span><em class="sig-param">self, params: Dict[str, float]</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.mcmc.softAgePriorMCMC.ln_likelihood" title="Permalink to this definition"></a></dt>
+<code class="sig-name descname">ln_likelihood</code><span class="sig-paren">(</span><em class="sig-param">params: Dict[str, float]</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.mcmc.softAgePriorMCMC.ln_likelihood" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

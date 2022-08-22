@@ -39,12 +39,10 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">API Reference</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs</span></code></a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="../index.html#submodules">Submodules</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="../accumulation_model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.accumulation_model</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../custom_acc_models/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.custom_acc_models</span></code></a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.custom_lag_models</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../datapaths/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.datapaths</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../generic_model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.generic_model</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../lag_model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.lag_model</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../mcmc/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.mcmc</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.model</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../trough/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.trough</span></code></a></li>
@@ -52,6 +50,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../index.html#package-contents">Package Contents</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../index.html#classes">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../index.html#functions">Functions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../index.html#attributes">Attributes</a></li>
 </ul>
 </li>
@@ -98,7 +97,7 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mars_troughs.custom_lag_models.CustomLagModel" title="mars_troughs.custom_lag_models.CustomLagModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CustomLagModel</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mars_troughs.custom_lag_models.LagModel" title="mars_troughs.custom_lag_models.LagModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LagModel</span></code></a></p></td>
 <td><p>Abstract class for lag models, that have a method</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#mars_troughs.custom_lag_models.ConstantLag" title="mars_troughs.custom_lag_models.ConstantLag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConstantLag</span></code></a></p></td>
@@ -119,21 +118,21 @@
 </tbody>
 </table>
 <dl class="class">
-<dt id="mars_troughs.custom_lag_models.CustomLagModel">
-<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.custom_lag_models.</code><code class="sig-name descname">CustomLagModel</code><a class="headerlink" href="#mars_troughs.custom_lag_models.CustomLagModel" title="Permalink to this definition"></a></dt>
+<dt id="mars_troughs.custom_lag_models.LagModel">
+<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.custom_lag_models.</code><code class="sig-name descname">LagModel</code><a class="headerlink" href="#mars_troughs.custom_lag_models.LagModel" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="../model/index.html#mars_troughs.model.Model" title="mars_troughs.model.Model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mars_troughs.model.Model</span></code></a></p>
 <p>Abstract class for lag models, that have a method
-called <a class="reference internal" href="#mars_troughs.custom_lag_models.CustomLagModel.get_lag_at_t" title="mars_troughs.custom_lag_models.CustomLagModel.get_lag_at_t"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_lag_at_t()</span></code></a> that returns the lag
+called <a class="reference internal" href="#mars_troughs.custom_lag_models.LagModel.get_lag_at_t" title="mars_troughs.custom_lag_models.LagModel.get_lag_at_t"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_lag_at_t()</span></code></a> that returns the lag
 as a function of time.</p>
 <dl class="attribute">
-<dt id="mars_troughs.custom_lag_models.CustomLagModel.prefix">
-<code class="sig-name descname">prefix</code><em class="property"> :str = lag_</em><a class="headerlink" href="#mars_troughs.custom_lag_models.CustomLagModel.prefix" title="Permalink to this definition"></a></dt>
+<dt id="mars_troughs.custom_lag_models.LagModel.prefix">
+<code class="sig-name descname">prefix</code><em class="property"> :str = lag_</em><a class="headerlink" href="#mars_troughs.custom_lag_models.LagModel.prefix" title="Permalink to this definition"></a></dt>
 <dd><p>All parameters of lag models start with ‘lag’.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="mars_troughs.custom_lag_models.CustomLagModel.get_lag_at_t">
-<code class="sig-name descname">get_lag_at_t</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#mars_troughs.custom_lag_models.CustomLagModel.get_lag_at_t" title="Permalink to this definition"></a></dt>
+<dt id="mars_troughs.custom_lag_models.LagModel.get_lag_at_t">
+<code class="sig-name descname">get_lag_at_t</code><span class="sig-paren">(</span><em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#mars_troughs.custom_lag_models.LagModel.get_lag_at_t" title="Permalink to this definition"></a></dt>
 <dd><p>Lag as a function of time</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -151,7 +150,7 @@ as a function of time.</p>
 <dl class="class">
 <dt id="mars_troughs.custom_lag_models.ConstantLag">
 <em class="property">class </em><code class="sig-prename descclassname">mars_troughs.custom_lag_models.</code><code class="sig-name descname">ConstantLag</code><span class="sig-paren">(</span><em class="sig-param">constant: float = 1e-06</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.custom_lag_models.ConstantLag" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#mars_troughs.custom_lag_models.CustomLagModel" title="mars_troughs.custom_lag_models.CustomLagModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CustomLagModel</span></code></a>, <a class="reference internal" href="../generic_model/index.html#mars_troughs.generic_model.ConstantModel" title="mars_troughs.generic_model.ConstantModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mars_troughs.generic_model.ConstantModel</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#mars_troughs.custom_lag_models.LagModel" title="mars_troughs.custom_lag_models.LagModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LagModel</span></code></a>, <a class="reference internal" href="../generic_model/index.html#mars_troughs.generic_model.ConstantModel" title="mars_troughs.generic_model.ConstantModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mars_troughs.generic_model.ConstantModel</span></code></a></p>
 <p>The lag thickness is constant and does not depend on time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -164,7 +163,7 @@ thickness at all times.</p>
 <dl class="class">
 <dt id="mars_troughs.custom_lag_models.LinearLag">
 <em class="property">class </em><code class="sig-prename descclassname">mars_troughs.custom_lag_models.</code><code class="sig-name descname">LinearLag</code><span class="sig-paren">(</span><em class="sig-param">constant: float = 1e-06</em>, <em class="sig-param">slope: float = 1e-08</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.custom_lag_models.LinearLag" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#mars_troughs.custom_lag_models.CustomLagModel" title="mars_troughs.custom_lag_models.CustomLagModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CustomLagModel</span></code></a>, <a class="reference internal" href="../generic_model/index.html#mars_troughs.generic_model.LinearModel" title="mars_troughs.generic_model.LinearModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mars_troughs.generic_model.LinearModel</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#mars_troughs.custom_lag_models.LagModel" title="mars_troughs.custom_lag_models.LagModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LagModel</span></code></a>, <a class="reference internal" href="../generic_model/index.html#mars_troughs.generic_model.LinearModel" title="mars_troughs.generic_model.LinearModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mars_troughs.generic_model.LinearModel</span></code></a></p>
 <p>The lag thickness is linear in time. Lag changes as
 lag(t) = intercept + slope*t.</p>
 <dl class="field-list simple">
@@ -182,21 +181,21 @@ of change of the lag per time.</p></li>
 <dl class="class">
 <dt id="mars_troughs.custom_lag_models.QuadraticLag">
 <em class="property">class </em><code class="sig-prename descclassname">mars_troughs.custom_lag_models.</code><code class="sig-name descname">QuadraticLag</code><span class="sig-paren">(</span><em class="sig-param">constant: float = 1e-06</em>, <em class="sig-param">slope: float = 1e-08</em>, <em class="sig-param">quad: float = 1e-20</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.custom_lag_models.QuadraticLag" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#mars_troughs.custom_lag_models.CustomLagModel" title="mars_troughs.custom_lag_models.CustomLagModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CustomLagModel</span></code></a>, <a class="reference internal" href="../generic_model/index.html#mars_troughs.generic_model.QuadModel" title="mars_troughs.generic_model.QuadModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mars_troughs.generic_model.QuadModel</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#mars_troughs.custom_lag_models.LagModel" title="mars_troughs.custom_lag_models.LagModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LagModel</span></code></a>, <a class="reference internal" href="../generic_model/index.html#mars_troughs.generic_model.QuadModel" title="mars_troughs.generic_model.QuadModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mars_troughs.generic_model.QuadModel</span></code></a></p>
 <p>Lag is quadratic with time</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="mars_troughs.custom_lag_models.CubicLag">
 <em class="property">class </em><code class="sig-prename descclassname">mars_troughs.custom_lag_models.</code><code class="sig-name descname">CubicLag</code><span class="sig-paren">(</span><em class="sig-param">constant: float = 1e-06</em>, <em class="sig-param">slope: float = 1e-08</em>, <em class="sig-param">quad: float = 1e-20</em>, <em class="sig-param">cubic: float = 1e-30</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.custom_lag_models.CubicLag" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#mars_troughs.custom_lag_models.CustomLagModel" title="mars_troughs.custom_lag_models.CustomLagModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CustomLagModel</span></code></a>, <a class="reference internal" href="../generic_model/index.html#mars_troughs.generic_model.CubicModel" title="mars_troughs.generic_model.CubicModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mars_troughs.generic_model.CubicModel</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#mars_troughs.custom_lag_models.LagModel" title="mars_troughs.custom_lag_models.LagModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LagModel</span></code></a>, <a class="reference internal" href="../generic_model/index.html#mars_troughs.generic_model.CubicModel" title="mars_troughs.generic_model.CubicModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mars_troughs.generic_model.CubicModel</span></code></a></p>
 <p>Lag is cubic with time</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="mars_troughs.custom_lag_models.PowerLawLag">
 <em class="property">class </em><code class="sig-prename descclassname">mars_troughs.custom_lag_models.</code><code class="sig-name descname">PowerLawLag</code><span class="sig-paren">(</span><em class="sig-param">coeff: float = 5</em>, <em class="sig-param">exponent: float = 0.01</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.custom_lag_models.PowerLawLag" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#mars_troughs.custom_lag_models.CustomLagModel" title="mars_troughs.custom_lag_models.CustomLagModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CustomLagModel</span></code></a>, <a class="reference internal" href="../generic_model/index.html#mars_troughs.generic_model.PowerLawModel" title="mars_troughs.generic_model.PowerLawModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mars_troughs.generic_model.PowerLawModel</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#mars_troughs.custom_lag_models.LagModel" title="mars_troughs.custom_lag_models.LagModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LagModel</span></code></a>, <a class="reference internal" href="../generic_model/index.html#mars_troughs.generic_model.PowerLawModel" title="mars_troughs.generic_model.PowerLawModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mars_troughs.generic_model.PowerLawModel</span></code></a></p>
 <p>Lag follows a power law function with time</p>
 </dd></dl>
 

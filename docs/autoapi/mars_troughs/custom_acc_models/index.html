@@ -39,12 +39,10 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">API Reference</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs</span></code></a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="../index.html#submodules">Submodules</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="../accumulation_model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.accumulation_model</span></code></a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.custom_acc_models</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../custom_lag_models/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.custom_lag_models</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../datapaths/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.datapaths</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../generic_model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.generic_model</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../lag_model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.lag_model</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../mcmc/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.mcmc</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.model</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../trough/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.trough</span></code></a></li>
@@ -52,6 +50,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../index.html#package-contents">Package Contents</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../index.html#classes">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../index.html#functions">Functions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../index.html#attributes">Attributes</a></li>
 </ul>
 </li>
@@ -99,7 +98,7 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mars_troughs.custom_acc_models.CustomAccumulationModel" title="mars_troughs.custom_acc_models.CustomAccumulationModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CustomAccumulationModel</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mars_troughs.custom_acc_models.AccumulationModel" title="mars_troughs.custom_acc_models.AccumulationModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AccumulationModel</span></code></a></p></td>
 <td><p>Abstract class for computing the amount of ice accumulation.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#mars_troughs.custom_acc_models.TimeDependentAccumulationModel" title="mars_troughs.custom_acc_models.TimeDependentAccumulationModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TimeDependentAccumulationModel</span></code></a></p></td>
@@ -132,19 +131,19 @@
 </tbody>
 </table>
 <dl class="class">
-<dt id="mars_troughs.custom_acc_models.CustomAccumulationModel">
-<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.custom_acc_models.</code><code class="sig-name descname">CustomAccumulationModel</code><span class="sig-paren">(</span><em class="sig-param">sub_models: Optional[List[Model]] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.custom_acc_models.CustomAccumulationModel" title="Permalink to this definition"></a></dt>
+<dt id="mars_troughs.custom_acc_models.AccumulationModel">
+<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.custom_acc_models.</code><code class="sig-name descname">AccumulationModel</code><a class="headerlink" href="#mars_troughs.custom_acc_models.AccumulationModel" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="../model/index.html#mars_troughs.model.Model" title="mars_troughs.model.Model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mars_troughs.model.Model</span></code></a></p>
 <p>Abstract class for computing the amount of ice accumulation.</p>
 <dl class="attribute">
-<dt id="mars_troughs.custom_acc_models.CustomAccumulationModel.prefix">
-<code class="sig-name descname">prefix</code><em class="property"> :str = acc_</em><a class="headerlink" href="#mars_troughs.custom_acc_models.CustomAccumulationModel.prefix" title="Permalink to this definition"></a></dt>
+<dt id="mars_troughs.custom_acc_models.AccumulationModel.prefix">
+<code class="sig-name descname">prefix</code><em class="property"> :str = acc_</em><a class="headerlink" href="#mars_troughs.custom_acc_models.AccumulationModel.prefix" title="Permalink to this definition"></a></dt>
 <dd><p>All parameters of accumulations models start with ‘acc’.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="mars_troughs.custom_acc_models.CustomAccumulationModel.get_accumulation_at_t">
-<em class="property">abstract </em><code class="sig-name descname">get_accumulation_at_t</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#mars_troughs.custom_acc_models.CustomAccumulationModel.get_accumulation_at_t" title="Permalink to this definition"></a></dt>
+<dt id="mars_troughs.custom_acc_models.AccumulationModel.get_accumulation_at_t">
+<em class="property">abstract </em><code class="sig-name descname">get_accumulation_at_t</code><span class="sig-paren">(</span><em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#mars_troughs.custom_acc_models.AccumulationModel.get_accumulation_at_t" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -152,7 +151,7 @@
 <dl class="class">
 <dt id="mars_troughs.custom_acc_models.TimeDependentAccumulationModel">
 <em class="property">class </em><code class="sig-prename descclassname">mars_troughs.custom_acc_models.</code><code class="sig-name descname">TimeDependentAccumulationModel</code><span class="sig-paren">(</span><em class="sig-param">times: numpy.ndarray</em>, <em class="sig-param">variable: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.custom_acc_models.TimeDependentAccumulationModel" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#mars_troughs.custom_acc_models.CustomAccumulationModel" title="mars_troughs.custom_acc_models.CustomAccumulationModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CustomAccumulationModel</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#mars_troughs.custom_acc_models.AccumulationModel" title="mars_troughs.custom_acc_models.AccumulationModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AccumulationModel</span></code></a></p>
 <p>An accumulation rate model that depends on the time dependent parameter
 (likely solar insolation or obliquity), A(Var(t)).
 A is in m/year. Interpolated splines are created for the parameter as
@@ -169,7 +168,7 @@ a function of time for faster integration.</p>
 </dl>
 <dl class="method">
 <dt id="mars_troughs.custom_acc_models.TimeDependentAccumulationModel.get_accumulation_at_t">
-<code class="sig-name descname">get_accumulation_at_t</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#mars_troughs.custom_acc_models.TimeDependentAccumulationModel.get_accumulation_at_t" title="Permalink to this definition"></a></dt>
+<code class="sig-name descname">get_accumulation_at_t</code><span class="sig-paren">(</span><em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#mars_troughs.custom_acc_models.TimeDependentAccumulationModel.get_accumulation_at_t" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates the accumulation rate at times “time”.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -185,7 +184,7 @@ accumulation rates A, in m/year</p>
 
 <dl class="method">
 <dt id="mars_troughs.custom_acc_models.TimeDependentAccumulationModel.get_xt">
-<code class="sig-name descname">get_xt</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em>, <em class="sig-param">int_retreat_model_t_spline: numpy.ndarray</em>, <em class="sig-param">cot_angle</em>, <em class="sig-param">csc_angle</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.custom_acc_models.TimeDependentAccumulationModel.get_xt" title="Permalink to this definition"></a></dt>
+<code class="sig-name descname">get_xt</code><span class="sig-paren">(</span><em class="sig-param">time: numpy.ndarray</em>, <em class="sig-param">int_retreat_model_t_spline: numpy.ndarray</em>, <em class="sig-param">cot_angle</em>, <em class="sig-param">csc_angle</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.custom_acc_models.TimeDependentAccumulationModel.get_xt" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates the horizontal distance x (in m) traveled by a point in the
 center of the high side of the trough. This distance x is a function of
 the accumulation rate A(ins(t)) and the retreat rate of ice R(l(t),t)
@@ -225,7 +224,7 @@ a function of time for faster integration.</p>
 </dl>
 <dl class="method">
 <dt id="mars_troughs.custom_acc_models.Linear_Obliquity.get_yt">
-<code class="sig-name descname">get_yt</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.custom_acc_models.Linear_Obliquity.get_yt" title="Permalink to this definition"></a></dt>
+<code class="sig-name descname">get_yt</code><span class="sig-paren">(</span><em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.custom_acc_models.Linear_Obliquity.get_yt" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates the vertical distance y (in m) traveled by a point
 in the center of the high side of the trough. This distance  is a
 function of the accumulation rate A as y(t)=integral(A(obl(t)), dt) or
@@ -264,7 +263,7 @@ a function of time for faster integration.</p>
 </dl>
 <dl class="method">
 <dt id="mars_troughs.custom_acc_models.Quadratic_Obliquity.get_yt">
-<code class="sig-name descname">get_yt</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.custom_acc_models.Quadratic_Obliquity.get_yt" title="Permalink to this definition"></a></dt>
+<code class="sig-name descname">get_yt</code><span class="sig-paren">(</span><em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.custom_acc_models.Quadratic_Obliquity.get_yt" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates the vertical distance y (in m) at traveled by a point
 in the center of the high side of the trough. This distance  is a
 function of the accumulation rate A as y(t)=integral(A(ins(t)), dt) or
@@ -303,7 +302,7 @@ a function of time for faster integration.</p>
 </dl>
 <dl class="method">
 <dt id="mars_troughs.custom_acc_models.Cubic_Obliquity.get_yt">
-<code class="sig-name descname">get_yt</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.custom_acc_models.Cubic_Obliquity.get_yt" title="Permalink to this definition"></a></dt>
+<code class="sig-name descname">get_yt</code><span class="sig-paren">(</span><em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.custom_acc_models.Cubic_Obliquity.get_yt" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates the vertical distance y (in m) at traveled by a point
 in the center of the high side of the trough. This distance  is a
 function of the accumulation rate A as y(t)=integral(A(ins(t)), dt) or
@@ -342,7 +341,7 @@ a function of time for faster integration.</p>
 </dl>
 <dl class="method">
 <dt id="mars_troughs.custom_acc_models.PowerLaw_Obliquity.get_yt">
-<code class="sig-name descname">get_yt</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.custom_acc_models.PowerLaw_Obliquity.get_yt" title="Permalink to this definition"></a></dt>
+<code class="sig-name descname">get_yt</code><span class="sig-paren">(</span><em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.custom_acc_models.PowerLaw_Obliquity.get_yt" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates the vertical distance y (in m) at traveled by a point
 in the center of the high side of the trough. This distance  is a
 function of the accumulation rate A as y(t)=integral(A(ins(t)), dt) or
@@ -381,7 +380,7 @@ a function of time for faster integration.</p>
 </dl>
 <dl class="method">
 <dt id="mars_troughs.custom_acc_models.Linear_Insolation.get_yt">
-<code class="sig-name descname">get_yt</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.custom_acc_models.Linear_Insolation.get_yt" title="Permalink to this definition"></a></dt>
+<code class="sig-name descname">get_yt</code><span class="sig-paren">(</span><em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.custom_acc_models.Linear_Insolation.get_yt" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates the vertical distance y (in m) traveled by a point
 in the center of the high side of the trough. This distance  is a
 function of the accumulation rate A as y(t)=integral(A(obl(t)), dt) or
@@ -420,7 +419,7 @@ a function of time for faster integration.</p>
 </dl>
 <dl class="method">
 <dt id="mars_troughs.custom_acc_models.Quadratic_Insolation.get_yt">
-<code class="sig-name descname">get_yt</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.custom_acc_models.Quadratic_Insolation.get_yt" title="Permalink to this definition"></a></dt>
+<code class="sig-name descname">get_yt</code><span class="sig-paren">(</span><em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.custom_acc_models.Quadratic_Insolation.get_yt" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates the vertical distance y (in m) at traveled by a point
 in the center of the high side of the trough. This distance  is a
 function of the accumulation rate A as y(t)=integral(A(ins(t)), dt) or
@@ -459,7 +458,7 @@ a function of time for faster integration.</p>
 </dl>
 <dl class="method">
 <dt id="mars_troughs.custom_acc_models.Cubic_Insolation.get_yt">
-<code class="sig-name descname">get_yt</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.custom_acc_models.Cubic_Insolation.get_yt" title="Permalink to this definition"></a></dt>
+<code class="sig-name descname">get_yt</code><span class="sig-paren">(</span><em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.custom_acc_models.Cubic_Insolation.get_yt" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates the vertical distance y (in m) at traveled by a point
 in the center of the high side of the trough. This distance  is a
 function of the accumulation rate A as y(t)=integral(A(ins(t)), dt) or
@@ -498,7 +497,7 @@ a function of time for faster integration.</p>
 </dl>
 <dl class="method">
 <dt id="mars_troughs.custom_acc_models.PowerLaw_Insolation.get_yt">
-<code class="sig-name descname">get_yt</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.custom_acc_models.PowerLaw_Insolation.get_yt" title="Permalink to this definition"></a></dt>
+<code class="sig-name descname">get_yt</code><span class="sig-paren">(</span><em class="sig-param">time: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.custom_acc_models.PowerLaw_Insolation.get_yt" title="Permalink to this definition"></a></dt>
 <dd><p>Calculates the vertical distance y (in m) at traveled by a point
 in the center of the high side of the trough. This distance  is a
 function of the accumulation rate A as y(t)=integral(A(ins(t)), dt) or

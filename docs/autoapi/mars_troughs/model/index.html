@@ -39,10 +39,10 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">API Reference</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs</span></code></a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="../index.html#submodules">Submodules</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="../accumulation_model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.accumulation_model</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../custom_acc_models/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.custom_acc_models</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../custom_lag_models/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.custom_lag_models</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../datapaths/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.datapaths</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../generic_model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.generic_model</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../lag_model/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.lag_model</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../mcmc/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.mcmc</span></code></a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.model</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../trough/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.trough</span></code></a></li>
@@ -124,7 +124,7 @@ model that serve their own purpose</p>
 
 <dl class="method">
 <dt id="mars_troughs.model.Model.parameter_names">
-<em class="property">property </em><code class="sig-name descname">parameter_names</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span> &#x2192; List[str]<a class="headerlink" href="#mars_troughs.model.Model.parameter_names" title="Permalink to this definition"></a></dt>
+<em class="property">property </em><code class="sig-name descname">parameter_names</code> &#x2192; List[str]<a class="headerlink" href="#mars_troughs.model.Model.parameter_names" title="Permalink to this definition"></a></dt>
 <dd><p>Names of the parameters for <strong>this</strong> object sorted alphabetically.
 This method <strong>must</strong> be implemented for all subclasses, and the names
 must consist of the names of the attributes that contain the
@@ -149,7 +149,7 @@ parameters.</p>
 
 <dl class="method">
 <dt id="mars_troughs.model.Model.parameters">
-<em class="property">property </em><code class="sig-name descname">parameters</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span> &#x2192; Dict[str, Any]<a class="headerlink" href="#mars_troughs.model.Model.parameters" title="Permalink to this definition"></a></dt>
+<em class="property">property </em><code class="sig-name descname">parameters</code> &#x2192; Dict[str, Any]<a class="headerlink" href="#mars_troughs.model.Model.parameters" title="Permalink to this definition"></a></dt>
 <dd><p>The parameters for <strong>this</strong> object, but not any of its sub-models.
 The parameters <strong>must</strong> be attributes of the object.</p>
 <dl class="field-list simple">
@@ -161,7 +161,7 @@ The parameters <strong>must</strong> be attributes of the object.</p>
 
 <dl class="method">
 <dt id="mars_troughs.model.Model.all_parameter_names">
-<em class="property">property </em><code class="sig-name descname">all_parameter_names</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span> &#x2192; List[str]<a class="headerlink" href="#mars_troughs.model.Model.all_parameter_names" title="Permalink to this definition"></a></dt>
+<em class="property">property </em><code class="sig-name descname">all_parameter_names</code> &#x2192; List[str]<a class="headerlink" href="#mars_troughs.model.Model.all_parameter_names" title="Permalink to this definition"></a></dt>
 <dd><p>Names of the parameters for this object and all sub-models.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -172,7 +172,7 @@ The parameters <strong>must</strong> be attributes of the object.</p>
 
 <dl class="method">
 <dt id="mars_troughs.model.Model.all_parameters">
-<em class="property">property </em><code class="sig-name descname">all_parameters</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span> &#x2192; Dict[str, Any]<a class="headerlink" href="#mars_troughs.model.Model.all_parameters" title="Permalink to this definition"></a></dt>
+<em class="property">property </em><code class="sig-name descname">all_parameters</code> &#x2192; Dict[str, Any]<a class="headerlink" href="#mars_troughs.model.Model.all_parameters" title="Permalink to this definition"></a></dt>
 <dd><p>The parameters for this model and all sub-models.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
