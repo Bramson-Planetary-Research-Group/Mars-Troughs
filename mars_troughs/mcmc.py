@@ -12,7 +12,8 @@ import numpy as np
 import scipy.optimize as op
 import mars_troughs as mt
 import emcee
-from mars_troughs import DATAPATHS, Model
+from mars_troughs import (DATAPATHS, Model, load_retreat_data)
+from scipy.interpolate import RectBivariateSpline as RBS
 import os
 import sys
 
@@ -49,8 +50,14 @@ class MCMC():
         
         self.xdata=self.xdata*1000 #km to m 
         
+        #load retreat data
+        retreat_times, retreats, lags = load_retreat_data(tmp)
+        retreat_times=-retreat_times
+        ret_data_spline = RBS(lags, retreat_times, retreats)
+        
         # Create  trough object 
-        self.tr = mt.Trough(self.acc_model,self.lag_model,errorbar,angle)
+        self.tr = mt.Trough(self.acc_model,self.lag_model,
+                            ret_data_spline,errorbar,angle)
         
         self.parameter_names = ([key for key in self.tr.all_parameters])
         

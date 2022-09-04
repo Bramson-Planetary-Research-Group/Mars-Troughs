@@ -5,11 +5,9 @@ from typing import Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
-from scipy.interpolate import RectBivariateSpline as RBS
 from mars_troughs.datapaths import (
     load_insolation_data,
-    load_obliquity_data,
-    load_retreat_data,
+    load_obliquity_data
 )
 from mars_troughs.model import Model
 
@@ -38,6 +36,7 @@ class Trough(Model):
         self,
         acc_model: Union[str, Model],
         lag_model: Union[str, Model],
+        ret_data_spline,
         errorbar: float = 1.0,
         angle: float = 2.9,
     ):
@@ -49,27 +48,16 @@ class Trough(Model):
           angle (float, optional): south-facing slope angle in degrees. Default is 2.9.
         """
 
-        # Load all data
-        retreat_times, retreats, lags = load_retreat_data()
-        retreat_times=-retreat_times
-        self.angle = angle
-        self.errorbar = errorbar
-        self.meters_per_pixel = np.array([500.0, 20.0])  # meters per pixel
-
-        # Acc submodel
         self.accuModel = acc_model
-
-        # Lag submodel
         self.lagModel = lag_model
+        self.ret_data_spline=ret_data_spline
+        self.errorbar = errorbar
+        self.angle = angle
+        self.meters_per_pixel = np.array([500.0, 20.0])  # meters per pixel
 
         # Call super() with the acc and lag models. This
         # way their parameters are visible here.
         super().__init__(sub_models=[self.accuModel, self.lagModel])
-        
-        # Create data splines of retreat of ice (no dependency
-        # on model parameters)
-        self.ret_data_spline = RBS(lags, retreat_times, retreats)
-        self.re2_data_spline = RBS(lags, retreat_times, retreats ** 2)
 
         # Calculate the model of retreat of ice per time
         self.lag_at_t=self.lagModel.get_lag_at_t(self.accuModel._times)

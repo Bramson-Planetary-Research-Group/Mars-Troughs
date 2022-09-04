@@ -61,13 +61,13 @@ def main():
         times=-times.astype(float)
         times[0]=1e-10
         acc_model=accModel_obl_dict[args.acc](times, obliquity)
+
     
-    
+    #create lag model
     lag_model=lagModel_dict[args.lag]()
     
     maxSteps=args.steps
     directory= (args.dir + args.data + '/TMP' + str(tmp) + '/')
-    
     errorbar=np.sqrt(1.6)
     
     if tmp==1:

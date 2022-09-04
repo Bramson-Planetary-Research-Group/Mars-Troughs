@@ -13,7 +13,8 @@ from .custom_lag_models import (ConstantLag,
                          PowerLawLag)
 from .datapaths import (DATAPATHS,
                        load_insolation_data, 
-                       load_obliquity_data)
+                       load_obliquity_data,
+                       load_retreat_data)
 from .model import Model
 from .trough import Trough
 from .mcmc import MCMC, softAgePriorMCMC, hardAgePriorMCMC
