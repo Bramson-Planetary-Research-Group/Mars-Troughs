@@ -55,6 +55,7 @@ Functions
 
    mars_troughs.load_insolation_data
    mars_troughs.load_obliquity_data
+   mars_troughs.load_retreat_data
 
 
 
@@ -411,6 +412,20 @@ Attributes
    :rtype: obliquity (np.ndarray)
 
 
+.. py:function:: load_retreat_data(tmp) -> Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]
+
+   Unpack the retreat data from the Bramson et al. thermal model used
+   to create a bivariate spline. This data is 'static' and so can be
+   loaded in here without respect to the model under consideration.
+
+   :returns: times the lags are measured at
+             retreats (np.ndarray): retreat values in a 2D array of shape
+               `(n_times, n_lags)`
+             lags (np.ndarray): lag values the retreats have been calculated for
+               by default these are [1,2,...15,20] in millimeters
+   :rtype: times (np.ndarray)
+
+
 .. py:class:: Model(sub_models: Optional[List[Model]] = None)
 
    Bases: :py:obj:`abc.ABC`
@@ -480,7 +495,7 @@ Attributes
 
 
 
-.. py:class:: Trough(acc_model: Union[str, mars_troughs.model.Model], lag_model: Union[str, mars_troughs.model.Model], errorbar: float = 1.0, angle: float = 2.9)
+.. py:class:: Trough(acc_model: Union[str, mars_troughs.model.Model], lag_model: Union[str, mars_troughs.model.Model], ret_data_spline, errorbar: float = 1.0, angle: float = 2.9)
 
    Bases: :py:obj:`mars_troughs.model.Model`
 

@@ -181,6 +181,9 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#mars_troughs.load_obliquity_data" title="mars_troughs.load_obliquity_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_obliquity_data</span></code></a>(→ Tuple[numpy.ndarray, numpy.ndarray])</p></td>
 <td><p>Unpack the obliquity data.</p></td>
 </tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mars_troughs.load_retreat_data" title="mars_troughs.load_retreat_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_retreat_data</span></code></a>(→ Tuple[numpy.ndarray, …)</p></td>
+<td><p>Unpack the retreat data from the Bramson et al. thermal model used</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -606,6 +609,31 @@ times (np.ndarray): times the obliquity is measured at</p>
 </dl>
 </dd></dl>
 
+<dl class="function">
+<dt id="mars_troughs.load_retreat_data">
+<code class="sig-prename descclassname">mars_troughs.</code><code class="sig-name descname">load_retreat_data</code><span class="sig-paren">(</span><em class="sig-param">tmp</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]<a class="headerlink" href="#mars_troughs.load_retreat_data" title="Permalink to this definition"></a></dt>
+<dd><p>Unpack the retreat data from the Bramson et al. thermal model used
+to create a bivariate spline. This data is ‘static’ and so can be
+loaded in here without respect to the model under consideration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p>times the lags are measured at
+retreats (np.ndarray): retreat values in a 2D array of shape</p>
+<blockquote>
+<div><p><cite>(n_times, n_lags)</cite></p>
+</div></blockquote>
+<dl class="simple">
+<dt>lags (np.ndarray): lag values the retreats have been calculated for</dt><dd><p>by default these are [1,2,…15,20] in millimeters</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>times (np.ndarray)</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="class">
 <dt id="mars_troughs.Model">
 <em class="property">class </em><code class="sig-prename descclassname">mars_troughs.</code><code class="sig-name descname">Model</code><span class="sig-paren">(</span><em class="sig-param">sub_models: Optional[List[Model]] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.Model" title="Permalink to this definition"></a></dt>
@@ -689,7 +717,7 @@ The parameters <strong>must</strong> be attributes of the object.</p>
 
 <dl class="class">
 <dt id="mars_troughs.Trough">
-<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.</code><code class="sig-name descname">Trough</code><span class="sig-paren">(</span><em class="sig-param">acc_model: Union[str, mars_troughs.model.Model], lag_model: Union[str, mars_troughs.model.Model], errorbar: float = 1.0, angle: float = 2.9</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.Trough" title="Permalink to this definition"></a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.</code><code class="sig-name descname">Trough</code><span class="sig-paren">(</span><em class="sig-param">acc_model: Union[str, mars_troughs.model.Model], lag_model: Union[str, mars_troughs.model.Model], ret_data_spline, errorbar: float = 1.0, angle: float = 2.9</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.Trough" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="model/index.html#mars_troughs.model.Model" title="mars_troughs.model.Model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mars_troughs.model.Model</span></code></a></p>
 <p>This object models trough migration patterns (TMPs). It is composed of
 a model for the accumulation of ice on the surface of the trough, accessible

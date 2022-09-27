@@ -67,6 +67,11 @@ Attributes
 
       
 
+   .. py:attribute:: RETREAT2
+      :annotation: :pathlib.Path
+
+      
+
    .. py:attribute:: TMP1
       :annotation: :pathlib.Path
 
@@ -88,7 +93,7 @@ Attributes
 
    Global object that holds paths.
 
-.. py:function:: load_retreat_data() -> Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]
+.. py:function:: load_retreat_data(tmp) -> Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]
 
    Unpack the retreat data from the Bramson et al. thermal model used
    to create a bivariate spline. This data is 'static' and so can be

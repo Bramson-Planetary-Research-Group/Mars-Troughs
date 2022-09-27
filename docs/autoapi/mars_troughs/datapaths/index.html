@@ -166,6 +166,11 @@ DATAPATHS variable instead.</p>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="mars_troughs.datapaths._DataPaths.RETREAT2">
+<code class="sig-name descname">RETREAT2</code><em class="property"> :pathlib.Path</em><a class="headerlink" href="#mars_troughs.datapaths._DataPaths.RETREAT2" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="mars_troughs.datapaths._DataPaths.TMP1">
 <code class="sig-name descname">TMP1</code><em class="property"> :pathlib.Path</em><a class="headerlink" href="#mars_troughs.datapaths._DataPaths.TMP1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -190,7 +195,7 @@ DATAPATHS variable instead.</p>
 
 <dl class="function">
 <dt id="mars_troughs.datapaths.load_retreat_data">
-<code class="sig-prename descclassname">mars_troughs.datapaths.</code><code class="sig-name descname">load_retreat_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]<a class="headerlink" href="#mars_troughs.datapaths.load_retreat_data" title="Permalink to this definition"></a></dt>
+<code class="sig-prename descclassname">mars_troughs.datapaths.</code><code class="sig-name descname">load_retreat_data</code><span class="sig-paren">(</span><em class="sig-param">tmp</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]<a class="headerlink" href="#mars_troughs.datapaths.load_retreat_data" title="Permalink to this definition"></a></dt>
 <dd><p>Unpack the retreat data from the Bramson et al. thermal model used
 to create a bivariate spline. This data is ‘static’ and so can be
 loaded in here without respect to the model under consideration.</p>
