@@ -18,6 +18,7 @@ class _DataPaths:
     INSOLATION1: Path = DATA / "Insolation_5million_1.txt"
     INSOLATION2: Path = DATA / "TMP2" / "Insolation_5million_2.txt"
     RETREAT: Path = DATA / "Retreat_data.txt"
+    RETREAT2: Path = DATA / "TMP2" / "Retreat_data_tmp2.txt"
     TMP1: Path = DATA / "TMP_xz.txt"
     TMP2: Path = DATA / "TMP2" / "TMP_xz.txt"
     OBLIQUITY: Path = DATA / "Obliquity_5million.txt"
@@ -27,7 +28,7 @@ DATAPATHS = _DataPaths()
 """Global object that holds paths."""
 
 
-def load_retreat_data() -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+def load_retreat_data(tmp) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
     Unpack the retreat data from the Bramson et al. thermal model used
     to create a bivariate spline. This data is 'static' and so can be
@@ -40,11 +41,19 @@ def load_retreat_data() -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
       lags (np.ndarray): lag values the retreats have been calculated for
         by default these are [1,2,...15,20] in millimeters
     """
-    df = pd.read_csv(DATAPATHS.RETREAT)
-    times: np.ndarray = df["times"].values
-    lag_cols: List[str] = [col for col in df.columns if col.startswith("lag")]
-    lags: np.ndarray = np.array([int(col[3:]) for col in lag_cols])
-    retreats: np.ndarray = df[lag_cols].values.T
+    if tmp==1:
+        df = pd.read_csv(DATAPATHS.RETREAT)
+        times: np.ndarray = df["times"].values
+        lag_cols: List[str] = [col for col in df.columns if col.startswith("lag")]
+        lags: np.ndarray = np.array([int(col[3:]) for col in lag_cols])
+        retreats: np.ndarray = df[lag_cols].values.T
+    else:
+        df = pd.read_csv(DATAPATHS.RETREAT2)
+        times: np.ndarray = df["times"].values
+        lag_cols: List[str] = [col for col in df.columns if col.startswith("lag")]
+        lags: np.ndarray = np.array([int(col[3:]) for col in lag_cols])
+        retreats: np.ndarray = df[lag_cols].values.T
+        
     return times, retreats, lags
 
 
