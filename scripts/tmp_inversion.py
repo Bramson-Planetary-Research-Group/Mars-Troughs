@@ -68,7 +68,7 @@ def main():
     
     maxSteps=args.steps
     directory= (args.dir + args.data + '/TMP' + str(tmp) + '/')
-    errorbar=np.sqrt(1.6)
+    errorbar=1 #assuming we know the measurement value down to one pixel
     
     if tmp==1:
         angle=2.9
