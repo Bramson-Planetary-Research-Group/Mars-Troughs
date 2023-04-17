@@ -188,7 +188,7 @@ class MCMC():
         #errorbar has to be positive
         errorbar: float = params["errorbar"]
         
-        if errorbar < 0: #prior on the variance (i.e. the error bars)
+        if errorbar < 1: #pixel error cannot be smaller than 1
             return False
         
         #lag thickness has to be larger than 1e-15 mm and less than 20 mm
