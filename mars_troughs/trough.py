@@ -194,7 +194,9 @@ class Trough(Model):
         xvar, yvar = (self.errorbar * self.meters_per_pixel) ** 2
         chi2 = (x_data - self.xnear) ** 2 / xvar + (y_data - 
                                                       self.ynear) ** 2 / yvar
-        return -0.5 * chi2.sum() - 0.5 * len(x_data) * np.log(xvar * yvar)
+        return (-0.5 * chi2.sum() 
+                -0.5 * len(x_data) * np.log(2*np.pi) 
+                -0.5 * np.log(xvar * yvar))
 
     @property
     def angle(self) -> float:
