@@ -344,34 +344,43 @@ def main():
                     facecolor='w',pad_inches=0.1)
         
         #plot variances as histograms-----------------------------------
-        stdsx=errorbar1d*newmcmc.tr.meters_per_pixel[0]
-        stdsy=errorbar1d*newmcmc.tr.meters_per_pixel[1]
-        
+
         plt.figure()
-        plt.subplot(1,2,1)
-        plt.hist(stdsx,bins=100)
-        plt.axvline(x=stdsx[indxbest],color='k',label='std best model',
+        plt.hist(errorbar1d,bins=100)
+        plt.axvline(x=errorbar1d[indxbest],color='k',label='errorbar best model',
                     linestyle='dashed')
         plt.title('Horizontal loc')
-        plt.xlabel('std (m^2)')
+        plt.xlabel('pixel')
         plt.ylabel('# models')
         plt.legend()
-        
-        plt.subplot(1,2,2)
-        plt.hist(stdsy,bins=100)
-        plt.axvline(x=stdsy[indxbest],color='k',label='std best model',
-                    linestyle='dashed')
-        plt.yticks([], [])
-        plt.title('Vertical loc')
-        plt.xlabel('std (m^2)')
-        plt.legend()
+
         
         #create folder for saving figure
-        if not os.path.exists(args.plotdir+'figures/'+'var/'):
-            os.makedirs(args.plotdir+'figures/'+'var/')
+        if not os.path.exists(args.plotdir+'figures/'+'errorbar/'):
+            os.makedirs(args.plotdir+'figures/'+'errorbar/')
     
             
-        plt.savefig(args.plotdir+'figures/'+'var/'
+        plt.savefig(args.plotdir+'figures/'+'errorbar/'
+                    +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
+                    facecolor='w',pad_inches=0.1)
+
+        errorbars=ensemble[:,:,0]
+        
+        plt.figure()
+        plt.plot(xaxis,errorbars)
+        plt.yscale('log')
+        plt.title('Horizontal loc')
+        plt.xlabel('step')
+        plt.ylabel('pixel')
+
+
+        
+        #create folder for saving figure
+        if not os.path.exists(args.plotdir+'figures/'+'errorbarAll/'):
+            os.makedirs(args.plotdir+'figures/'+'errorbarAll/')
+    
+            
+        plt.savefig(args.plotdir+'figures/'+'errorbarAll/'
                     +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
                     facecolor='w',pad_inches=0.1)
         
