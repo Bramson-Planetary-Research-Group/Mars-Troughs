@@ -5,14 +5,11 @@ from typing import Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
-from mars_troughs.datapaths import (
-    load_insolation_data,
-    load_obliquity_data
-)
 from mars_troughs.model import Model
+from typing import Any, Dict, List, Optional
 
 
-class Trough(Model):
+class Trough():
     """
     This object models trough migration patterns (TMPs). It is composed of
     a model for the accumulation of ice on the surface of the trough, accessible
@@ -37,7 +34,6 @@ class Trough(Model):
         acc_model: Union[str, Model],
         lag_model: Union[str, Model],
         ret_data_spline,
-        errorbar: float = 1.0,
         angle: float = 2.9,
     ):
         """Constructor for the trough object.
@@ -51,13 +47,12 @@ class Trough(Model):
         self.accuModel = acc_model
         self.lagModel = lag_model
         self.ret_data_spline=ret_data_spline
-        self.errorbar = errorbar
         self.angle = angle
         self.meters_per_pixel = np.array([475.0, 20.0])  # meters per pixel
+        self.errorbar = 1 #error is 1 pixel always
 
-        # Call super() with the acc and lag models. This
-        # way their parameters are visible here.
-        super().__init__(sub_models=[self.accuModel, self.lagModel])
+        # Set submodels
+        self.set_submodels([self.accuModel, self.lagModel])
 
         # Calculate the model of retreat of ice per time
         self.lag_at_t=self.lagModel.get_lag_at_t(self.accuModel._times)
@@ -67,11 +62,6 @@ class Trough(Model):
         # Compute the Retreat(time) spline
         self.retreat_model_t_spline = IUS(self.accuModel._times, 
                                           self.retreat_model_t)
-
-    @property
-    def parameter_names(self) -> List[str]:
-        """Just the errorbar"""
-        return ["errorbar"]
 
     def set_model(
         self,
@@ -197,6 +187,10 @@ class Trough(Model):
         return (-0.5 * chi2.sum() 
                 -0.5 * len(x_data) * np.log(2*np.pi) 
                 -0.5 * np.log(xvar * yvar))
+    
+    def set_submodels(self, sub_models: Optional[List["Model"]] = None) -> None:
+        # Add sub_models as an attribute
+        self.sub_models: List[Model] = sub_models or []
 
     @property
     def angle(self) -> float:
@@ -225,3 +219,55 @@ class Trough(Model):
         Cotangent of the slope angle.
         """
         return self._cot
+        
+    @property
+    def all_parameter_names(self) -> List[str]:
+        """
+        Names of the parameters of all sub-models.
+
+        Returns:
+          names of parameters of all sub-models
+        """
+        return self.all_parameters.keys()
+
+    @property
+    def all_parameters(self) -> Dict[str, Any]:
+        """
+        The parameters for this model and all sub-models.
+
+        Returns:
+          key-value pairs for this model and all sub-models
+        """
+        # Find parameters of sub_models
+        sub_pars = {}
+        for i, sub_model in enumerate(self.sub_models):
+            # If the sub model doesn't have a prefix then prepend a number
+            sub_prefix = sub_model.prefix or str(i) + "_"
+            # Attach the prefix of submodels to their keys
+            for key, value in sub_model.parameters.items():
+                sub_pars[sub_prefix + key] = value
+
+        # Bundle up our parameters and all sub model's parameters
+        return {**sub_pars}
+
+    @all_parameters.setter
+    def all_parameters(self, params: Dict[str, Any]) -> None:
+        """
+        Setter for all sub-models parameters.
+
+        Args:
+          params (Dict[str, Any]): new parameters
+        """
+        # Update sub model's parameters
+        for i, sub_model in enumerate(self.sub_models):
+            # Pull out only the parameters associated with the sub model,
+            # based on its prefix (or the default assigned prefix)
+            # Set the sub model's `all_parameters` to be this parameter subset
+            sub_prefix = sub_model.prefix or str(i) + "_"
+            sub_params = {
+                k[len(sub_prefix) :]: v
+                for k, v in params.items()
+                if k.startswith(sub_prefix)
+            }
+            sub_model.parameters = sub_params
+        return

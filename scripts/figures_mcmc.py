@@ -198,8 +198,6 @@ def main():
                 tmpt[indxw,:,:]=tmpti.T
                 indxw=indxw+1
                 
-        #get errorbar 1d
-        errorbar1d=ensemble[:,:,0].reshape(nmodels*newmcmc.nwalkers,1)
         #reshape log prob        
         logprob1d=logprob.reshape(nmodels*newmcmc.nwalkers,1)
         #best model indx
@@ -254,9 +252,6 @@ def main():
         bestTMP=tmpt[indxbest,:,:]
         plt.plot(bestTMP[:,0],bestTMP[:,1],c='b')
         
-        #get errorbar of best tmp
-        bestErrorbar=errorbar1d[indxbest]
-        
         ratioyx=0.4;
         
         #find nearest points
@@ -274,21 +269,20 @@ def main():
             ynear[i] = y_model[ind]
             timenear[i] = newmcmc.tr.accuModel._times[ind]
             
-        #plot tmp data and errorbar
-        xerr, yerr = bestErrorbar*newmcmc.tr.meters_per_pixel
         
         for i in range(nmodels*newmcmc.nwalkers):
             indx=i
             plt.plot(tmpt[indx,:,0],tmpt[indx,:,1],c="gray", alpha=0.1, zorder=-1)
         plt.plot(tmpt[indx,:,0],tmpt[indx,:,1],c="gray", alpha=0.1, zorder=-1,label='Ensemble models')
-        
-        plt.errorbar(x=xnear, xerr=xerr, y=ynear, yerr=yerr, 
-                 c='b', marker='.', ls='', label='Best model')
+
         #plot observed data with errorbars
         #sharad images error: 20 m per pixel vertically and 475 m per pixel
         #horizontally
-        plt.errorbar(x=newmcmc.xdata, xerr=475, y=newmcmc.ydata, yerr=20, 
-                 c='r', marker='.', ls='',label='Observed TMP')
+        plt.errorbar(x=newmcmc.xdata, 
+                     xerr=newmcmc.tr.errorbar*newmcmc.tr.meters_per_pixel[0],
+                     y=newmcmc.ydata, 
+                     yerr=newmcmc.tr.errorbar*newmcmc.tr.meters_per_pixel[1], 
+                     c='r', marker='.', ls='',label='Observed TMP')
         
         plt.xlabel("Horizontal dist [m]")
         plt.ylabel("V. dist [m]")
@@ -331,8 +325,11 @@ def main():
                      alpha=0.1, zorder=-1)
         plt.xlabel("Horizontal dist [m]")
         plt.ylabel("V. dist [m]")
-        plt.errorbar(x=newmcmc.xdata, xerr=xerr, y=newmcmc.ydata, yerr=yerr, 
-                 c='r', marker='.', ls='')
+        plt.errorbar(x=newmcmc.xdata, 
+                     xerr=newmcmc.tr.errorbar*newmcmc.tr.meters_per_pixel[0], 
+                     y=newmcmc.ydata, 
+                     yerr=newmcmc.tr.errorbar*newmcmc.tr.meters_per_pixel[1], 
+                     c='r', marker='.', ls='')
         
          #create folder for saving figure
         if not os.path.exists(args.plotdir+'figures/'+'tmpFull/'):
@@ -343,47 +340,8 @@ def main():
                     +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.png',
                     facecolor='w',pad_inches=0.1)
         
-        #plot variances as histograms-----------------------------------
-
-        plt.figure()
-        plt.hist(errorbar1d,bins=100)
-        plt.axvline(x=errorbar1d[indxbest],color='k',label='errorbar best model',
-                    linestyle='dashed')
-        plt.title('Horizontal loc')
-        plt.xlabel('pixel')
-        plt.ylabel('# models')
-        plt.legend()
-
-        
-        #create folder for saving figure
-        if not os.path.exists(args.plotdir+'figures/'+'errorbar/'):
-            os.makedirs(args.plotdir+'figures/'+'errorbar/')
-    
-            
-        plt.savefig(args.plotdir+'figures/'+'errorbar/'
-                    +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
-                    facecolor='w',pad_inches=0.1)
-
-        errorbars=ensemble[:,:,0]
-        
-        plt.figure()
-        plt.plot(xaxis,errorbars)
-        plt.yscale('log')
-        plt.title('Horizontal loc')
-        plt.xlabel('step')
-        plt.ylabel('pixel')
 
 
-        
-        #create folder for saving figure
-        if not os.path.exists(args.plotdir+'figures/'+'errorbarAll/'):
-            os.makedirs(args.plotdir+'figures/'+'errorbarAll/')
-    
-            
-        plt.savefig(args.plotdir+'figures/'+'errorbarAll/'
-                    +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
-                    facecolor='w',pad_inches=0.1)
-        
         #plot hists of age-------------------------
         
         ndata=len(newmcmc.xdata)

@@ -30,7 +30,6 @@ class MCMC():
         tmp: int,
         acc_model = Union[str, Model],
         lag_model = Union[str, Model],
-        errorbar = np.sqrt(1.6), #errorbar in pixels on the datapoints
         angle= 5.0,
     ):
         self.maxSteps = maxSteps
@@ -57,7 +56,7 @@ class MCMC():
         
         # Create  trough object 
         self.tr = mt.Trough(self.acc_model,self.lag_model,
-                            ret_data_spline,errorbar,angle)
+                            ret_data_spline,angle)
         
         self.parameter_names = ([key for key in self.tr.all_parameters])
         
@@ -68,8 +67,7 @@ class MCMC():
         
         #Linear optimization
         
-        guessParams=np.array([errorbar]
-                             +list(self.tr.accuModel.parameters.values())
+        guessParams=np.array( list(self.tr.accuModel.parameters.values())
                              +list(self.tr.lagModel.parameters.values()))
         optObj= op.minimize(self.neg_ln_likelihood, x0=guessParams, 
                             method='Nelder-Mead')
@@ -184,12 +182,6 @@ class MCMC():
         del self.sampler
         
     def priors(self,params,times):
-        
-        #errorbar has to be positive
-        errorbar: float = params["errorbar"]
-        
-        if errorbar < 1: #pixel error cannot be smaller than 1
-            return False
         
         #lag thickness has to be larger than 1e-15 mm and less than 20 mm
         if any(self.tr.lag_at_t  < 1e-15) or any(self.tr.lag_at_t > 20):

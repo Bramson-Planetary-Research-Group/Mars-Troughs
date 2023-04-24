@@ -68,8 +68,6 @@ def main():
     
     maxSteps=args.steps
     directory= (args.dir + args.data + '/TMP' + str(tmp) + '/')
-    errorbar=2 #assuming we know the measurement value down to "errorbar" 
-               #pixels
     
     if tmp==1:
         angle=2.9
@@ -78,7 +76,7 @@ def main():
     
     thin_by=args.thin_by
     mcmcobj=mt.MCMC(maxSteps,thin_by,directory,tmp,acc_model,lag_model,
-                    errorbar, angle)
+                    angle)
     
     filename=mcmcobj.filename
     
