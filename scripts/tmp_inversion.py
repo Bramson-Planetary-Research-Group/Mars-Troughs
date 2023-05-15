@@ -30,6 +30,8 @@ def main():
     p.add_argument("-thin_by",default=1,type=int,help="Skip iterations in ensemble")
     p.add_argument("-data", default="insolation",type=str, help="insolation or obliquity")
     p.add_argument("-tmp", default=1,type=int, help="tmp number")
+    p.add_argument("-removePoint",default=1,type=int, 
+                                               help="tmp data point to remove")
     p.add_argument("-dir",default="../../outputMCMC/",type=str, help="directory for output")
     args=p.parse_args()
     
@@ -86,9 +88,16 @@ def main():
         xdata,ydata=np.loadtxt(DATAPATHS.TMP2, 
                                      unpack=True) #Observed TMP data  
         xdata=xdata*1000 #km to m 
+        
+    removePoint=args.removePoint
+    
+    if removePoint:
+        xdataRemovedPoint=np.delete(xdata,removePoint)
+        ydataRemovedPoint=np.delete(ydata,removePoint)
     
     thin_by=args.thin_by
-    mcmcobj=mt.MCMC(maxSteps,thin_by,directory,tmp,xdata,ydata,acc_model,
+    mcmcobj=mt.MCMC(maxSteps,thin_by,directory,tmp,xdataRemovedPoint,
+                    ydataRemovedPoint,acc_model,
                     lag_model,
                     angle)
     
@@ -100,7 +109,7 @@ def main():
     
     print(filename)
     
-def mainArgs(acc,lag,steps,thin_by,data,tmp,dir):
+def mainArgs(acc,lag,steps,thin_by,data,tmp,removePoint,dir):
     sys.argv = ['mainInv.py', 
                 '-acc', str(acc),
                 '-lag', str(lag),
@@ -108,6 +117,7 @@ def mainArgs(acc,lag,steps,thin_by,data,tmp,dir):
                 '-thin_by', str(thin_by),
                 '-data', str(data),
                 '-tmp', str(tmp),
+                '-removePoint',str(removePoint),
                 '-dir', str(dir)]
     
     #cProfile.run('main()')
