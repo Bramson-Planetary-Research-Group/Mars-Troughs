@@ -18,6 +18,7 @@ from mars_troughs import (Linear_Obliquity,
                           PowerLaw_Obliquity)
 from mars_troughs import (load_insolation_data, 
                           load_obliquity_data)
+from mars_troughs import DATAPATHS
 import sys
 
 def main():
@@ -56,6 +57,8 @@ def main():
         times=-times.astype(float)
         times[0]=1e-10
         acc_model=accModel_ins_dict[args.acc](times,insolations)
+        
+        
     else:
         (obliquity,times) = load_obliquity_data()
         times=-times.astype(float)
@@ -71,11 +74,22 @@ def main():
     
     if tmp==1:
         angle=2.9
+        #get tmp data
+        xdata,ydata=np.loadtxt(DATAPATHS.TMP1, 
+                                         unpack=True) #Observed TMP data   
+        xdata=xdata*1000 #km to m 
+        
+        
     elif tmp==2:
         angle=1.9
+        #get tmp data
+        xdata,ydata=np.loadtxt(DATAPATHS.TMP2, 
+                                     unpack=True) #Observed TMP data  
+        xdata=xdata*1000 #km to m 
     
     thin_by=args.thin_by
-    mcmcobj=mt.MCMC(maxSteps,thin_by,directory,tmp,acc_model,lag_model,
+    mcmcobj=mt.MCMC(maxSteps,thin_by,directory,tmp,xdata,ydata,acc_model,
+                    lag_model,
                     angle)
     
     filename=mcmcobj.filename

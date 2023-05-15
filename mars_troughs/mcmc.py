@@ -12,7 +12,7 @@ import numpy as np
 import scipy.optimize as op
 import mars_troughs as mt
 import emcee
-from mars_troughs import (DATAPATHS, Model, load_retreat_data)
+from mars_troughs import (Model, load_retreat_data)
 from scipy.interpolate import RectBivariateSpline as RBS
 import os
 import sys
@@ -28,6 +28,8 @@ class MCMC():
         thin_by: int,
         directory: str,
         tmp: int,
+        xdata,
+        ydata,
         acc_model = Union[str, Model],
         lag_model = Union[str, Model],
         angle= 5.0,
@@ -38,17 +40,9 @@ class MCMC():
         self.lag_model = lag_model
         self.directory = directory
         self.tmp=tmp
-        
-        #Load data
-        if tmp==1:
-            self.xdata,self.ydata=np.loadtxt(DATAPATHS.TMP1, 
-                                         unpack=True) #Observed TMP data
-        else:
-            self.xdata,self.ydata=np.loadtxt(DATAPATHS.TMP2, 
-                                         unpack=True) #Observed TMP data    
-        
-        self.xdata=self.xdata*1000 #km to m 
-        
+        self.xdata=xdata
+        self.ydata=ydata
+
         #load retreat data
         retreat_times, retreats, lags = load_retreat_data(tmp)
         retreat_times=-retreat_times
