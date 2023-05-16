@@ -30,6 +30,7 @@ class MCMC():
         tmp: int,
         xdata,
         ydata,
+        index,
         acc_model = Union[str, Model],
         lag_model = Union[str, Model],
         angle= 5.0,
@@ -87,7 +88,7 @@ class MCMC():
         if not os.path.exists(self.directory+'obj/'):
             os.makedirs(self.directory+'obj/')
             
-        self.modelName=self.acc_model_name+'_'+self.lag_model_name
+        self.modelName=self.acc_model_name+'_'+self.lag_model_name+ str(index)
         #if not os.path.exists(self.directory+'obj/'+self.modelName+'/'):
          #   os.makedirs(self.directory+'obj/'+self.modelName+'/')
     

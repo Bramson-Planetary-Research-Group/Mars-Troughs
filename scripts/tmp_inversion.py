@@ -97,7 +97,7 @@ def main():
     
     thin_by=args.thin_by
     mcmcobj=mt.MCMC(maxSteps,thin_by,directory,tmp,xdataRemovedPoint,
-                    ydataRemovedPoint,acc_model,
+                    ydataRemovedPoint,removePoint,acc_model,
                     lag_model,
                     angle)
     
