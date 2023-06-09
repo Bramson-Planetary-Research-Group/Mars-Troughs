@@ -42,9 +42,6 @@ Classes
    mars_troughs.PowerLawLag
    mars_troughs.Model
    mars_troughs.Trough
-   mars_troughs.MCMC
-   mars_troughs.softAgePriorMCMC
-   mars_troughs.hardAgePriorMCMC
 
 
 
@@ -390,7 +387,6 @@ Attributes
 
 
 .. py:data:: DATAPATHS
-   
 
    Global object that holds paths.
 
@@ -426,7 +422,7 @@ Attributes
    :rtype: times (np.ndarray)
 
 
-.. py:class:: Model(sub_models: Optional[List[Model]] = None)
+.. py:class:: Model
 
    Bases: :py:obj:`abc.ABC`
 
@@ -440,13 +436,9 @@ Attributes
                       model that serve their own purpose
    :type sub_models: Optional[List["Model"]]
 
-   .. py:attribute:: prefix
-      :annotation: :Optional[str]
-
-      A prefix to prepend to parameter naems when supplying them.
-
-   .. py:method:: parameter_names() -> List[str]
-      :property:
+   .. py:property:: parameter_names
+      :type: List[str]
+      :abstractmethod:
 
       Names of the parameters for **this** object sorted alphabetically.
       This method **must** be implemented for all subclasses, and the names
@@ -468,36 +460,21 @@ Attributes
 
       :returns: names of parametes for **this** object
 
-
-   .. py:method:: parameters() -> Dict[str, Any]
-      :property:
+   .. py:property:: parameters
+      :type: Dict[str, Any]
 
       The parameters for **this** object, but not any of its sub-models.
       The parameters **must** be attributes of the object.
 
       :returns: name/value pairs where values can be numbers or arrays of numbers
 
+   .. py:attribute:: prefix
+      :type: Optional[str]
 
-   .. py:method:: all_parameter_names() -> List[str]
-      :property:
-
-      Names of the parameters for this object and all sub-models.
-
-      :returns: names of parametes for this object and all sub-models
+      A prefix to prepend to parameter names when supplying them.
 
 
-   .. py:method:: all_parameters() -> Dict[str, Any]
-      :property:
-
-      The parameters for this model and all sub-models.
-
-      :returns: key-value pairs for this model and all sub-models
-
-
-
-.. py:class:: Trough(acc_model: Union[str, mars_troughs.model.Model], lag_model: Union[str, mars_troughs.model.Model], ret_data_spline, errorbar: float = 1.0, angle: float = 2.9)
-
-   Bases: :py:obj:`mars_troughs.model.Model`
+.. py:class:: Trough(acc_model: Union[str, mars_troughs.model.Model], lag_model: Union[str, mars_troughs.model.Model], ret_data_spline, angle: float = 2.9)
 
    This object models trough migration patterns (TMPs). It is composed of
    a model for the accumulation of ice on the surface of the trough, accessible
@@ -522,11 +499,34 @@ Attributes
                            insolation data.
    :type insolation_path: Union[str, Path], optional
 
-   .. py:method:: parameter_names() -> List[str]
-      :property:
+   .. py:property:: angle
+      :type: float
 
-      Just the errorbar
+      Slope angle in degrees.
 
+   .. py:property:: csc_angle
+      :type: float
+
+      Cosecant of the slope angle.
+
+   .. py:property:: cot_angle
+      :type: float
+
+      Cotangent of the slope angle.
+
+   .. py:property:: all_parameter_names
+      :type: List[str]
+
+      Names of the parameters of all sub-models.
+
+      :returns: names of parameters of all sub-models
+
+   .. py:property:: all_parameters
+      :type: Dict[str, Any]
+
+      The parameters for this model and all sub-models.
+
+      :returns: key-value pairs for this model and all sub-models
 
    .. py:method:: set_model(all_parameters: Dict[str, float]) -> None
 
@@ -600,77 +600,22 @@ Attributes
           log-likelihood value (float)
 
 
-   .. py:method:: angle() -> float
-      :property:
-
-      Slope angle in degrees.
-
-
-   .. py:method:: csc_angle() -> float
-      :property:
-
-      Cosecant of the slope angle.
-
-
-   .. py:method:: cot_angle() -> float
-      :property:
-
-      Cotangent of the slope angle.
-
-
-
-.. py:class:: MCMC(maxSteps: int, thin_by: int, directory: str, tmp: int, acc_model=Union[str, Model], lag_model=Union[str, Model], errorbar=np.sqrt(1.6), angle=5.0)
-
-   Class for running MCMC chains to obtain a sample of climate parameters
-   of trough migration.
-
-   .. py:method:: priors(params, times)
-
-
-   .. py:method:: ln_likelihood(params: Dict[str, float])
-
-
-   .. py:method:: neg_ln_likelihood(paramsArray)
-
-
-
-.. py:class:: softAgePriorMCMC(meanAge: float, maxSteps: int, thin_by: int, directory: str, tmp: int, acc_model=Union[str, Model], lag_model=Union[str, Model], errorbar=np.sqrt(1.6), angle=5.0)
-
-   Bases: :py:obj:`MCMC`
-
-   Class for running MCMC chains to obtain a sample of climate parameters
-   of trough migration.
-
-   .. py:method:: priors(params, times)
-
-
-   .. py:method:: ln_likelihood(params: Dict[str, float])
-
-
-
-.. py:class:: hardAgePriorMCMC(maxSteps: int, thin_by: int, directory: str, tmp: int, acc_model=Union[str, Model], lag_model=Union[str, Model], errorbar=np.sqrt(1.6), angle=5.0)
-
-   Bases: :py:obj:`MCMC`
-
-   Class for running MCMC chains to obtain a sample of climate parameters
-   of trough migration.
-
-   .. py:method:: priors(params, times)
+   .. py:method:: set_submodels(sub_models: Optional[List[mars_troughs.model.Model]] = None) -> None
 
 
 
 .. py:data:: __author__
-   :annotation: = ['Tom McClintock <thmsmcclintock@gmail.com>', 'Kristel Izquierdo...
+   :value: ['Tom McClintock <thmsmcclintock@gmail.com>', 'Kristel Izquierdo...
 
    
 
 .. py:data:: __version__
-   :annotation: = 0.0.1
+   :value: '0.0.1'
 
    
 
 .. py:data:: __docs__
-   :annotation: = Simulating martian ice troughs.
+   :value: 'Simulating martian ice troughs.'
 
    
 

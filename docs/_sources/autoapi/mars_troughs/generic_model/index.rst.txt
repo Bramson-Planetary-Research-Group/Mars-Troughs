@@ -43,11 +43,10 @@ Classes
                     parameter.
    :type constant: float, optional
 
-   .. py:method:: parameter_names() -> List[str]
-      :property:
+   .. py:property:: parameter_names
+      :type: List[str]
 
       Returns ``["constant"]``
-
 
    .. py:method:: eval(x: Union[numbers.Number, numpy.ndarray]) -> Union[numbers.Number, numpy.ndarray]
 
@@ -67,9 +66,28 @@ Classes
    :type slope: float, optional
    :param y = slope*x + constant:
 
-   .. py:method:: parameter_names() -> List[str]
-      :property:
+   .. py:property:: parameter_names
+      :type: List[str]
 
+      Names of the parameters for **this** object sorted alphabetically.
+      This method **must** be implemented for all subclasses, and the names
+      must consist of the names of the attributes that contain the
+      parameters.
+
+      Example:
+
+      .. code-block:: python
+
+         class MyModel(Model):
+             a = 3
+
+             @property
+             def parameter_names(self):
+                 return ["a"]
+
+             ...
+
+      :returns: names of parametes for **this** object
 
    .. py:method:: eval(x: Union[numbers.Number, numpy.ndarray]) -> Union[numbers.Number, numpy.ndarray]
 
@@ -89,9 +107,28 @@ Classes
    :type quadcoeff: float, optional
    :param y = constant + linearcoeff*x + quadcoeff*x^2:
 
-   .. py:method:: parameter_names() -> List[str]
-      :property:
+   .. py:property:: parameter_names
+      :type: List[str]
 
+      Names of the parameters for **this** object sorted alphabetically.
+      This method **must** be implemented for all subclasses, and the names
+      must consist of the names of the attributes that contain the
+      parameters.
+
+      Example:
+
+      .. code-block:: python
+
+         class MyModel(Model):
+             a = 3
+
+             @property
+             def parameter_names(self):
+                 return ["a"]
+
+             ...
+
+      :returns: names of parametes for **this** object
 
    .. py:method:: eval(x: Union[numbers.Number, numpy.ndarray]) -> Union[numbers.Number, numpy.ndarray]
 
@@ -114,9 +151,28 @@ Classes
 
    y = constant + slope * x + quad * x^2 + cubic * x^3
 
-   .. py:method:: parameter_names() -> List[str]
-      :property:
+   .. py:property:: parameter_names
+      :type: List[str]
 
+      Names of the parameters for **this** object sorted alphabetically.
+      This method **must** be implemented for all subclasses, and the names
+      must consist of the names of the attributes that contain the
+      parameters.
+
+      Example:
+
+      .. code-block:: python
+
+         class MyModel(Model):
+             a = 3
+
+             @property
+             def parameter_names(self):
+                 return ["a"]
+
+             ...
+
+      :returns: names of parametes for **this** object
 
    .. py:method:: eval(x: Union[numbers.Number, numpy.ndarray]) -> Union[numbers.Number, numpy.ndarray]
 
@@ -135,9 +191,28 @@ Classes
 
    y = coeff * x^exponent
 
-   .. py:method:: parameter_names() -> List[str]
-      :property:
+   .. py:property:: parameter_names
+      :type: List[str]
 
+      Names of the parameters for **this** object sorted alphabetically.
+      This method **must** be implemented for all subclasses, and the names
+      must consist of the names of the attributes that contain the
+      parameters.
+
+      Example:
+
+      .. code-block:: python
+
+         class MyModel(Model):
+             a = 3
+
+             @property
+             def parameter_names(self):
+                 return ["a"]
+
+             ...
+
+      :returns: names of parametes for **this** object
 
    .. py:method:: eval(x: Union[numbers.Number, numpy.ndarray]) -> Union[numbers.Number, numpy.ndarray]
 

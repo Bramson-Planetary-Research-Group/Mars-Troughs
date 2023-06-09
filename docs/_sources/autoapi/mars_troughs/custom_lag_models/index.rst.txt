@@ -36,7 +36,8 @@ Classes
    as a function of time.
 
    .. py:attribute:: prefix
-      :annotation: :str = lag_
+      :type: str
+      :value: 'lag_'
 
       All parameters of lag models start with 'lag'.
 

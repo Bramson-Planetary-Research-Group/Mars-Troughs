@@ -24,11 +24,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> Mars-Troughs
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Mars-Troughs
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -73,8 +77,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.trough</span></code></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.trough</span></code></li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/autoapi/mars_troughs/trough/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -104,9 +108,8 @@
 </table>
 <dl class="class">
 <dt id="mars_troughs.trough.Trough">
-<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.trough.</code><code class="sig-name descname">Trough</code><span class="sig-paren">(</span><em class="sig-param">acc_model: Union[str, mars_troughs.model.Model], lag_model: Union[str, mars_troughs.model.Model], ret_data_spline, errorbar: float = 1.0, angle: float = 2.9</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.trough.Trough" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../model/index.html#mars_troughs.model.Model" title="mars_troughs.model.Model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mars_troughs.model.Model</span></code></a></p>
-<p>This object models trough migration patterns (TMPs). It is composed of
+<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.trough.</code><code class="sig-name descname">Trough</code><span class="sig-paren">(</span><em class="sig-param">acc_model: Union[str, mars_troughs.model.Model], lag_model: Union[str, mars_troughs.model.Model], ret_data_spline, angle: float = 2.9</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.trough.Trough" title="Permalink to this definition"></a></dt>
+<dd><p>This object models trough migration patterns (TMPs). It is composed of
 a model for the accumulation of ice on the surface of the trough, accessible
 as the <code class="xref py py-attr docutils literal notranslate"><span class="pre">accuModel</span></code> attribute, as well as a model for the lag
 that builds up over time, accesible as the <code class="xref py py-attr docutils literal notranslate"><span class="pre">lagModel</span></code> attribute.</p>
@@ -126,12 +129,6 @@ insolation data.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
-<dt id="mars_troughs.trough.Trough.parameter_names">
-<em class="property">property </em><code class="sig-name descname">parameter_names</code> &#x2192; List[str]<a class="headerlink" href="#mars_troughs.trough.Trough.parameter_names" title="Permalink to this definition"></a></dt>
-<dd><p>Just the errorbar</p>
-</dd></dl>
-
 <dl class="method">
 <dt id="mars_troughs.trough.Trough.set_model">
 <code class="sig-name descname">set_model</code><span class="sig-paren">(</span><em class="sig-param">all_parameters: Dict[str, float]</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#mars_troughs.trough.Trough.set_model" title="Permalink to this definition"></a></dt>
@@ -221,22 +218,9 @@ Note that this is the natural log (ln).</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="mars_troughs.trough.Trough.angle">
-<em class="property">property </em><code class="sig-name descname">angle</code> &#x2192; float<a class="headerlink" href="#mars_troughs.trough.Trough.angle" title="Permalink to this definition"></a></dt>
-<dd><p>Slope angle in degrees.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="mars_troughs.trough.Trough.csc_angle">
-<em class="property">property </em><code class="sig-name descname">csc_angle</code> &#x2192; float<a class="headerlink" href="#mars_troughs.trough.Trough.csc_angle" title="Permalink to this definition"></a></dt>
-<dd><p>Cosecant of the slope angle.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="mars_troughs.trough.Trough.cot_angle">
-<em class="property">property </em><code class="sig-name descname">cot_angle</code> &#x2192; float<a class="headerlink" href="#mars_troughs.trough.Trough.cot_angle" title="Permalink to this definition"></a></dt>
-<dd><p>Cotangent of the slope angle.</p>
-</dd></dl>
+<dt id="mars_troughs.trough.Trough.set_submodels">
+<code class="sig-name descname">set_submodels</code><span class="sig-paren">(</span><em class="sig-param">sub_models: Optional[List[mars_troughs.model.Model]] = None</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#mars_troughs.trough.Trough.set_submodels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 

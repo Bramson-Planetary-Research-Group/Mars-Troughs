@@ -40,7 +40,8 @@ Classes
    Abstract class for computing the amount of ice accumulation.
 
    .. py:attribute:: prefix
-      :annotation: :str = acc_
+      :type: str
+      :value: 'acc_'
 
       All parameters of accumulations models start with 'acc'.
 

@@ -48,48 +48,47 @@ Attributes
    DATAPATHS variable instead.
 
    .. py:attribute:: DATA
-      :annotation: :pathlib.Path
+      :type: pathlib.Path
 
       
 
    .. py:attribute:: INSOLATION1
-      :annotation: :pathlib.Path
+      :type: pathlib.Path
 
       
 
    .. py:attribute:: INSOLATION2
-      :annotation: :pathlib.Path
+      :type: pathlib.Path
 
       
 
    .. py:attribute:: RETREAT
-      :annotation: :pathlib.Path
+      :type: pathlib.Path
 
       
 
    .. py:attribute:: RETREAT2
-      :annotation: :pathlib.Path
+      :type: pathlib.Path
 
       
 
    .. py:attribute:: TMP1
-      :annotation: :pathlib.Path
+      :type: pathlib.Path
 
       
 
    .. py:attribute:: TMP2
-      :annotation: :pathlib.Path
+      :type: pathlib.Path
 
       
 
    .. py:attribute:: OBLIQUITY
-      :annotation: :pathlib.Path
+      :type: pathlib.Path
 
       
 
 
 .. py:data:: DATAPATHS
-   
 
    Global object that holds paths.
 

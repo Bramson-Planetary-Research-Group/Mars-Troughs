@@ -22,7 +22,7 @@ Classes
 
 
 
-.. py:class:: Model(sub_models: Optional[List[Model]] = None)
+.. py:class:: Model
 
    Bases: :py:obj:`abc.ABC`
 
@@ -36,13 +36,9 @@ Classes
                       model that serve their own purpose
    :type sub_models: Optional[List["Model"]]
 
-   .. py:attribute:: prefix
-      :annotation: :Optional[str]
-
-      A prefix to prepend to parameter naems when supplying them.
-
-   .. py:method:: parameter_names() -> List[str]
-      :property:
+   .. py:property:: parameter_names
+      :type: List[str]
+      :abstractmethod:
 
       Names of the parameters for **this** object sorted alphabetically.
       This method **must** be implemented for all subclasses, and the names
@@ -64,30 +60,17 @@ Classes
 
       :returns: names of parametes for **this** object
 
-
-   .. py:method:: parameters() -> Dict[str, Any]
-      :property:
+   .. py:property:: parameters
+      :type: Dict[str, Any]
 
       The parameters for **this** object, but not any of its sub-models.
       The parameters **must** be attributes of the object.
 
       :returns: name/value pairs where values can be numbers or arrays of numbers
 
+   .. py:attribute:: prefix
+      :type: Optional[str]
 
-   .. py:method:: all_parameter_names() -> List[str]
-      :property:
-
-      Names of the parameters for this object and all sub-models.
-
-      :returns: names of parametes for this object and all sub-models
-
-
-   .. py:method:: all_parameters() -> Dict[str, Any]
-      :property:
-
-      The parameters for this model and all sub-models.
-
-      :returns: key-value pairs for this model and all sub-models
-
+      A prefix to prepend to parameter names when supplying them.
 
 

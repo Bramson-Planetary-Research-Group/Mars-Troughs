@@ -26,7 +26,7 @@ Classes
 
 
 
-.. py:class:: MCMC(maxSteps: int, thin_by: int, directory: str, tmp: int, acc_model=Union[str, Model], lag_model=Union[str, Model], errorbar=np.sqrt(1.6), angle=5.0)
+.. py:class:: MCMC(maxSteps: int, thin_by: int, directory: str, tmp: int, acc_model=Union[str, Model], lag_model=Union[str, Model], angle=5.0)
 
    Class for running MCMC chains to obtain a sample of climate parameters
    of trough migration.
@@ -41,7 +41,7 @@ Classes
 
 
 
-.. py:class:: hardAgePriorMCMC(maxSteps: int, thin_by: int, directory: str, tmp: int, acc_model=Union[str, Model], lag_model=Union[str, Model], errorbar=np.sqrt(1.6), angle=5.0)
+.. py:class:: hardAgePriorMCMC(maxSteps: int, thin_by: int, directory: str, tmp: int, acc_model=Union[str, Model], lag_model=Union[str, Model], angle=5.0)
 
    Bases: :py:obj:`MCMC`
 

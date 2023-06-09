@@ -24,11 +24,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> Mars-Troughs
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Mars-Troughs
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -73,8 +77,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.mcmc</span></code></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.mcmc</span></code></li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/autoapi/mars_troughs/mcmc/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -111,7 +115,7 @@
 </table>
 <dl class="class">
 <dt id="mars_troughs.mcmc.MCMC">
-<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.mcmc.</code><code class="sig-name descname">MCMC</code><span class="sig-paren">(</span><em class="sig-param">maxSteps: int, thin_by: int, directory: str, tmp: int, acc_model=Union[str, Model], lag_model=Union[str, Model], errorbar=np.sqrt(1.6), angle=5.0</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.mcmc.MCMC" title="Permalink to this definition"></a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.mcmc.</code><code class="sig-name descname">MCMC</code><span class="sig-paren">(</span><em class="sig-param">maxSteps: int, thin_by: int, directory: str, tmp: int, acc_model=Union[str, Model], lag_model=Union[str, Model], angle=5.0</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.mcmc.MCMC" title="Permalink to this definition"></a></dt>
 <dd><p>Class for running MCMC chains to obtain a sample of climate parameters
 of trough migration.</p>
 <dl class="method">
@@ -133,7 +137,7 @@ of trough migration.</p>
 
 <dl class="class">
 <dt id="mars_troughs.mcmc.hardAgePriorMCMC">
-<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.mcmc.</code><code class="sig-name descname">hardAgePriorMCMC</code><span class="sig-paren">(</span><em class="sig-param">maxSteps: int, thin_by: int, directory: str, tmp: int, acc_model=Union[str, Model], lag_model=Union[str, Model], errorbar=np.sqrt(1.6), angle=5.0</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.mcmc.hardAgePriorMCMC" title="Permalink to this definition"></a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">mars_troughs.mcmc.</code><code class="sig-name descname">hardAgePriorMCMC</code><span class="sig-paren">(</span><em class="sig-param">maxSteps: int, thin_by: int, directory: str, tmp: int, acc_model=Union[str, Model], lag_model=Union[str, Model], angle=5.0</em><span class="sig-paren">)</span><a class="headerlink" href="#mars_troughs.mcmc.hardAgePriorMCMC" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#mars_troughs.mcmc.MCMC" title="mars_troughs.mcmc.MCMC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MCMC</span></code></a></p>
 <p>Class for running MCMC chains to obtain a sample of climate parameters
 of trough migration.</p>

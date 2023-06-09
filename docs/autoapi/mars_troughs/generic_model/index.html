@@ -24,11 +24,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> Mars-Troughs
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Mars-Troughs
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -73,8 +77,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.generic_model</span></code></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mars_troughs.generic_model</span></code></li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/autoapi/mars_troughs/generic_model/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -131,12 +135,6 @@ parameter.</p>
 </dd>
 </dl>
 <dl class="method">
-<dt id="mars_troughs.generic_model.ConstantModel.parameter_names">
-<em class="property">property </em><code class="sig-name descname">parameter_names</code> &#x2192; List[str]<a class="headerlink" href="#mars_troughs.generic_model.ConstantModel.parameter_names" title="Permalink to this definition"></a></dt>
-<dd><p>Returns <code class="docutils literal notranslate"><span class="pre">[&quot;constant&quot;]</span></code></p>
-</dd></dl>
-
-<dl class="method">
 <dt id="mars_troughs.generic_model.ConstantModel.eval">
 <code class="sig-name descname">eval</code><span class="sig-paren">(</span><em class="sig-param">x: Union[numbers.Number, numpy.ndarray]</em><span class="sig-paren">)</span> &#x2192; Union[numbers.Number, numpy.ndarray]<a class="headerlink" href="#mars_troughs.generic_model.ConstantModel.eval" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the value of <code class="xref py py-attr docutils literal notranslate"><span class="pre">constant</span></code>.</p>
@@ -159,11 +157,6 @@ parameter.</p>
 </dd>
 </dl>
 <dl class="method">
-<dt id="mars_troughs.generic_model.LinearModel.parameter_names">
-<em class="property">property </em><code class="sig-name descname">parameter_names</code> &#x2192; List[str]<a class="headerlink" href="#mars_troughs.generic_model.LinearModel.parameter_names" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="method">
 <dt id="mars_troughs.generic_model.LinearModel.eval">
 <code class="sig-name descname">eval</code><span class="sig-paren">(</span><em class="sig-param">x: Union[numbers.Number, numpy.ndarray]</em><span class="sig-paren">)</span> &#x2192; Union[numbers.Number, numpy.ndarray]<a class="headerlink" href="#mars_troughs.generic_model.LinearModel.eval" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -185,11 +178,6 @@ parameter.</p>
 </ul>
 </dd>
 </dl>
-<dl class="method">
-<dt id="mars_troughs.generic_model.QuadModel.parameter_names">
-<em class="property">property </em><code class="sig-name descname">parameter_names</code> &#x2192; List[str]<a class="headerlink" href="#mars_troughs.generic_model.QuadModel.parameter_names" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
 <dl class="method">
 <dt id="mars_troughs.generic_model.QuadModel.eval">
 <code class="sig-name descname">eval</code><span class="sig-paren">(</span><em class="sig-param">x: Union[numbers.Number, numpy.ndarray]</em><span class="sig-paren">)</span> &#x2192; Union[numbers.Number, numpy.ndarray]<a class="headerlink" href="#mars_troughs.generic_model.QuadModel.eval" title="Permalink to this definition"></a></dt>
@@ -214,11 +202,6 @@ parameter.</p>
 </dl>
 <p>y = constant + slope * x + quad * x^2 + cubic * x^3</p>
 <dl class="method">
-<dt id="mars_troughs.generic_model.CubicModel.parameter_names">
-<em class="property">property </em><code class="sig-name descname">parameter_names</code> &#x2192; List[str]<a class="headerlink" href="#mars_troughs.generic_model.CubicModel.parameter_names" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="method">
 <dt id="mars_troughs.generic_model.CubicModel.eval">
 <code class="sig-name descname">eval</code><span class="sig-paren">(</span><em class="sig-param">x: Union[numbers.Number, numpy.ndarray]</em><span class="sig-paren">)</span> &#x2192; Union[numbers.Number, numpy.ndarray]<a class="headerlink" href="#mars_troughs.generic_model.CubicModel.eval" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -239,11 +222,6 @@ parameter.</p>
 </dd>
 </dl>
 <p>y = coeff * x^exponent</p>
-<dl class="method">
-<dt id="mars_troughs.generic_model.PowerLawModel.parameter_names">
-<em class="property">property </em><code class="sig-name descname">parameter_names</code> &#x2192; List[str]<a class="headerlink" href="#mars_troughs.generic_model.PowerLawModel.parameter_names" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
 <dl class="method">
 <dt id="mars_troughs.generic_model.PowerLawModel.eval">
 <code class="sig-name descname">eval</code><span class="sig-paren">(</span><em class="sig-param">x: Union[numbers.Number, numpy.ndarray]</em><span class="sig-paren">)</span> &#x2192; Union[numbers.Number, numpy.ndarray]<a class="headerlink" href="#mars_troughs.generic_model.PowerLawModel.eval" title="Permalink to this definition"></a></dt>

@@ -22,9 +22,7 @@ Classes
 
 
 
-.. py:class:: Trough(acc_model: Union[str, mars_troughs.model.Model], lag_model: Union[str, mars_troughs.model.Model], ret_data_spline, errorbar: float = 1.0, angle: float = 2.9)
-
-   Bases: :py:obj:`mars_troughs.model.Model`
+.. py:class:: Trough(acc_model: Union[str, mars_troughs.model.Model], lag_model: Union[str, mars_troughs.model.Model], ret_data_spline, angle: float = 2.9)
 
    This object models trough migration patterns (TMPs). It is composed of
    a model for the accumulation of ice on the surface of the trough, accessible
@@ -49,11 +47,34 @@ Classes
                            insolation data.
    :type insolation_path: Union[str, Path], optional
 
-   .. py:method:: parameter_names() -> List[str]
-      :property:
+   .. py:property:: angle
+      :type: float
 
-      Just the errorbar
+      Slope angle in degrees.
 
+   .. py:property:: csc_angle
+      :type: float
+
+      Cosecant of the slope angle.
+
+   .. py:property:: cot_angle
+      :type: float
+
+      Cotangent of the slope angle.
+
+   .. py:property:: all_parameter_names
+      :type: List[str]
+
+      Names of the parameters of all sub-models.
+
+      :returns: names of parameters of all sub-models
+
+   .. py:property:: all_parameters
+      :type: Dict[str, Any]
+
+      The parameters for this model and all sub-models.
+
+      :returns: key-value pairs for this model and all sub-models
 
    .. py:method:: set_model(all_parameters: Dict[str, float]) -> None
 
@@ -127,22 +148,7 @@ Classes
           log-likelihood value (float)
 
 
-   .. py:method:: angle() -> float
-      :property:
-
-      Slope angle in degrees.
-
-
-   .. py:method:: csc_angle() -> float
-      :property:
-
-      Cosecant of the slope angle.
-
-
-   .. py:method:: cot_angle() -> float
-      :property:
-
-      Cotangent of the slope angle.
+   .. py:method:: set_submodels(sub_models: Optional[List[mars_troughs.model.Model]] = None) -> None
 
 
 
