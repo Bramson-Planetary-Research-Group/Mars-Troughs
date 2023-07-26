@@ -1,12 +1,17 @@
 """
 The trough model.
+
+Edited by Kris Laf. to handle retreat, not lag thickness. Initial changes are just editing names, removing any lag equations not done for accum. 
 """
-from typing import Callable, Dict, List, Optional, Tuple, Union
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
+from mars_troughs.datapaths import (
+    load_insolation_data,
+    load_obliquity_data
+)
 from mars_troughs.model import Model
-from typing import Any, Dict, List, Optional
 
 
 class Trough():
@@ -19,10 +24,10 @@ class Trough():
     Args:
       acc_model (Union[str, Model]): name of the accumulation model
         (linear, quadratic, etc) or a custom model
-      lag_model_name (Union[str, Model]): name of the lag(t) model (constant,
+      retr_model_name (Union[str, Model]): name of the retreat(t) model (constant,
         linear, etc) or a custom model
-      acc_params (List[float]): model parameters for accumulation
-      lag_params (List[float]): model parameters for lag(t)
+      acc_params (List[float]): model parameters for accumulation(t)
+      retr_params (List[float]): model parameters for retreat(t)
       errorbar (float, optional): errorbar of the datapoints in pixels; default=1
       angle (float, optional): south-facing slope angle in degrees. Default is 2.9.
       insolation_path (Union[str, Path], optional): path to the file with
@@ -32,36 +37,27 @@ class Trough():
     def __init__(
         self,
         acc_model: Union[str, Model],
-        lag_model: Union[str, Model],
-        ret_data_spline,
+        retr_model: Union[str, Model],
         angle: float = 2.9,
     ):
         """Constructor for the trough object.
         Args:
           acc_model (Model): accumulation submodel
-          lag_model (Model): lag submodel
+          retr_model (Model): retreat submodel
           errorbar (float, optional): errorbar of the datapoints in pixels; default=1
           angle (float, optional): south-facing slope angle in degrees. Default is 2.9.
         """
 
         self.accuModel = acc_model
-        self.lagModel = lag_model
-        self.ret_data_spline=ret_data_spline
+        self.retrModel = retr_model
+        self.errorbar = 1 #errorbar
         self.angle = angle
-        self.meters_per_pixel = np.array([475.0, 20.0])  # meters per pixel
-        self.errorbar = 1 #error is 1 pixel always
+        #self.meters_per_pixel = np.array([475.0, 20.0])  # meters per pixel
+        self.meters_per_pixel = np.array([250.0, 20.0])  # meters per pixel
 
         # Set submodels
-        self.set_submodels([self.accuModel, self.lagModel])
+        self.set_submodels([self.accuModel, self.retrModel])
 
-        # Calculate the model of retreat of ice per time
-        self.lag_at_t=self.lagModel.get_lag_at_t(self.accuModel._times)
-        self.retreat_model_t = self.ret_data_spline.ev(self.lag_at_t, 
-                                                       self.accuModel._times)
-
-        # Compute the Retreat(time) spline
-        self.retreat_model_t_spline = IUS(self.accuModel._times, 
-                                          self.retreat_model_t)
 
     def set_model(
         self,
@@ -75,15 +71,7 @@ class Trough():
             all_parameter (Dict[str, float]): new parameters to the models
         """
         self.all_parameters = all_parameters
-
-        # Update the model of retreat of ice per time
-        self.lag_at_t=self.lagModel.get_lag_at_t(self.accuModel._times)
-        self.retreat_model_t = self.ret_data_spline.ev(self.lag_at_t, 
-                                                       self.accuModel._times)
-
-        # Update the Retreat(time) spline
-        self.retreat_model_t_spline = IUS(self.accuModel._times, 
-                                          self.retreat_model_t)
+       
         return
 
     def get_trajectory(
@@ -102,9 +90,10 @@ class Trough():
         """
 
         y = self.accuModel.get_yt(times)
+        r = self.retrModel.get_rt(times)
         x = self.accuModel.get_xt(
             times,
-            self.retreat_model_t_spline.antiderivative(),
+            r, 
             self.cot_angle,
             self.csc_angle,
         )
@@ -184,10 +173,8 @@ class Trough():
         xvar, yvar = (self.errorbar * self.meters_per_pixel) ** 2
         chi2 = (x_data - self.xnear) ** 2 / xvar + (y_data - 
                                                       self.ynear) ** 2 / yvar
-        return (-0.5 * chi2.sum() 
-                -0.5 * len(x_data) * np.log(2*np.pi) 
-                -0.5 * np.log(xvar * yvar))
-    
+        return -0.5 * chi2.sum() - 0.5 * len(x_data) * np.log(2*np.pi) -0.5 * np.log(xvar * yvar)
+
     def set_submodels(self, sub_models: Optional[List["Model"]] = None) -> None:
         # Add sub_models as an attribute
         self.sub_models: List[Model] = sub_models or []
@@ -219,12 +206,11 @@ class Trough():
         Cotangent of the slope angle.
         """
         return self._cot
-        
+    
     @property
     def all_parameter_names(self) -> List[str]:
         """
         Names of the parameters of all sub-models.
-
         Returns:
           names of parameters of all sub-models
         """
@@ -234,7 +220,6 @@ class Trough():
     def all_parameters(self) -> Dict[str, Any]:
         """
         The parameters for this model and all sub-models.
-
         Returns:
           key-value pairs for this model and all sub-models
         """
@@ -254,7 +239,6 @@ class Trough():
     def all_parameters(self, params: Dict[str, Any]) -> None:
         """
         Setter for all sub-models parameters.
-
         Args:
           params (Dict[str, Any]): new parameters
         """
