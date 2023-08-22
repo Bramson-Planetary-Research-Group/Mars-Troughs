@@ -17,7 +17,9 @@ from mars_troughs import (Linear_Obliquity,
                           Cubic_Obliquity,
                           PowerLaw_Obliquity)
 from mars_troughs import (load_insolation_data, 
-                          load_obliquity_data)
+                          load_obliquity_data,
+                          load_angle,
+                          load_TMP_data)
 import sys
 
 def main():
@@ -28,7 +30,8 @@ def main():
     p.add_argument("-steps",default=100,type=int,help="Number of steps for MCMC")
     p.add_argument("-thin_by",default=1,type=int,help="Skip iterations in ensemble")
     p.add_argument("-data", default="insolation",type=str, help="insolation or obliquity")
-    p.add_argument("-tmp", default=1,type=int, help="tmp number")
+    p.add_argument("-trough", default= "1", type=str, help="trough number")
+    p.add_argument("-tmp", default= 'all', type=str, help="tmp number or all")
     p.add_argument("-dir",default="../../outputMCMC/",type=str, help="directory for output")
     args=p.parse_args()
     
@@ -52,7 +55,7 @@ def main():
     
     #if data is insolation,load insolation data
     if args.data=="insolation":
-        (insolations,times) = load_insolation_data(tmp)
+        (insolations,times) = load_insolation_data()
         times=-times.astype(float)
         times[0]=1e-10
         acc_model=accModel_ins_dict[args.acc](times,insolations)
@@ -62,17 +65,19 @@ def main():
         times[0]=1e-10
         acc_model=accModel_obl_dict[args.acc](times, obliquity)
 
+    #load trough angle
+    angle=load_angle()
+    #load tmp data  
+    xdata,ydata=load_TMP_data()
     
+    breakpoint()
+
     #create lag model
     lag_model=lagModel_dict[args.lag]()
     
     maxSteps=args.steps
     directory= (args.dir + args.data + '/TMP' + str(tmp) + '/')
     
-    if tmp==1:
-        angle=2.9
-    elif tmp==2:
-        angle=1.9
     
     thin_by=args.thin_by
     mcmcobj=mt.MCMC(maxSteps,thin_by,directory,tmp,acc_model,lag_model,
