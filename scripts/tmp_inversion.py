@@ -51,11 +51,13 @@ def main():
                       4: CubicLag,
                       5: PowerLawLag }
     
-    tmp=args.tmp
+    tmp = args.tmp
+    trough = args.trough
+    
     
     #if data is insolation,load insolation data
     if args.data=="insolation":
-        (insolations,times) = load_insolation_data()
+        (insolations,times) = load_insolation_data(trough)
         times=-times.astype(float)
         times[0]=1e-10
         acc_model=accModel_ins_dict[args.acc](times,insolations)
@@ -66,9 +68,10 @@ def main():
         acc_model=accModel_obl_dict[args.acc](times, obliquity)
 
     #load trough angle
-    angle=load_angle()
+    angle=load_angle(trough)
+    angle=float(angle)
     #load tmp data  
-    xdata,ydata=load_TMP_data()
+    xdata,ydata=load_TMP_data(trough,tmp)
     
     breakpoint()
 
@@ -91,13 +94,14 @@ def main():
     
     print(filename)
     
-def mainArgs(acc,lag,steps,thin_by,data,tmp,dir):
+def mainArgs(acc,lag,steps,thin_by,data,trough,tmp,dir):
     sys.argv = ['mainInv.py', 
                 '-acc', str(acc),
                 '-lag', str(lag),
                 '-steps',str(steps),
                 '-thin_by', str(thin_by),
                 '-data', str(data),
+                '-trough', str(trough),
                 '-tmp', str(tmp),
                 '-dir', str(dir)]
     
