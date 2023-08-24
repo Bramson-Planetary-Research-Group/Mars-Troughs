@@ -40,7 +40,9 @@ def main():
     tmp = args.tmp
     trough = args.trough
     maxSteps=args.steps
-    directory= (args.dir + args.data + '/TMP' + str(tmp) + '/')
+    directory= (args.dir +
+                'trough'+ str(trough) + '/TMP' + str(tmp) + '/' +
+                args.data +'/')
     thin_by=args.thin_by
     
     #Diccionaries for submodels
