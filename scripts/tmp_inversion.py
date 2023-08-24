@@ -73,7 +73,6 @@ def main():
     #load tmp data  
     xdata,ydata=load_TMP_data(trough,tmp)
     
-    breakpoint()
 
     #create lag model
     lag_model=lagModel_dict[args.lag]()

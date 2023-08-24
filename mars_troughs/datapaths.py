@@ -98,8 +98,8 @@ def load_TMP_data(trough,tmp) -> Tuple[np.ndarray, np.ndarray]:
     Loads the TMP data for the trough being investigated now.
 
     Returns:
-      x (np.ndarray): x position in kilometers
-      y (np.ndarray): y position in meters
+      xs (list): x positions in kilometers for one or more TMPs
+      ys (list): y positions in meters for one or more TMPs
     """
     troughFolder="3D_Trough"+trough
     
@@ -107,20 +107,22 @@ def load_TMP_data(trough,tmp) -> Tuple[np.ndarray, np.ndarray]:
         tmpFilesPath = str(DATAPATHS.DATA) + '/'+ troughFolder + "/TMPs/*" 
         listPaths=glob.glob(tmpFilesPath)
         ntmps=len(listPaths)
-        x=[]
-        y=[]
-        for i in ntmps:
-            xi=np.loadtxt(listPaths[i])
-            
+        xs=[]
+        ys=[]
         
-        breakpoint()
+        for i in range(0,ntmps):
+            xi,yi=np.loadtxt(listPaths[i],skiprows=1).T
+            xs.append(xi)
+            ys.append(yi)
 
-        return 
+        return xs,ys
+    
     else:
         tmpFile = "tmp"+tmp+".txt"     
         TMP: Path = DATAPATHS.DATA /  troughFolder / "TMPs"/ tmpFile
-        tmpArray=np.loadtxt(TMP, skiprows=1).T 
-        return tmpArray
+        xs,ys=np.loadtxt(TMP, skiprows=1).T 
+
+        return [xs],[ys]
 
     
 
