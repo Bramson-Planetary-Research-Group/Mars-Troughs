@@ -53,12 +53,12 @@ class MCMC():
         #self.optParams=guessParams
         
         #aux for creating directories
-        auxAcc=str(self.acc_model).split(' ')
+        auxAcc=str(self.tr.accuModel).split(' ')
         auxAcc=auxAcc[0]
         self.acc_model_name=auxAcc.split('.')
         self.acc_model_name=self.acc_model_name[2]
             
-        auxLag=str(self.lag_model).split(' ')
+        auxLag=str(self.tr.lagModel).split(' ')
         auxLag=auxLag[0]
         self.lag_model_name=auxLag.split('.')
         self.lag_model_name=self.lag_model_name[2]
@@ -161,10 +161,6 @@ class MCMC():
         if any(self.tr.lag_at_t  < 1e-15) or any(self.tr.lag_at_t > 20):
             return False
         
-        #depth of trough migration points should between 0 and -2 km
-        if any(self.tr.ynear < -2e3) or any(self.tr.ynear > 0):
-            return False
-        
         #accumulation rate should >=0
         acc_t=self.tr.accuModel.get_accumulation_at_t(
                                                     self.tr.accuModel._times)
@@ -185,10 +181,12 @@ class MCMC():
         
         #set trough model with candidate parameters
         self.tr.set_model(params)
-        #compute likelihood of model 
-        likelihood_of_model=self.tr.lnlikelihood(self.xdata,self.ydata,
-                                                 self.tr.accuModel._times)
+
         if self.priors(params,self.tr.accuModel._times):
+            likelihood_of_model=self.tr.lnlikelihood(
+                                            self.xdata,
+                                            self.ydata,
+                                            self.tr.accuModel._times)
             return likelihood_of_model
         else:
             return -1e99
