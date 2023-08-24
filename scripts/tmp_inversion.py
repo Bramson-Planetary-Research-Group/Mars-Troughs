@@ -1,7 +1,6 @@
 #!/usr/bin/env python                                                                                                                                  
 import argparse
 import pickle
-import numpy as np
 import mars_troughs as mt
 from mars_troughs import (ConstantLag,
                           LinearLag,
@@ -18,9 +17,11 @@ from mars_troughs import (Linear_Obliquity,
                           PowerLaw_Obliquity)
 from mars_troughs import (load_insolation_data, 
                           load_obliquity_data,
+                          load_retreat_data,
                           load_angle,
                           load_TMP_data)
 import sys
+from scipy.interpolate import RectBivariateSpline as RBS
 
 def main():
         
@@ -35,6 +36,14 @@ def main():
     p.add_argument("-dir",default="../../outputMCMC/",type=str, help="directory for output")
     args=p.parse_args()
     
+    #rename inputs
+    tmp = args.tmp
+    trough = args.trough
+    maxSteps=args.steps
+    directory= (args.dir + args.data + '/TMP' + str(tmp) + '/')
+    thin_by=args.thin_by
+    
+    #Diccionaries for submodels
     accModel_ins_dict= { 1: Linear_Insolation,
                          2: Quadratic_Insolation,
                          3: Cubic_Insolation,
@@ -51,42 +60,45 @@ def main():
                       4: CubicLag,
                       5: PowerLawLag }
     
-    tmp = args.tmp
-    trough = args.trough
-    
-    
     #if data is insolation,load insolation data
     if args.data=="insolation":
         (insolations,times) = load_insolation_data(trough)
         times=-times.astype(float)
         times[0]=1e-10
+        #create accumulation model
         acc_model=accModel_ins_dict[args.acc](times,insolations)
     else:
+        #load obliquity
         (obliquity,times) = load_obliquity_data()
         times=-times.astype(float)
         times[0]=1e-10
+        #create accumulation model
         acc_model=accModel_obl_dict[args.acc](times, obliquity)
-
-    #load trough angle
-    angle=load_angle(trough)
-    angle=float(angle)
-    #load tmp data  
-    xdata,ydata=load_TMP_data(trough,tmp)
-    
 
     #create lag model
     lag_model=lagModel_dict[args.lag]()
     
-    maxSteps=args.steps
-    directory= (args.dir + args.data + '/TMP' + str(tmp) + '/')
+    #load retreat data
+    retreat_times, retreats, lags = load_retreat_data(trough)
+    retreat_times=-retreat_times
+    ret_data_spline = RBS(lags, retreat_times, retreats)
+
+    #load tmp data  
+    xdata,ydata=load_TMP_data(trough,tmp)
     
+    #load trough angle
+    angle=load_angle(trough)
     
-    thin_by=args.thin_by
-    mcmcobj=mt.MCMC(maxSteps,thin_by,directory,tmp,acc_model,lag_model,
-                    angle)
+    # Create  trough object 
+    tr = mt.Trough(acc_model,lag_model,
+                   ret_data_spline,angle)
     
+    mcmcobj=mt.MCMC(xdata,ydata,
+                    tr,
+                    maxSteps,thin_by,directory)
+    
+    #save mcmc object
     filename=mcmcobj.filename
-    
     outfile=open(filename,'wb')
     pickle.dump(mcmcobj,outfile)
     outfile.close()

@@ -7,15 +7,13 @@ Created on Mon Jul 12 09:31:34 2021
 """
 #import modules
 import time
-from typing import Dict, List, Optional, Union
 import numpy as np
 import scipy.optimize as op
-import mars_troughs as mt
 import emcee
-from mars_troughs import (DATAPATHS, Model, load_retreat_data)
-from scipy.interpolate import RectBivariateSpline as RBS
 import os
 import sys
+from mars_troughs import Trough
+from typing import  Dict
 
 class MCMC():
     """
@@ -24,39 +22,20 @@ class MCMC():
     """
     def __init__(
         self,
+        xdata,
+        ydata,
+        troughObject: Trough,
         maxSteps: int,
         thin_by: int,
         directory: str,
-        tmp: int,
-        acc_model = Union[str, Model],
-        lag_model = Union[str, Model],
-        angle= 5.0,
     ):
+        self.xdata=xdata
+        self.ydata=ydata
+        self.tr=troughObject
         self.maxSteps = maxSteps
         self.thin_by = thin_by
-        self.acc_model = acc_model
-        self.lag_model = lag_model
         self.directory = directory
-        self.tmp=tmp
         
-        #Load data
-        if tmp==1:
-            self.xdata,self.ydata=np.loadtxt(DATAPATHS.TMP1, 
-                                         unpack=True) #Observed TMP data
-        else:
-            self.xdata,self.ydata=np.loadtxt(DATAPATHS.TMP2, 
-                                         unpack=True) #Observed TMP data    
-        
-        self.xdata=self.xdata*1000 #km to m 
-        
-        #load retreat data
-        retreat_times, retreats, lags = load_retreat_data(tmp)
-        retreat_times=-retreat_times
-        ret_data_spline = RBS(lags, retreat_times, retreats)
-        
-        # Create  trough object 
-        self.tr = mt.Trough(self.acc_model,self.lag_model,
-                            ret_data_spline,angle)
         
         self.parameter_names = ([key for key in self.tr.all_parameters])
         
@@ -66,7 +45,6 @@ class MCMC():
         
         
         #Linear optimization
-        
         guessParams=np.array( list(self.tr.accuModel.parameters.values())
                              +list(self.tr.lagModel.parameters.values()))
         optObj= op.minimize(self.neg_ln_likelihood, x0=guessParams, 
@@ -75,7 +53,6 @@ class MCMC():
         #self.optParams=guessParams
         
         #aux for creating directories
-        
         auxAcc=str(self.acc_model).split(' ')
         auxAcc=auxAcc[0]
         self.acc_model_name=auxAcc.split('.')
@@ -92,12 +69,9 @@ class MCMC():
         #Create directory to save objects and h5 tracking file
         if not os.path.exists(self.directory+'obj/'):
             os.makedirs(self.directory+'obj/')
-            
+        
+        #define name of model and filename
         self.modelName=self.acc_model_name+'_'+self.lag_model_name
-        #if not os.path.exists(self.directory+'obj/'+self.modelName+'/'):
-         #   os.makedirs(self.directory+'obj/'+self.modelName+'/')
-    
-        #self.filename=self.directory+'obj/'+self.modelName+'/'+str(self.maxSteps)
         self.filename=self.directory+'obj/'+self.modelName+'_'+str(self.maxSteps)+'obj'
         
         #Set optimized parameter values as initial values of MCMC chains 
@@ -243,26 +217,22 @@ class softAgePriorMCMC(MCMC):
     def __init__(
         self,
         meanAge: float,
+        xdata,
+        ydata,
+        troughObject,
         maxSteps: int,
         thin_by: int,
         directory: str,
-        tmp: int,
-        acc_model = Union[str, Model],
-        lag_model = Union[str, Model],
-        errorbar = np.sqrt(1.6), #errorbar in pixels on the datapoints
-        angle= 5.0
     ):
         self.meanAge=meanAge
         
         super().__init__(
+            xdata,
+            ydata,
+            troughObject,
             maxSteps,
             thin_by,
-            directory,
-            tmp,
-            acc_model,
-            lag_model,
-            errorbar,
-            angle)
+            directory)
         
     
     def priors(self,params,times):

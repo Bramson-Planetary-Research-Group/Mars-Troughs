@@ -88,7 +88,7 @@ def load_angle(trough) -> Tuple[np.float]:
     """
     troughFolder="3D_Trough"+trough
     ANGLE: Path = DATAPATHS.DATA /  troughFolder / "angle.txt"
-    angle=np.loadtxt(ANGLE)
+    angle=float(np.loadtxt(ANGLE))
     
     return angle
 
