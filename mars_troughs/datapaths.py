@@ -112,7 +112,7 @@ def load_TMP_data(trough,tmp) -> Tuple[np.ndarray, np.ndarray]:
         
         for i in range(0,ntmps):
             xi,yi=np.loadtxt(listPaths[i],skiprows=1).T
-            xs.append(xi)
+            xs.append(xi*1000)
             ys.append(yi)
 
         return xs,ys
@@ -122,7 +122,7 @@ def load_TMP_data(trough,tmp) -> Tuple[np.ndarray, np.ndarray]:
         TMP: Path = DATAPATHS.DATA /  troughFolder / "TMPs"/ tmpFile
         xs,ys=np.loadtxt(TMP, skiprows=1).T 
 
-        return [xs],[ys]
+        return [xs*1000],[ys]
 
     
 

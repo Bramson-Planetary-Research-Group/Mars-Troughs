@@ -249,27 +249,7 @@ def main():
         
         # tmp fit ---------------------------------------------------
         plt.figure()
-        bestTMP=tmpt[indxbest,:,:]
-        plt.plot(bestTMP[:,0],bestTMP[:,1],c='b')
-        
-        ratioyx=0.4;
-        
-        #find nearest points
-        x_model=bestTMP[:,0]
-        y_model=bestTMP[:,1]
-        xnear = np.zeros_like(newmcmc.xdata)
-        ynear = np.zeros_like(newmcmc.ydata)
-        timenear = np.zeros_like(newmcmc.xdata)
-        
-        
-        for i, (xdi, ydi) in enumerate(zip(newmcmc.xdata, newmcmc.ydata)):
-            dist = newmcmc.tr._L2_distance(x_model, xdi, y_model, ydi)
-            ind = np.argmin(dist)
-            xnear[i] = x_model[ind]
-            ynear[i] = y_model[ind]
-            timenear[i] = newmcmc.tr.accuModel._times[ind]
-            
-        
+        ratioyx=1/3
         for i in range(nmodels*newmcmc.nwalkers):
             indx=i
             plt.plot(tmpt[indx,:,0],tmpt[indx,:,1],c="gray", alpha=0.1, zorder=-1)
@@ -278,35 +258,35 @@ def main():
         #plot observed data with errorbars
         #sharad images error: 20 m per pixel vertically and 475 m per pixel
         #horizontally
-        plt.errorbar(x=newmcmc.xdata, 
-                     xerr=newmcmc.tr.errorbar*newmcmc.tr.meters_per_pixel[0],
-                     y=newmcmc.ydata, 
-                     yerr=newmcmc.tr.errorbar*newmcmc.tr.meters_per_pixel[1], 
-                     c='r', marker='.', ls='',label='Observed TMP')
+        ntmps=len(newmcmc.xdata)
+        if ntmps>1:
+            #diff colors for each tmp
+            cmap = plt.get_cmap('rainbow', ntmps)
+            for i in range(0,ntmps):
+                colour = cmap(i)
+                plt.errorbar(x=newmcmc.xdata[i], 
+                             xerr=newmcmc.tr.errorbar*newmcmc.tr.meters_per_pixel[0],
+                             y=newmcmc.ydata[i], 
+                             yerr=newmcmc.tr.errorbar*newmcmc.tr.meters_per_pixel[1], 
+                             c=colour, marker='.', ls='',label='Observed TMP')
+        else: 
+            plt.errorbar(x=newmcmc.xdata[0], 
+                         xerr=newmcmc.tr.errorbar*newmcmc.tr.meters_per_pixel[0],
+                         y=newmcmc.ydata[0], 
+                         yerr=newmcmc.tr.errorbar*newmcmc.tr.meters_per_pixel[1], 
+                         c='r', marker='.', ls='',label='Observed TMP')
         
         plt.xlabel("Horizontal dist [m]")
         plt.ylabel("V. dist [m]")
         ax=plt.gca()
-        ax.legend(bbox_to_anchor=(0.5, -0.3), loc='upper left')
+        ax.legend( loc='upper right')
         #ymin,ymax=ax.get_ylim()
         #xmin,xmax=ax.get_xlim()
-        xmax=np.max(newmcmc.xdata)+1000
-        ymin=np.min(newmcmc.ydata)-100
+        xmax=np.max(newmcmc.xdata[:])+1000
+        ymin=np.min(newmcmc.ydata[:])-100
         ax.set_ylim(ymin,0)
         ax.set_xlim(0,xmax)
         ax.set_box_aspect(ratioyx)
-        
-        #plot times on upper axis
-        ax2=ax.twiny()
-        color='m'
-        ax2.set_xlabel('Time before present ( Myr)',color=color)
-        #plt.scatter(xnear,ynear,marker="o",color='b')
-        
-        ax2.set_ylim(ymin,0)
-        ax2.set_xlim(0,xmax)
-        ax2.tick_params(axis='x',labelcolor=color)
-        plt.xticks(xnear,np.round(timenear/1000000,2).astype(float),rotation=90)
-        ax2.set_box_aspect(ratioyx)
         
         #create folder for saving figure
         if not os.path.exists(args.plotdir+'figures/'+'tmp/'):
@@ -316,67 +296,7 @@ def main():
         plt.savefig(args.plotdir+'figures/'+'tmp/'
                     +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
                     facecolor='w',pad_inches=0.1)
-        
-        #save tmp full range of model---------------------------------
-        plt.figure()
-        for i in range(nmodels*newmcmc.nwalkers):
-            indx=i
-            plt.plot(tmpt[indx,:,0],tmpt[indx,:,1],c="gray", 
-                     alpha=0.1, zorder=-1)
-        plt.xlabel("Horizontal dist [m]")
-        plt.ylabel("V. dist [m]")
-        plt.errorbar(x=newmcmc.xdata, 
-                     xerr=newmcmc.tr.errorbar*newmcmc.tr.meters_per_pixel[0], 
-                     y=newmcmc.ydata, 
-                     yerr=newmcmc.tr.errorbar*newmcmc.tr.meters_per_pixel[1], 
-                     c='r', marker='.', ls='')
-        
-         #create folder for saving figure
-        if not os.path.exists(args.plotdir+'figures/'+'tmpFull/'):
-            os.makedirs(args.plotdir+'figures/'+'tmpFull/')
     
-            
-        plt.savefig(args.plotdir+'figures/'+'tmpFull/'
-                    +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.png',
-                    facecolor='w',pad_inches=0.1)
-        
-
-
-        #plot hists of age-------------------------
-        
-        ndata=len(newmcmc.xdata)
-        lastxdata=newmcmc.xdata[ndata-1]
-        lastydata=newmcmc.ydata[ndata-1]
-        ages = np.zeros((nmodels*newmcmc.nwalkers,1))
-
-        for w in range(0,nmodels*newmcmc.nwalkers):
-            xi=tmpt[w,:,0]
-            yi=tmpt[w,:,1]
-            disti = newmcmc.tr._L2_distance(xi, lastxdata, yi, lastydata)
-            ind = np.argmin(disti)
-            ages[w] = newmcmc.tr.accuModel._times[ind]/1000000
-            
-        plt.figure()
-        plt.hist(ages,bins=100)
-        plt.axvline(x=ages[indxbest],color='k',label='Age best model',
-                    linestyle='dashed')
-        plt.xlabel('Age (Myr)')
-        plt.ylabel('# models')
-        plt.legend()
-        
-        #create folder for saving figure
-        if not os.path.exists(args.plotdir+'figures/'+'age/'):
-            os.makedirs(args.plotdir+'figures/'+'age/')
-    
-        plt.savefig(args.plotdir+'figures/'+'age/'
-                    +newmcmc.modelName+'_'+str(newmcmc.maxSteps)+'.pdf',
-                    facecolor='w',pad_inches=0.1)
-        
-        plt.close('all')
-        print(ifile,file=sys.stderr)
-        
-        #plot optimal parameters versus best params------
-        
         
 def mainArgs(objpath,plotdir,nmodels,step):
     sys.argv = ['maintest.py', 

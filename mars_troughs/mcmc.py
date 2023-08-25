@@ -160,6 +160,9 @@ class MCMC():
         #lag thickness has to be larger than 1e-15 mm and less than 20 mm
         if any(self.tr.lag_at_t  < 1e-15) or any(self.tr.lag_at_t > 20):
             return False
+        #model tmp has to be between 0 and 2 km deep
+        if np.min(self.tr.ynear) < -2e3 or np.max(self.tr.ynear)>0:
+            return False
         
         #accumulation rate should >=0
         acc_t=self.tr.accuModel.get_accumulation_at_t(
@@ -181,12 +184,13 @@ class MCMC():
         
         #set trough model with candidate parameters
         self.tr.set_model(params)
+        likelihood_of_model=self.tr.lnlikelihood(
+                                        self.xdata,
+                                        self.ydata,
+                                        self.tr.accuModel._times)
 
         if self.priors(params,self.tr.accuModel._times):
-            likelihood_of_model=self.tr.lnlikelihood(
-                                            self.xdata,
-                                            self.ydata,
-                                            self.tr.accuModel._times)
+            
             return likelihood_of_model
         else:
             return -1e99

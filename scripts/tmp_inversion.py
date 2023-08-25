@@ -86,7 +86,7 @@ def main():
     ret_data_spline = RBS(lags, retreat_times, retreats)
 
     #load tmp data  
-    xdata,ydata=load_TMP_data(trough,tmp)
+    xdata,ydata=load_TMP_data(trough,tmp) #both in meters
     
     #load trough angle
     angle=load_angle(trough)

@@ -179,32 +179,40 @@ class Trough():
             log-likelihood value (float)
         """
         ntmps=len(xdataList)
-        
         if ntmps>1:
             loglike=0
+            xnear=[]
+            ynear=[]
             for i in range(0,ntmps):
                 xdata=xdataList[i]
                 ydata=ydataList[i]
-                xnear, ynear, timesxy = self.get_nearest_points(
+                xneari, yneari, timesxy = self.get_nearest_points(
                                         xdata, ydata, times)
                 # Variance in meters in both directions
                 xvar, yvar = (self.errorbar * self.meters_per_pixel) ** 2
-                chi2 = ((xdata - xnear) ** 2 / xvar + 
-                       (ydata - ynear) ** 2 / yvar)
+                chi2 = ((xdata - xneari) ** 2 / xvar + 
+                       (ydata - yneari) ** 2 / yvar)
                 
                 loglike_i = (-0.5 * chi2.sum() 
                             -0.5 * len(xdata) * np.log(2*np.pi) 
                             -0.5 * np.log(xvar * yvar))
                 #output is mean loglikelihood from all tmps
                 loglike = loglike+loglike_i/ntmps
+                xnear.append(xneari)
+                ynear.append(yneari)
+            self.xnear=xnear
+            self.ynear=ynear
+
         else:   
                 #there is only one tmp
-                xnear, ynear, timesxy = self.get_nearest_points(
+                xdata=xdataList[0]
+                ydata=ydataList[0]
+                self.xnear, self.ynear, timesxy = self.get_nearest_points(
                                         xdata, ydata,times)
                 # Variance in meters in both directions
                 xvar, yvar = (self.errorbar * self.meters_per_pixel) ** 2
-                chi2 = ((xdata - xnear) ** 2 / xvar + 
-                        (ydata - ynear) ** 2 / yvar)
+                chi2 = ((xdata - self.xnear) ** 2 / xvar + 
+                        (ydata - self.ynear) ** 2 / yvar)
                 #output is log like from the only tmp
                 loglike = (-0.5 * chi2.sum() 
                            -0.5 * len(xdata) * np.log(2*np.pi) 
