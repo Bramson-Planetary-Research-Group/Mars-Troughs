@@ -181,8 +181,8 @@ class Trough():
         ntmps=len(xdataList)
         if ntmps>1:
             loglike=0
-            xnear=[]
-            ynear=[]
+            xnear=np.array([])
+            ynear=np.array([])
             for i in range(0,ntmps):
                 xdata=xdataList[i]
                 ydata=ydataList[i]
@@ -198,8 +198,8 @@ class Trough():
                             -0.5 * np.log(xvar * yvar))
                 #output is mean loglikelihood from all tmps
                 loglike = loglike+loglike_i/ntmps
-                xnear.append(xneari)
-                ynear.append(yneari)
+                xnear=np.append(xnear,xneari)
+                ynear=np.append(ynear,yneari)
             self.xnear=xnear
             self.ynear=ynear
 
