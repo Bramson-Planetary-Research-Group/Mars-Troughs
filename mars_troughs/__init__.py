@@ -15,9 +15,15 @@ from .custom_retr_models import (Constant_Retreat,
                          Quadratic_RetreatI,
                          Cubic_RetreatI,
                          PowerLaw_RetreatI)
+from .custom_lag_models import (ConstantLag,
+                         QuadraticLag,
+                         LinearLag,
+                         CubicLag,
+                         PowerLawLag)
 from .datapaths import (DATAPATHS,
                        load_insolation_data, 
-                       load_obliquity_data)
+                       load_obliquity_data,
+                       load_retreat_data)
 from .model import Model
 from .trough import Trough
 from .mcmc import MCMC, softAgePriorMCMC, hardAgePriorMCMC

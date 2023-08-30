@@ -69,9 +69,10 @@ class TimeDependentAccumulationModel(AccumulationModel):
     def get_xt(
         self,
         time: np.ndarray,
-        retr: np.ndarray,
+        retr: np.ndarray, # previously known as int_retreat_model_t_spline
         cot_angle,
         csc_angle,
+        retrModel
     ):
         """
         Calculates the horizontal distance x (in m) traveled by a point in the
@@ -86,11 +87,19 @@ class TimeDependentAccumulationModel(AccumulationModel):
             horizontal distances (np.ndarray) of the same size as time input, in
             meters.
         """
-        yt = self.get_yt(time) 
-  
-        out = cot_angle * (-yt)  + csc_angle * (retr)
+        
+        yt = self.get_yt(time)
 
-        return out
+        if "Lag" in str(retrModel):
+                
+            return -cot_angle * yt + csc_angle * (
+                retr(time) - retr(0)
+            )
+        
+        elif "Retreat" in str(self.retrModel):  
+            out = cot_angle * (-yt)  + csc_angle * (retr)
+    
+            return out
 
 
 class Linear_Obliquity(TimeDependentAccumulationModel, LinearModel):
