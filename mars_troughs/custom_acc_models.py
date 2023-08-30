@@ -96,7 +96,7 @@ class TimeDependentAccumulationModel(AccumulationModel):
                 retr(time) - retr(0)
             )
         
-        elif "Retreat" in str(self.retrModel):  
+        elif "Retreat" in str(retrModel):  
             out = cot_angle * (-yt)  + csc_angle * (retr)
     
             return out
