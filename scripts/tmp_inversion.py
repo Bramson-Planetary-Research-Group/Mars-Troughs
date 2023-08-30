@@ -33,7 +33,7 @@ def main():
         
     p=argparse.ArgumentParser(description='Parse submodel numbers for MCMC')
     p.add_argument("-acc",default=1,type=int,help="Number of the accumulation model")
-    p.add_argument("-lag",default=1,type=int,help="Number of the lag model")
+    p.add_argument("-retr",default=1,type=int,help="Number of the retreat model")
     p.add_argument("-steps",default=100,type=int,help="Number of steps for MCMC")
     p.add_argument("-thin_by",default=1,type=int,help="Skip iterations in ensemble")
     p.add_argument("-data", default="insolation",type=str, help="insolation or obliquity")
