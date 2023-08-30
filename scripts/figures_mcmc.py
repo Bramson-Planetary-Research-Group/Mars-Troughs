@@ -188,7 +188,7 @@ def main():
                 newmcmc.tr.set_model(iparams)
                 
                 retreati=newmcmc.tr.retreat_model_t
-                lagti=newmcmc.tr.lagModel.get_lag_at_t(newmcmc.tr.accuModel._times)
+                lagti=newmcmc.tr.retrModel.get_lag_at_t(newmcmc.tr.accuModel._times)
                 accti=newmcmc.tr.accuModel.get_accumulation_at_t(newmcmc.tr.accuModel._times)
                 tmpti=np.array(newmcmc.tr.get_trajectory(newmcmc.tr.accuModel._times))
                 
