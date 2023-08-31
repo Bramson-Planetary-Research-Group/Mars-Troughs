@@ -119,21 +119,19 @@ def main():
     
     print(filename)
 
-#def mainArgs(acc,lag,retr,steps,thin_by,data,tmp,dir):
-    # ugh how do i do this????
-    # can i just take this out
-#    sys.argv = ['mainInv.py', 
-#                '-acc', str(acc),
-#                '-lag', str(lag),
-#                '-retr', str(retr), 
-#                '-steps',str(steps),
-#                '-thin_by', str(thin_by),
-#                '-data', str(data),
-#                '-tmp', str(tmp),
-#                '-dir', str(dir)] 
-#    main()
+def mainArgs(acc,lag,retr,steps,thin_by,data,tmp,dir):
+
+    sys.argv = ['mainInv.py', 
+                '-acc', str(acc),
+                '-lag', str(lag),
+                '-retr', str(retr), 
+                '-steps',str(steps),
+                '-thin_by', str(thin_by),
+                '-data', str(data),
+                '-tmp', str(tmp),
+                '-dir', str(dir)] 
+    main()
     
 
 if __name__=='__main__':
-    #cProfile.run('main()')
     main()
