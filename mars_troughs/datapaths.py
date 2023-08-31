@@ -19,7 +19,9 @@ class _DataPaths:
     INSOLATION2: Path = DATA / "TMP2" / "Insolation_5million_2.txt"
     RETREAT: Path = DATA / "Retreat_data.txt"
     RETREAT2: Path = DATA / "TMP2" / "Retreat_data_tmp2.txt"
-    TMP1: Path = DATA / "TMP_xz.txt"
+    #TMP1: Path = DATA / "TMP_xz.txt"
+    TMP1: Path = DATA / "TMP1_3D"/"TMP1_v2_depth_test2_XY_MCMC_desampled.txt"
+
     TMP2: Path = DATA / "TMP2" / "TMP_xz.txt"
     OBLIQUITY: Path = DATA / "Obliquity_5million.txt"
 
@@ -27,7 +29,8 @@ class _DataPaths:
 DATAPATHS = _DataPaths()
 """Global object that holds paths."""
 
-
+""" Load retreat data is commented out, as teh code has been updated to model retreat reate, not lag thickness. 
+"""
 def load_retreat_data(tmp) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
     Unpack the retreat data from the Bramson et al. thermal model used
@@ -53,7 +56,7 @@ def load_retreat_data(tmp) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
         lag_cols: List[str] = [col for col in df.columns if col.startswith("lag")]
         lags: np.ndarray = np.array([int(col[3:]) for col in lag_cols])
         retreats: np.ndarray = df[lag_cols].values.T
-        
+       
     return times, retreats, lags
 
 

@@ -21,7 +21,7 @@ class Model(ABC):
 
     prefix: Optional[str] = None
     """A prefix to prepend to parameter names when supplying them."""
-        
+
 
     @property
     @abstractmethod
@@ -73,4 +73,4 @@ class Model(ABC):
             setattr(self, key, value)
         return
 
- 
+   

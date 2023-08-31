@@ -1,38 +1,48 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Fri Jul 23 13:14:58 2021
-
-@author: kris
-# updated to handle retreat instead of lag
+Custom retreat models
 
 """
-from abc import abstractmethod
 import numpy as np
-from scipy.interpolate import InterpolatedUnivariateSpline as IUS
+from abc import abstractmethod
 from mars_troughs.model import Model
-from mars_troughs.generic_model import (LinearModel, 
+from scipy.interpolate import InterpolatedUnivariateSpline as IUS
+
+from mars_troughs.generic_model import (ConstantModel, 
+                                        LinearModel,
                                         QuadModel, 
                                         CubicModel, 
                                         PowerLawModel)
 
-class AccumulationModel(Model):
+class RetreatModel(Model):
     """
-    Abstract class for computing the amount of ice accumulation.
+    Abstract class for retreat models, that have a method
+    called :meth:`get_retreat_at_t` that returns retreat lag
+    as a function of time.
     """
 
-    prefix: str = "acc_"
-    """All parameters of accumulations models start with 'acc'."""
-
+    prefix: str = "retr_"
+    """All parameters of retreat models start with 'retreat'."""
     @abstractmethod
-    def get_accumulation_at_t(self, time: np.ndarray) -> np.ndarray:
-        raise NotImplementedError  # pragma: no cover
-    
-class TimeDependentAccumulationModel(AccumulationModel):
+    def get_retreat_at_t(self, time: np.ndarray) -> np.ndarray:
+        """
+        Retreat as a function of time
+
+        Args:
+            time (np.ndarray): times at which we want to calculate the retreat.
+
+        Output:
+            np.ndarray of the same size as time input containing values of retreat.
+        """
+        #return self.eval(time)
+        raise NotImplementedError # this comes from Acc model
+   
+class TimeDependentRetreatModel(RetreatModel):
     """
-    An accumulation rate model that depends on the time dependent parameter
-    (likely solar insolation or obliquity), A(Var(t)).
-    A is in m/year. Interpolated splines are created for the parameter as
+    A retreat rate model that depends on the time dependent parameter
+    (likely solar insolation or obliquity), R(Var(t)).
+    R is in m/year. Interpolated splines are created for the parameter as
     a function of time for faster integration.
 
     Args:
@@ -52,106 +62,111 @@ class TimeDependentAccumulationModel(AccumulationModel):
         self._var3_data_spline = IUS(self._times, self._variable ** 3)
         self._int_var3_data_spline = self._var3_data_spline.antiderivative()
 
-    def get_accumulation_at_t(self, time: np.ndarray) -> np.ndarray:
+    def get_retreat_at_t(self, time: np.ndarray) -> np.ndarray:
         """
-        Calculates the accumulation rate at times "time".
+        Calculates the retreat rate at times "time".
 
         Args:
-            time (np.ndarray): times at which we want to calculate A, in years.
+            time (np.ndarray): times at which we want to calculate R, in years.
         Output:
             np.ndarray of the same size as time input containing values of
-            accumulation rates A, in m/year
+            retreat rates R, in m/year
 
         """
+        
+        
         return self.eval(self._var_data_spline(time))
-
-
-    def get_xt(
-        self,
-        time: np.ndarray,
-        retr: np.ndarray, # previously known as int_retreat_model_t_spline
-        cot_angle,
-        csc_angle,
-        retrModel
-    ):
-        """
-        Calculates the horizontal distance x (in m) traveled by a point in the
-        center of the high side of the trough. This distance x is a function of
-        the accumulation rate A(ins(t)) and the retreat rate of ice R(l(t),t)
-        as in dx/dt=(R(l(t),t)+A(ins(t))cos(theta))/sin(theta). Where theta
-        is the slope angle of the trough.
-
-        Args:
-            time (np.ndarray): times at which we want the path.
-        Output:
-            horizontal distances (np.ndarray) of the same size as time input, in
-            meters.
-        """
         
-        yt = self.get_yt(time)
 
-        if "Lag" in str(retrModel):
-                
-            return -cot_angle * yt + csc_angle * (
-                retr(time) - retr(0)
-            )
-        
-        elif "Retreat" in str(retrModel):  
-            out = cot_angle * (-yt)  + csc_angle * (retr)
-    
-            return out
+class Constant_Retreat(TimeDependentRetreatModel, ConstantModel):
+    """
+    The retreat rate is constant and does not depend on time.
 
+    Args:
+        constant (float, optional): default is 1 millimeter. The lag
+            thickness at all times.
+    """
 
-class Linear_Obliquity(TimeDependentAccumulationModel, LinearModel):
     def __init__(
         self,
         obl_times: np.ndarray,
         obliquity: np.ndarray,
         constant: float = 1e-6,
-        slope: float = 1e-8,
+    ):
+        super().__init__(obl_times, obliquity)  # note: `super` maps to the LagModel parent class
+        ConstantModel.__init__(self, constant=constant)
+
+    def get_rt(self, time: np.ndarray):
+        """
+        Calculates the retreat distance r (in m) traveled by a point
+        in the center of the high side of the trough. This distance  is a
+        function of the retreat rate A as r(t)=integral(AR(obl(t)), dt) or
+        dy/dt=R(obl(t))
+
+        Args:
+            time (np.ndarray): times at which we want to calculate r, in years.
+        Output:
+            np.ndarray of the same size as time input containing values of
+            the retreat distance r, in meters.
+
+        """
+
+        return (self.constant * time)
+              
+
+class Linear_RetreatO(TimeDependentRetreatModel, LinearModel):
+    def __init__(
+        self,
+        obl_times: np.ndarray,
+        obliquity: np.ndarray,
+        constant: float = 1e-6,#1e-6, # was e-6, then e-5
+        slope: float = 1e-8, #1e-8, # was e-8, then 1e-6
     ):
         LinearModel.__init__(self, constant, slope)
         super().__init__(obl_times, obliquity)
 
-    def get_yt(self, time: np.ndarray):
+    def get_rt(self, time: np.ndarray):
         """
-        Calculates the vertical distance y (in m) traveled by a point
+        Calculates the retreat distance r (in m) traveled by a point
         in the center of the high side of the trough. This distance  is a
-        function of the accumulation rate A as y(t)=integral(A(obl(t)), dt) or
-        dy/dt=A(obl(t))
+        function of the retreat rate R as r(t)=integral(R(obl(t)), dt) or
+        dy/dt=R(obl(t))
 
         Args:
-            time (np.ndarray): times at which we want to calculate y, in years.
+            time (np.ndarray): times at which we want to calculate r, in years.
         Output:
             np.ndarray of the same size as time input containing values of
-            the vertical distance y, in meters.
+            the retreat distance r, in meters.
 
         """
-
-        return -(
+        
+        
+       
+        return (
             self.constant * time
             + (
                 self.slope
                 * (self._int_var_data_spline(time) - self._int_var_data_spline(0))
             )
         )
-        
+ 
 
     
-class Quadratic_Obliquity(TimeDependentAccumulationModel, QuadModel):
+
+class Quadratic_RetreatO(TimeDependentRetreatModel,QuadModel):
     def __init__(
         self,
         obl_times: np.ndarray,
         obliquity: np.ndarray,
         constant: float = 1e-6,
         slope: float = 1e-8,
-        quad: float = 1e-20,
+        quad: float = 1e-20, # was 1e-20
         ):
         
         QuadModel.__init__(self, constant, slope, quad)
         super().__init__(obl_times, obliquity)
         
-    def get_yt(self, time: np.ndarray):
+    def get_rt(self, time: np.ndarray):
         """
         Calculates the vertical distance y (in m) at traveled by a point
         in the center of the high side of the trough. This distance  is a
@@ -165,7 +180,7 @@ class Quadratic_Obliquity(TimeDependentAccumulationModel, QuadModel):
             the vertical distance y, in meters.
 
         """
-        return -(
+        output = (
             self.constant * time
             + (
                 self.slope
@@ -178,8 +193,13 @@ class Quadratic_Obliquity(TimeDependentAccumulationModel, QuadModel):
                 )
             )
         )
-    
-class Cubic_Obliquity(TimeDependentAccumulationModel, CubicModel):
+        
+        
+        return output
+            
+       
+
+class Cubic_RetreatO(TimeDependentRetreatModel, CubicModel):
     def __init__(
         self,
         obl_times: np.ndarray,
@@ -193,7 +213,7 @@ class Cubic_Obliquity(TimeDependentAccumulationModel, CubicModel):
         CubicModel.__init__(self, constant, slope, quad, cubic)
         super().__init__(obl_times, obliquity)
         
-    def get_yt(self, time: np.ndarray):
+    def get_rt(self, time: np.ndarray):
         """
         Calculates the vertical distance y (in m) at traveled by a point
         in the center of the high side of the trough. This distance  is a
@@ -207,7 +227,7 @@ class Cubic_Obliquity(TimeDependentAccumulationModel, CubicModel):
             the vertical distance y, in meters.
 
         """
-        return -(self.constant * time
+        return (self.constant * time
                 + 
                   (
                     self.slope
@@ -224,7 +244,7 @@ class Cubic_Obliquity(TimeDependentAccumulationModel, CubicModel):
                   )
                )
 
-class PowerLaw_Obliquity(TimeDependentAccumulationModel, PowerLawModel):
+class PowerLaw_RetreatO(TimeDependentRetreatModel, PowerLawModel):
     def __init__(
         self,
         obl_times: np.ndarray,
@@ -237,7 +257,7 @@ class PowerLaw_Obliquity(TimeDependentAccumulationModel, PowerLawModel):
         super().__init__(obl_times, obliquity)
         
 
-    def get_yt(self, time: np.ndarray):
+    def get_rt(self, time: np.ndarray):
         """
         Calculates the vertical distance y (in m) at traveled by a point
         in the center of the high side of the trough. This distance  is a
@@ -255,13 +275,15 @@ class PowerLaw_Obliquity(TimeDependentAccumulationModel, PowerLawModel):
         self._var_exp_data_spline = IUS(self._times, self._variable_exp )
         self._int_var_exp_data_spline = self._var_exp_data_spline.antiderivative()
         
-        return -(self.coeff*
+        return (self.coeff*
                      (self._int_var_exp_data_spline(time)
                      -self._int_var_exp_data_spline(0)
                      )
                 )
     
-class Linear_Insolation(TimeDependentAccumulationModel, LinearModel):
+#%% insolation functions
+  
+class Linear_RetreatI(TimeDependentRetreatModel, LinearModel):
     def __init__(
         self,
         ins_times: np.ndarray,
@@ -272,12 +294,12 @@ class Linear_Insolation(TimeDependentAccumulationModel, LinearModel):
         LinearModel.__init__(self, constant, slope)
         super().__init__(ins_times, 1/insolations)
 
-    def get_yt(self, time: np.ndarray):
+    def get_rt(self, time: np.ndarray):
         """
         Calculates the vertical distance y (in m) traveled by a point
         in the center of the high side of the trough. This distance  is a
-        function of the accumulation rate A as y(t)=integral(A(obl(t)), dt) or
-        dy/dt=A(obl(t))
+        function of the accumulation rate A as y(t)=integral(A(ins(t)), dt) or
+        dy/dt=A(ins(t))
 
         Args:
             time (np.ndarray): times at which we want to calculate y, in years.
@@ -287,16 +309,17 @@ class Linear_Insolation(TimeDependentAccumulationModel, LinearModel):
 
         """
 
-        return -(
+        return (
             self.constant * time
             + (
                 self.slope
                 * (self._int_var_data_spline(time) - self._int_var_data_spline(0))
             )
         )
-
-    
-class Quadratic_Insolation(TimeDependentAccumulationModel, QuadModel):
+        
+        
+ 
+class Quadratic_RetreatI(TimeDependentRetreatModel, QuadModel):
     def __init__(
         self,
         ins_times: np.ndarray,
@@ -309,7 +332,7 @@ class Quadratic_Insolation(TimeDependentAccumulationModel, QuadModel):
         QuadModel.__init__(self, constant, slope, quad)
         super().__init__(ins_times, 1/insolations)
         
-    def get_yt(self, time: np.ndarray):
+    def get_rt(self, time: np.ndarray):
         """
         Calculates the vertical distance y (in m) at traveled by a point
         in the center of the high side of the trough. This distance  is a
@@ -323,7 +346,7 @@ class Quadratic_Insolation(TimeDependentAccumulationModel, QuadModel):
             the vertical distance y, in meters.
 
         """
-        return -(
+        return (
             self.constant * time
             + (
                 self.slope
@@ -338,7 +361,7 @@ class Quadratic_Insolation(TimeDependentAccumulationModel, QuadModel):
         )    
     
     
-class Cubic_Insolation(TimeDependentAccumulationModel, CubicModel):
+class Cubic_RetreatI(TimeDependentRetreatModel, CubicModel):
     def __init__(
         self,
         ins_times: np.ndarray,
@@ -352,7 +375,7 @@ class Cubic_Insolation(TimeDependentAccumulationModel, CubicModel):
         CubicModel.__init__(self, constant, slope, quad, cubic)
         super().__init__(ins_times, 1/insolations)
         
-    def get_yt(self, time: np.ndarray):
+    def get_rt(self, time: np.ndarray):
         """
         Calculates the vertical distance y (in m) at traveled by a point
         in the center of the high side of the trough. This distance  is a
@@ -366,7 +389,7 @@ class Cubic_Insolation(TimeDependentAccumulationModel, CubicModel):
             the vertical distance y, in meters.
 
         """
-        return -(self.constant * time
+        return (self.constant * time
                 + 
                   (
                     self.slope
@@ -383,7 +406,7 @@ class Cubic_Insolation(TimeDependentAccumulationModel, CubicModel):
                   )
                )
  
-class PowerLaw_Insolation(TimeDependentAccumulationModel, PowerLawModel):
+class PowerLaw_RetreatI(TimeDependentRetreatModel, PowerLawModel):
     def __init__(
         self,
         ins_times: np.ndarray,
@@ -396,7 +419,7 @@ class PowerLaw_Insolation(TimeDependentAccumulationModel, PowerLawModel):
         super().__init__(ins_times, insolations)
         
 
-    def get_yt(self, time: np.ndarray):
+    def get_rt(self, time: np.ndarray):
         """
         Calculates the vertical distance y (in m) at traveled by a point
         in the center of the high side of the trough. This distance  is a
@@ -414,18 +437,10 @@ class PowerLaw_Insolation(TimeDependentAccumulationModel, PowerLawModel):
         self._var_exp_data_spline = IUS(self._times, self._variable_exp )
         self._int_var_exp_data_spline = self._var_exp_data_spline.antiderivative()
         
-        return -(self.coeff*
+        return (self.coeff*
                      (self._int_var_exp_data_spline(time)
                      -self._int_var_exp_data_spline(0)
                      )
-                )  
-    
-    
-    
-    
-    
-    
-    
-    
+                )         
     
     

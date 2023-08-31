@@ -4,6 +4,7 @@
 Created on Mon Jul 12 09:31:34 2021
 
 @author: kris
+@edit: kris laferriere, update to use retreat, not lag. 
 """
 #import modules
 import time
@@ -29,13 +30,13 @@ class MCMC():
         directory: str,
         tmp: int,
         acc_model = Union[str, Model],
-        lag_model = Union[str, Model],
+        retr_model = Union[str, Model],
         angle= 5.0,
     ):
         self.maxSteps = maxSteps
         self.thin_by = thin_by
         self.acc_model = acc_model
-        self.lag_model = lag_model
+        self.retr_model = retr_model
         self.directory = directory
         self.tmp=tmp
         
@@ -49,15 +50,27 @@ class MCMC():
         
         self.xdata=self.xdata*1000 #km to m 
         
-        #load retreat data
-        retreat_times, retreats, lags = load_retreat_data(tmp)
-        retreat_times=-retreat_times
-        ret_data_spline = RBS(lags, retreat_times, retreats)
-        
-        # Create  trough object 
-        self.tr = mt.Trough(self.acc_model,self.lag_model,
-                            ret_data_spline,angle)
-        
+        if "Lag" in str(self.retr_model):
+            #load retreat data
+            retreat_times, retreats, lags = load_retreat_data(tmp)
+            retreat_times=-retreat_times
+            ret_data_spline = RBS(lags, retreat_times, retreats)
+            
+            # Create trough object 
+            self.tr = mt.Trough(self.acc_model,self.retr_model,
+                                ret_data_spline,angle)
+            
+            guessParams=np.array( list(self.tr.accuModel.parameters.values())
+                     +list(self.tr.retrModel.parameters.values()))
+            
+        elif "Retreat" in str(self.retr_model):
+            # Create  trough object 
+            self.tr = mt.Trough(self.acc_model,self.retr_model, angle)
+
+            #Linear optimization
+            guessParams=np.array(list(self.tr.accuModel.parameters.values())
+                                 +list(self.tr.retrModel.parameters.values()))
+            
         self.parameter_names = ([key for key in self.tr.all_parameters])
         
         #Find number of dimensions and number of parameters per submodel
@@ -66,9 +79,6 @@ class MCMC():
         
         
         #Linear optimization
-        
-        guessParams=np.array( list(self.tr.accuModel.parameters.values())
-                             +list(self.tr.lagModel.parameters.values()))
         optObj= op.minimize(self.neg_ln_likelihood, x0=guessParams, 
                             method='Nelder-Mead')
         self.optParams=optObj['x']
@@ -81,10 +91,10 @@ class MCMC():
         self.acc_model_name=auxAcc.split('.')
         self.acc_model_name=self.acc_model_name[2]
             
-        auxLag=str(self.lag_model).split(' ')
-        auxLag=auxLag[0]
-        self.lag_model_name=auxLag.split('.')
-        self.lag_model_name=self.lag_model_name[2]
+        auxRetr=str(self.retr_model).split(' ')
+        auxRetr=auxRetr[0]
+        self.retr_model_name=auxRetr.split('.')
+        self.retr_model_name=self.retr_model_name[2]
         
         #Create directory to save outputs
         if not os.path.exists(self.directory):
@@ -93,11 +103,8 @@ class MCMC():
         if not os.path.exists(self.directory+'obj/'):
             os.makedirs(self.directory+'obj/')
             
-        self.modelName=self.acc_model_name+'_'+self.lag_model_name
-        #if not os.path.exists(self.directory+'obj/'+self.modelName+'/'):
-         #   os.makedirs(self.directory+'obj/'+self.modelName+'/')
+        self.modelName=self.acc_model_name+'_'+self.retr_model_name
     
-        #self.filename=self.directory+'obj/'+self.modelName+'/'+str(self.maxSteps)
         self.filename=self.directory+'obj/'+self.modelName+'_'+str(self.maxSteps)+'obj'
         
         #Set optimized parameter values as initial values of MCMC chains 
@@ -183,15 +190,11 @@ class MCMC():
         
     def priors(self,params,times):
         
-        #lag thickness has to be larger than 1e-15 mm and less than 20 mm
-        if any(self.tr.lag_at_t  < 1e-15) or any(self.tr.lag_at_t > 20):
-            return False
-        
         #depth of trough migration points should between 0 and -2 km
         if any(self.tr.ynear < -2e3) or any(self.tr.ynear > 0):
-            return False
+            return False   
         
-        #accumulation rate should >=0
+        #accumulation rate should >0
         acc_t=self.tr.accuModel.get_accumulation_at_t(
                                                     self.tr.accuModel._times)
         if any(acc_t <= 0):
@@ -203,8 +206,30 @@ class MCMC():
             
             if exponent < -3:
                 return False
-        
-        return True
+                 
+        if "Lag" in str(self.tr.retrModel):
+            #lag thickness has to be larger than 1e-15 mm and less than 20 mm
+            if any(self.tr.lag_at_t  < 1e-15) or any(self.tr.lag_at_t > 20):
+                return False
+
+            return True
+    
+        elif "Retreat" in str(self.tr.retrModel):
+                
+            # keep retreat rate below 20 mm/yr (why? bc we can't control lag thickness)
+            if any(self.tr.retrModel.get_retreat_at_t(self.tr.retrModel._times) > (20*10**(-3))):
+                return False
+            
+            # Retreat rate should >= 0 
+            ret_t=self.tr.retrModel.get_retreat_at_t(self.tr.accuModel._times)
+            if any(ret_t < 0):
+                return False
+            
+            # Accumulation has max limit, must be < 10 mm/yr
+            if any(self.tr.accuModel.get_accumulation_at_t(self.tr.accuModel._times) > (10*10**(-3))):
+                return False
+ 
+            return True
         
 
     def ln_likelihood(self,params: Dict[str,float]):
@@ -248,7 +273,7 @@ class softAgePriorMCMC(MCMC):
         directory: str,
         tmp: int,
         acc_model = Union[str, Model],
-        lag_model = Union[str, Model],
+        retr_model = Union[str, Model],
         errorbar = np.sqrt(1.6), #errorbar in pixels on the datapoints
         angle= 5.0
     ):
@@ -260,7 +285,7 @@ class softAgePriorMCMC(MCMC):
             directory,
             tmp,
             acc_model,
-            lag_model,
+            retr_model,
             errorbar,
             angle)
         

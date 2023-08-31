@@ -3,7 +3,7 @@
 """
 Created on Thu May  6 10:37:51 2021
 
-@author: laferrierek
+@author: kristel Iz.
 
 Linear model for both accumulation and lag
 """
