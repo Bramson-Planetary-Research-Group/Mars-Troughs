@@ -280,8 +280,8 @@ def main():
         plt.ylabel("V. dist [m]")
         ax=plt.gca()
         ax.legend( loc='upper right')
-        xmax=40000
-        ymin=-700
+        xmax=np.max(newmcmc.tr.xnear)
+        ymin=np.min(newmcmc.tr.ynear)
         ax.set_ylim(ymin,0)
         ax.set_xlim(0,xmax)
         ax.set_box_aspect(ratioyx)

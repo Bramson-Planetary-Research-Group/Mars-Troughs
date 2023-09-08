@@ -89,7 +89,7 @@ def main():
     xdata,ydata=load_TMP_data(trough,tmp) #both in meters
     
     #load trough angle
-    angle=load_angle(trough)
+    angle=load_angle(trough,tmp)
     
     # Create  trough object 
     tr = mt.Trough(acc_model,lag_model,

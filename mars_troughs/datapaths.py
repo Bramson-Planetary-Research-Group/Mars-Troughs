@@ -82,12 +82,18 @@ def load_insolation_data(trough) -> Tuple[np.ndarray, np.ndarray]:
     ins: np.ndarray = df["insolation"].values
     return ins, times
 
-def load_angle(trough) -> Tuple[np.float]:
+def load_angle(trough,tmp) -> Tuple[np.float]:
     """
     Loads the trough angle
     """
+    
     troughFolder="3D_Trough"+trough
-    ANGLE: Path = DATAPATHS.DATA /  troughFolder / "angle.txt"
+    if tmp=='all':
+        ANGLE: Path = DATAPATHS.DATA /  troughFolder / "angle.txt"
+    else:
+        tmpFile = "angle"+tmp+".txt" 
+        ANGLE: Path = DATAPATHS.DATA /  troughFolder / "TMPs"/ tmpFile
+    
     angle=float(np.loadtxt(ANGLE))
     
     return angle
@@ -104,7 +110,7 @@ def load_TMP_data(trough,tmp) -> Tuple[np.ndarray, np.ndarray]:
     troughFolder="3D_Trough"+trough
     
     if tmp=='all':
-        tmpFilesPath = str(DATAPATHS.DATA) + '/'+ troughFolder + "/TMPs/*" 
+        tmpFilesPath = str(DATAPATHS.DATA) + '/'+ troughFolder + "/TMPs/tmp*" 
         listPaths=glob.glob(tmpFilesPath)
         ntmps=len(listPaths)
         xs=[]
