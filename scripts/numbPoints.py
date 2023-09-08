@@ -16,11 +16,14 @@ import matplotlib.pyplot as plt
 from mars_troughs import (load_insolation_data)
 from mars_troughs import PowerLawLag
 from mars_troughs import Quadratic_Insolation
-
-
-
+import argparse
+import sys
 
 def main():
+    
+    p=argparse.ArgumentParser(description="args for eff density inv")
+    p.add_argument("-nPoints",type=int,help="number of points for subsample")
+    args=p.parse_args()
 
     #load original TMP 1 and 2 data
     xdata1,ydata1 = np.loadtxt(DATAPATHS.TMP1, 
@@ -28,10 +31,7 @@ def main():
     xdata1=xdata1*1000 #km to m
     N=len(xdata1)
     
-    xdata2,ydata2 = np.loadtxt(DATAPATHS.TMP2, 
-                              unpack=True) #Observed TMP 1 data
-    xdata2=xdata2*1000 #km to m
-    n=len(xdata2)
+    n=args.nPoints
     
     #uncertainty data 
     stdx=475 #m
@@ -75,7 +75,7 @@ def main():
     ax=plt.gca()
     ax.set_box_aspect(ratioyx)
     plt.show()
-    plt.savefig('../../outputSubs/allSubsTMPs.pdf')
+    plt.savefig('../../outputSubs/allSubsTMPs_n' + str(n)+'.pdf')
     
     #obtain mean accumulation rate and age of trough from each subsampled tmp
     tmp=1
@@ -95,13 +95,6 @@ def main():
     opt = Optimization(tmp,angle,acc_model,lag_model)
     
     for i in range(0,nsamples):
-        #init optimiztion class
-        
-        # plt.errorbar(x=subx[i],
-        #              xerr=stdx,
-        #              y=suby[i], 
-        #              yerr=stdy, 
-        #              c='r', marker='.', ls='',label='Subsample TMP 1')
         
         (xinit,yinit,optParams, xmodel, ymodel, 
          meanAcc, age, chi2sum) = opt.optFitSubTMP(subx[i],suby[i])
@@ -113,30 +106,46 @@ def main():
         plt.plot(xmodel,ymodel,c='b',alpha=0.5)
         #plt.plot(xinit,yinit,c='g',label='Default TMP')
         print(i)
+        
+    plt.plot(xmodel,ymodel,c='b',alpha=0.5,label='Model TMPs from subsamples')
+    plt.errorbar(x=xdata1,
+                 xerr=stdx,
+                 y=ydata1, 
+                 yerr=stdy, 
+                 c='r', marker='.', ls='',label='TMP 1')
     ax=plt.gca()
     ax.set_box_aspect(ratioyx)
+    plt.legend()
     plt.show()
-    plt.savefig('../../outputSubs/modelTmpsSubsamples.pdf')
+    plt.savefig('../../outputSubs/modelTMPs_n' + str(n)+'.pdf')
     
     plt.figure()
     nbins=10
     plt.hist(meanAccs,nbins)
     plt.xlabel('mean accumulation  (mm/y)')
     plt.ylabel('Number of subsamples')
-    plt.savefig('../../outputSubs/histMeanAcc.pdf')
+    plt.savefig('../../outputSubs/histMeanAcc_n' + str(n)+'.pdf')
     
     plt.figure()
     plt.hist(ages/1e6,nbins)
     plt.xlabel('ages  (Myr)')
     plt.ylabel('Number of subsamples')
-    plt.savefig('../../outputSubs/ages.pdf')
+    plt.savefig('../../outputSubs/ages_n' + str(n)+'.pdf')
     
     plt.figure()
     plt.hist(chis,nbins)
     plt.xlabel('residual  (m)')
     plt.ylabel('Number of subsamples')
-    plt.savefig('../../outputSubs/chi.pdf')
+    plt.savefig('../../outputSubs/chi_n' + str(n)+'.pdf')
     
     
     return meanAccs,ages,chis
     
+        
+def mainArgs(nPoints):
+    sys.argv = ['maintest.py', 
+                '-nPoints', str(nPoints)]
+    main()
+    
+if __name__ == "__main__":
+    main()
