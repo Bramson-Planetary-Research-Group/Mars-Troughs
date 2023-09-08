@@ -9,16 +9,14 @@ Created on Fri Sep  1 13:23:47 2023
 #TMP in the tmp inversion code, and compare the inferred accumulation rates 
 #and age of each subsample 
 from optimization import Optimization
-import mars_troughs as mt
-from mars_troughs import (DATAPATHS, Model, load_retreat_data)
+from mars_troughs import DATAPATHS
 import numpy as np
 from itertools import combinations
 import matplotlib.pyplot as plt
-from mars_troughs import (load_insolation_data, 
-                          load_obliquity_data)
+from mars_troughs import (load_insolation_data)
 from mars_troughs import PowerLawLag
 from mars_troughs import Quadratic_Insolation
-from typing import Dict, List, Optional, Union
+
 
 
 
@@ -27,14 +25,16 @@ def main():
     #load original TMP 1 and 2 data
     xdata1,ydata1 = np.loadtxt(DATAPATHS.TMP1, 
                               unpack=True) #Observed TMP 1 data
+    xdata1=xdata1*1000 #km to m
     N=len(xdata1)
     
     xdata2,ydata2 = np.loadtxt(DATAPATHS.TMP2, 
                               unpack=True) #Observed TMP 1 data
+    xdata2=xdata2*1000 #km to m
     n=len(xdata2)
     
     #uncertainty data 
-    stdx=0.475 #km
+    stdx=475 #m
     stdy=20 #m
     
     #get ns subsamples of original tmp 1 data 
@@ -74,17 +74,69 @@ def main():
     ratioyx=0.4;
     ax=plt.gca()
     ax.set_box_aspect(ratioyx)
+    plt.show()
+    plt.savefig('../../outputSubs/allSubsTMPs.pdf')
     
     #obtain mean accumulation rate and age of trough from each subsampled tmp
-    
-    (insolations,times) = load_insolation_data(1)
+    tmp=1
+    angle=2.9
+    (insolations,times) = load_insolation_data(tmp)
     times=-times.astype(float)
     times[0]=1e-10
     acc_model=Quadratic_Insolation(times,insolations)
     lag_model=PowerLawLag()
     
-    for i in range(0,2):
-        optParams, xmodel, ymodel, meanAcc, age, chi2 = optimization(
-            subx[i],suby[i],acc_model,lag_model,1)
+    #loop through each subsample and plot
+    meanAccs=np.zeros(nsamples)
+    ages=np.zeros(nsamples)
+    chis=np.zeros(nsamples)
     
+    plt.figure()
+    opt = Optimization(tmp,angle,acc_model,lag_model)
+    
+    for i in range(0,nsamples):
+        #init optimiztion class
+        
+        # plt.errorbar(x=subx[i],
+        #              xerr=stdx,
+        #              y=suby[i], 
+        #              yerr=stdy, 
+        #              c='r', marker='.', ls='',label='Subsample TMP 1')
+        
+        (xinit,yinit,optParams, xmodel, ymodel, 
+         meanAcc, age, chi2sum) = opt.optFitSubTMP(subx[i],suby[i])
+        
+        meanAccs[i]=meanAcc
+        ages[i]=age
+        chis[i]=chi2sum
+        
+        plt.plot(xmodel,ymodel,c='b',alpha=0.5)
+        #plt.plot(xinit,yinit,c='g',label='Default TMP')
+        print(i)
+    ax=plt.gca()
+    ax.set_box_aspect(ratioyx)
+    plt.show()
+    plt.savefig('../../outputSubs/modelTmpsSubsamples.pdf')
+    
+    plt.figure()
+    nbins=10
+    plt.hist(meanAccs,nbins)
+    plt.xlabel('mean accumulation  (mm/y)')
+    plt.ylabel('Number of subsamples')
+    plt.savefig('../../outputSubs/histMeanAcc.pdf')
+    
+    plt.figure()
+    plt.hist(ages/1e6,nbins)
+    plt.xlabel('ages  (Myr)')
+    plt.ylabel('Number of subsamples')
+    plt.savefig('../../outputSubs/ages.pdf')
+    
+    plt.figure()
+    plt.hist(chis,nbins)
+    plt.xlabel('residual  (m)')
+    plt.ylabel('Number of subsamples')
+    plt.savefig('../../outputSubs/chi.pdf')
+    
+    
+    return meanAccs,ages,chis
     
