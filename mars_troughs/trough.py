@@ -6,7 +6,7 @@ from typing import Callable, Dict, List, Optional, Tuple, Union
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as IUS
 from mars_troughs.model import Model
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 class Trough():
@@ -164,29 +164,60 @@ class Trough():
 
     def lnlikelihood(
             self, 
-            x_data: np.ndarray, 
-            y_data: np.ndarray,
+            xdataList, 
+            ydataList,
             times: Optional[np.ndarray] = None,) -> float:
         """
         Calculates the log-likelihood of the data given the model.
         Note that this is the natural log (ln).
 
         Args:
-            x_data (np.ndarray): x-coordinates of the trough path
-            y_data (np.ndarray): y-coordinates of the trough path
+            x_data (List): x-coordinates of the trough path(s)
+            y_data (List): y-coordinates of the trough path(s)
 
         Output:
             log-likelihood value (float)
         """
-        self.xnear, self.ynear, self.timesxy = self.get_nearest_points(
-                                                      x_data, y_data,times)
-        # Variance in meters in both directions
-        xvar, yvar = (self.errorbar * self.meters_per_pixel) ** 2
-        chi2 = (x_data - self.xnear) ** 2 / xvar + (y_data - 
-                                                      self.ynear) ** 2 / yvar
-        return (-0.5 * chi2.sum() 
-                -0.5 * len(x_data) * np.log(2*np.pi) 
-                -0.5 * np.log(xvar * yvar))
+        ntmps=len(xdataList)
+        if ntmps>1:
+            loglike=0
+            xnear=np.array([])
+            ynear=np.array([])
+            for i in range(0,ntmps):
+                xdata=xdataList[i]
+                ydata=ydataList[i]
+                xneari, yneari, timesxy = self.get_nearest_points(
+                                        xdata, ydata, times)
+                # Variance in meters in both directions
+                xvar, yvar = (self.errorbar * self.meters_per_pixel) ** 2
+                chi2 = ((xdata - xneari) ** 2 / xvar + 
+                       (ydata - yneari) ** 2 / yvar)
+                
+                loglike_i = (-0.5 * chi2.sum() 
+                            -0.5 * len(xdata) * np.log(2*np.pi) 
+                            -0.5 * np.log(xvar * yvar))
+                #output is mean loglikelihood from all tmps
+                loglike = loglike+loglike_i/ntmps
+                xnear=np.append(xnear,xneari)
+                ynear=np.append(ynear,yneari)
+            self.xnear=xnear
+            self.ynear=ynear
+
+        else:   
+                #there is only one tmp
+                xdata=xdataList[0]
+                ydata=ydataList[0]
+                self.xnear, self.ynear, timesxy = self.get_nearest_points(
+                                        xdata, ydata,times)
+                # Variance in meters in both directions
+                xvar, yvar = (self.errorbar * self.meters_per_pixel) ** 2
+                chi2 = ((xdata - self.xnear) ** 2 / xvar + 
+                        (ydata - self.ynear) ** 2 / yvar)
+                #output is log like from the only tmp
+                loglike = (-0.5 * chi2.sum() 
+                           -0.5 * len(xdata) * np.log(2*np.pi) 
+                           -0.5 * np.log(xvar * yvar))
+        return loglike
     
     def set_submodels(self, sub_models: Optional[List["Model"]] = None) -> None:
         # Add sub_models as an attribute
