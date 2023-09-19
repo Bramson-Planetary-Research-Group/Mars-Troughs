@@ -82,7 +82,7 @@ def load_insolation_data(trough) -> Tuple[np.ndarray, np.ndarray]:
     ins: np.ndarray = df["insolation"].values
     return ins, times
 
-def load_angle(trough,tmp) -> Tuple[np.float]:
+def load_angle(trough,tmp) -> Tuple[float]:
     """
     Loads the trough angle
     """
